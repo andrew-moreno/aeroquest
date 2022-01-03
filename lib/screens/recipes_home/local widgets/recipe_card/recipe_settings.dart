@@ -72,24 +72,29 @@ class RecipeSettings extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _buildSettingValue(
-                setting: coffee[index].grindSetting.toString(),
-                settingType: "Grind",
+                ctx,
+                coffee[index].grindSetting.toString(),
+                "Grind",
               ),
               _buildSettingValue(
-                setting: coffee[index].coffeeAmount.toString() + "g",
-                settingType: "Coffee",
+                ctx,
+                coffee[index].coffeeAmount.toString() + "g",
+                "Coffee",
               ),
               _buildSettingValue(
-                setting: coffee[index].waterAmount.toString() + "g",
-                settingType: "Water",
+                ctx,
+                coffee[index].waterAmount.toString() + "g",
+                "Water",
               ),
               _buildSettingValue(
-                setting: coffee[index].waterTemp.toString(),
-                settingType: "Temp",
+                ctx,
+                coffee[index].waterTemp.toString(),
+                "Temp",
               ),
               _buildSettingValue(
-                setting: coffee[index].brewTime.toString(),
-                settingType: "Time",
+                ctx,
+                coffee[index].brewTime.toString(),
+                "Time",
               ),
             ],
           ),
@@ -100,7 +105,7 @@ class RecipeSettings extends StatelessWidget {
 
   // defines the template for displaying recipe information values
   // eg. grind: 17
-  Column _buildSettingValue({ctx, setting, settingType}) {
+  Column _buildSettingValue(ctx, setting, settingType) {
     return Column(
       children: [
         Text(
