@@ -5,14 +5,45 @@ import 'package:flutter/material.dart';
 class RecipeMethod extends StatelessWidget {
   const RecipeMethod({
     Key? key,
-    required this.pushPressure,
-    required this.brewMethod,
-    required this.notes,
-  }) : super(key: key);
+    required pushPressure,
+    required brewMethod,
+    required notes,
+  })  : _pushPressure = pushPressure,
+        _brewMethod = brewMethod,
+        _notes = notes,
+        super(key: key);
 
-  final PushPressure pushPressure;
-  final BrewMethod brewMethod;
-  final List<Notes> notes;
+  final PushPressure _pushPressure;
+  final BrewMethod _brewMethod;
+  final List<Notes> _notes;
+
+  static const double _methodPadding = 15;
+
+  String _pushPressureText(PushPressure action) {
+    switch (action) {
+      case PushPressure.weak:
+        return "Weak";
+      case PushPressure.medium:
+        return "Medium";
+      case PushPressure.strong:
+        return "Strong";
+
+      default:
+        return "";
+    }
+  }
+
+  String _brewMethodText(BrewMethod action) {
+    switch (action) {
+      case BrewMethod.regular:
+        return "Regular";
+      case BrewMethod.inverted:
+        return "Inverted";
+
+      default:
+        return "";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +51,9 @@ class RecipeMethod extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 30),
       padding: const EdgeInsets.only(
         top: 5,
-        bottom: 15,
-        left: 15,
-        right: 15,
+        bottom: _methodPadding,
+        left: _methodPadding,
+        right: _methodPadding,
       ),
       decoration: const BoxDecoration(
         color: kDarkNavy,
@@ -36,13 +67,8 @@ class RecipeMethod extends StatelessWidget {
           const Text(
             "Method",
             style: TextStyle(
-                color: Color.fromRGBO(
-                  // subtitle color with higher opacity
-                  217,
-                  204,
-                  191,
-                  0.75,
-                ),
+                // subtitle color with higher opacity
+                color: Color.fromRGBO(217, 204, 191, 0.75),
                 fontFamily: "Spectral",
                 fontSize: 18,
                 fontWeight: FontWeight.w600),
@@ -56,16 +82,9 @@ class RecipeMethod extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _RecipeMethodDescriptionTemplate(
+                _buildRecipeMethodDescription(
                   description: "Push Pressure",
-                  data: () {
-                    if (pushPressure == PushPressure.weak) {
-                      return "Weak";
-                    } else if (pushPressure == PushPressure.medium) {
-                      return "Medium";
-                    }
-                    return "Strong";
-                  }(),
+                  data: _pushPressureText(_pushPressure),
                 ),
                 const VerticalDivider(
                   color: kDarkSubtitleColor,
@@ -73,33 +92,28 @@ class RecipeMethod extends StatelessWidget {
                   indent: 6,
                   endIndent: 6,
                 ),
-                _RecipeMethodDescriptionTemplate(
+                _buildRecipeMethodDescription(
                   description: "Brew Method  ",
-                  data: () {
-                    if (brewMethod == BrewMethod.regular) {
-                      return "Regular";
-                    }
-                    return "Inverted";
-                  }(),
+                  data: _brewMethodText(_brewMethod),
                 ),
               ],
             ),
           ),
           const Divider(
             color: Color(0x00000000),
-            height: 15,
+            height: _methodPadding,
           ),
           ListView.separated(
             physics: const BouncingScrollPhysics(),
             shrinkWrap: true,
-            itemCount: notes.length,
+            itemCount: _notes.length,
             itemBuilder: (BuildContext context, int index) {
-              return _RecipeMethodNotes(notes: notes, index: index);
+              return _buildRecipeNotes(index);
             },
             separatorBuilder: (context, index) {
               return const Divider(
                 color: Color(0x00000000),
-                height: 15,
+                height: _methodPadding,
               );
             },
           )
@@ -107,17 +121,8 @@ class RecipeMethod extends StatelessWidget {
       ),
     );
   }
-}
 
-class _RecipeMethodNotes extends StatelessWidget {
-  const _RecipeMethodNotes({Key? key, required this.notes, required this.index})
-      : super(key: key);
-
-  final List<Notes> notes;
-  final int index;
-
-  @override
-  Widget build(BuildContext context) {
+  Container _buildRecipeNotes(int index) {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -129,7 +134,7 @@ class _RecipeMethodNotes extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Text(
-              notes[index].time,
+              _notes[index].time,
               style: const TextStyle(
                 color: kTextColor,
                 fontSize: 18,
@@ -146,7 +151,7 @@ class _RecipeMethodNotes extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                notes[index].note,
+                _notes[index].note,
                 style: const TextStyle(
                   color: kTextColor,
                   fontSize: 13,
@@ -160,20 +165,8 @@ class _RecipeMethodNotes extends StatelessWidget {
       ),
     );
   }
-}
 
-class _RecipeMethodDescriptionTemplate extends StatelessWidget {
-  const _RecipeMethodDescriptionTemplate({
-    Key? key,
-    required this.description,
-    required this.data,
-  }) : super(key: key);
-
-  final String description;
-  final String data;
-
-  @override
-  Widget build(BuildContext context) {
+  Column _buildRecipeMethodDescription({description, data}) {
     return Column(
       children: [
         Text(

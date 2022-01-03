@@ -5,12 +5,14 @@ import 'package:aeroquest/constraints.dart';
 class Header extends StatelessWidget {
   const Header({
     Key? key,
-    required this.title,
-    required this.description,
-  }) : super(key: key);
+    required title,
+    required description,
+  })  : _title = title,
+        _description = description,
+        super(key: key);
 
-  final String title;
-  final String description;
+  final String _title;
+  final String _description;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,7 @@ class Header extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  title,
+                  _title,
                   textAlign: TextAlign.left,
                   style: const TextStyle(
                     color: kTextColor,
@@ -55,7 +57,7 @@ class Header extends StatelessWidget {
         Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            description,
+            _description,
             textAlign: TextAlign.left,
             style: Theme.of(context)
                 .textTheme
