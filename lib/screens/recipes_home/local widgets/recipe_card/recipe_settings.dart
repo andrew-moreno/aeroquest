@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/models/recipe.dart';
 import 'package:expandable_page_view/expandable_page_view.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 // displays bean and recipe settings information
 // grind, coffee and water amount, temp, time
@@ -10,10 +9,11 @@ class RecipeSettings extends StatelessWidget {
   RecipeSettings({
     Key? key,
     required this.coffee,
+    required this.controller,
   }) : super(key: key);
 
   final List<Coffee> coffee;
-  final controller = PageController();
+  final PageController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -37,22 +37,6 @@ class RecipeSettings extends StatelessWidget {
             ),
           ),
         ),
-        const Divider(
-          color: Color(0x00000000),
-          height: 7,
-        ),
-        (coffee.length > 1)
-            ? SmoothPageIndicator(
-                controller: controller,
-                count: coffee.length,
-                effect: const WormEffect(
-                  dotHeight: 6,
-                  dotWidth: 6,
-                  activeDotColor: kAccentYellow,
-                  dotColor: kBackgroundColor,
-                ),
-              )
-            : Container(),
       ],
     );
   }

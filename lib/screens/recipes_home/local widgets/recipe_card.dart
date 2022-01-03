@@ -2,13 +2,14 @@ import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/models/recipe.dart';
 import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import 'recipe_card/header.dart';
 import 'recipe_card/recipe_settings.dart';
 import 'recipe_card/recipe_method.dart';
 
 class RecipeCard extends StatelessWidget {
-  const RecipeCard({
+  RecipeCard({
     Key? key,
     required this.title,
     required this.description,
@@ -25,6 +26,9 @@ class RecipeCard extends StatelessWidget {
   final BrewMethod brewMethod;
   final List<Notes> notes;
 
+  final controller = PageController();
+  static const double verticalPadding = 7;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -39,7 +43,7 @@ class RecipeCard extends StatelessWidget {
                 theme: const ExpandableThemeData(useInkWell: false),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                    vertical: 10,
+                    vertical: verticalPadding,
                     horizontal: 15,
                   ),
                   decoration: BoxDecoration(
@@ -56,7 +60,26 @@ class RecipeCard extends StatelessWidget {
                         color: Color(0x00000000),
                         height: 10,
                       ),
-                      RecipeSettings(coffee: coffee),
+                      RecipeSettings(
+                        coffee: coffee,
+                        controller: controller,
+                      ),
+                      const Divider(
+                        color: Color(0x00000000),
+                        height: verticalPadding,
+                      ),
+                      (coffee.length > 1)
+                          ? SmoothPageIndicator(
+                              controller: controller,
+                              count: coffee.length,
+                              effect: const WormEffect(
+                                dotHeight: 6,
+                                dotWidth: 6,
+                                activeDotColor: kAccentYellow,
+                                dotColor: kBackgroundColor,
+                              ),
+                            )
+                          : Container(),
                     ],
                   ),
                 ),
@@ -84,7 +107,26 @@ class RecipeCard extends StatelessWidget {
                             color: Color(0x00000000),
                             height: 10,
                           ),
-                          RecipeSettings(coffee: coffee),
+                          RecipeSettings(
+                            coffee: coffee,
+                            controller: controller,
+                          ),
+                          const Divider(
+                            color: Color(0x00000000),
+                            height: 7,
+                          ),
+                          (coffee.length > 1)
+                              ? SmoothPageIndicator(
+                                  controller: controller,
+                                  count: coffee.length,
+                                  effect: const WormEffect(
+                                    dotHeight: 6,
+                                    dotWidth: 6,
+                                    activeDotColor: kAccentYellow,
+                                    dotColor: kBackgroundColor,
+                                  ),
+                                )
+                              : Container(),
                         ],
                       ),
                     ),
