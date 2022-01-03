@@ -31,37 +31,74 @@ class RecipeCard extends StatelessWidget {
       onTap: () {
         print("Tapped");
       },
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(
-              vertical: 10,
-              horizontal: 15,
-            ),
-            decoration: BoxDecoration(
-              color: kLightNavy,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(
-              children: [
-                Header(
-                  title: title,
-                  description: description,
+      child: ExpandableNotifier(
+        child: Column(
+          children: [
+            Expandable(
+              collapsed: ExpandableButton(
+                theme: const ExpandableThemeData(useInkWell: false),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 15,
+                  ),
+                  decoration: BoxDecoration(
+                    color: kLightNavy,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    children: [
+                      Header(
+                        title: title,
+                        description: description,
+                      ),
+                      const Divider(
+                        color: Color(0x00000000),
+                        height: 10,
+                      ),
+                      RecipeSettings(coffee: coffee),
+                    ],
+                  ),
                 ),
-                const Divider(
-                  color: Color(0x00000000),
-                  height: 10,
-                ),
-                RecipeSettings(coffee: coffee),
-              ],
-            ),
-          ),
-          RecipeMethod(
-            pushPressure: pushPressure,
-            brewMethod: brewMethod,
-            notes: notes,
-          )
-        ],
+              ),
+              expanded: Column(
+                children: [
+                  ExpandableButton(
+                    theme: const ExpandableThemeData(useInkWell: false),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 15,
+                      ),
+                      decoration: BoxDecoration(
+                        color: kLightNavy,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                        children: [
+                          Header(
+                            title: title,
+                            description: description,
+                          ),
+                          const Divider(
+                            color: Color(0x00000000),
+                            height: 10,
+                          ),
+                          RecipeSettings(coffee: coffee),
+                        ],
+                      ),
+                    ),
+                  ),
+                  RecipeMethod(
+                    pushPressure: pushPressure,
+                    brewMethod: brewMethod,
+                    notes: notes,
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
