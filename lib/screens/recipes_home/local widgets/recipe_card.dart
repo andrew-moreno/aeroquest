@@ -2,14 +2,13 @@ import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/models/recipe.dart';
 import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import 'recipe_card/header.dart';
 import 'recipe_card/recipe_settings.dart';
 import 'recipe_card/recipe_method.dart';
 
 class RecipeCard extends StatelessWidget {
-  RecipeCard({
+  const RecipeCard({
     Key? key,
     required title,
     required description,
@@ -32,7 +31,6 @@ class RecipeCard extends StatelessWidget {
   final BrewMethod _brewMethod;
   final List<Notes> _notes;
 
-  final controller = PageController();
   static const double verticalPadding = 7;
 
   @override
@@ -91,24 +89,8 @@ class RecipeCard extends StatelessWidget {
           ),
           RecipeSettings(
             coffee: _coffee,
-            controller: controller,
+            verticalPadding: verticalPadding,
           ),
-          const Divider(
-            color: Color(0x00000000),
-            height: verticalPadding,
-          ),
-          (_coffee.length > 1)
-              ? SmoothPageIndicator(
-                  controller: controller,
-                  count: _coffee.length,
-                  effect: const WormEffect(
-                    dotHeight: 6,
-                    dotWidth: 6,
-                    activeDotColor: kAccentYellow,
-                    dotColor: kBackgroundColor,
-                  ),
-                )
-              : Container(),
         ],
       ),
     );
