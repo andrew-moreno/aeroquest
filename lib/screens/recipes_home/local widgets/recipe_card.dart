@@ -2,13 +2,14 @@ import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/models/recipe.dart';
 import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
+import 'package:provider/provider.dart';
 
 import 'recipe_card/header.dart';
 import 'recipe_card/recipe_settings.dart';
 import 'recipe_card/recipe_method.dart';
 
 class RecipeCard extends StatelessWidget {
-  const RecipeCard({
+  RecipeCard({
     Key? key,
     required title,
     required description,
@@ -42,17 +43,14 @@ class RecipeCard extends StatelessWidget {
       child: ExpandableNotifier(
         child: Column(
           children: [
+            ExpandableButton(
+              theme: const ExpandableThemeData(useInkWell: false),
+              child: _buildMainRecipeCard(),
+            ),
             Expandable(
-              collapsed: ExpandableButton(
-                theme: const ExpandableThemeData(useInkWell: false),
-                child: _buildMainRecipeCard(),
-              ),
+              collapsed: Container(),
               expanded: Column(
                 children: [
-                  ExpandableButton(
-                    theme: const ExpandableThemeData(useInkWell: false),
-                    child: _buildMainRecipeCard(),
-                  ),
                   RecipeMethod(
                     pushPressure: _pushPressure,
                     brewMethod: _brewMethod,
