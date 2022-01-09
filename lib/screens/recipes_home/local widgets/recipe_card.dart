@@ -2,7 +2,6 @@ import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/models/recipe.dart';
 import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
-import 'package:provider/provider.dart';
 
 import 'recipe_card/header.dart';
 import 'recipe_card/recipe_settings.dart';
