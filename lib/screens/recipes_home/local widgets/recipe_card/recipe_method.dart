@@ -166,6 +166,7 @@ class RecipeMethod extends StatelessWidget {
     );
   }
 
+  // template for push pressure and brew method text
   Column _buildRecipeMethodDescription({description, data}) {
     return Column(
       children: [
