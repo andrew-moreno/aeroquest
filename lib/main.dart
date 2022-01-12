@@ -1,9 +1,11 @@
+import 'package:aeroquest/screens/about_aeroquest/about_aeroquest.dart';
+import 'package:aeroquest/screens/coffee_beans/coffee_beans.dart';
 import 'package:aeroquest/screens/new_recipe/new_recipe.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'constraints.dart';
-import 'screens/recipes_home/recipes_home.dart';
+import 'screens/recipes/recipes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,6 +24,18 @@ class MyApp extends StatelessWidget {
           backgroundColor: kBackgroundColor,
           canvasColor: kBackgroundColor,
           textTheme: const TextTheme(
+            headline1: TextStyle(
+              color: kTextColor,
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+              fontFamily: "Spectral",
+            ),
+            headline2: TextStyle(
+              color: kTextColor,
+              fontSize: 27,
+              fontWeight: FontWeight.bold,
+              fontFamily: "Spectral",
+            ),
             subtitle1: TextStyle(
               fontFamily: "Poppins",
               fontWeight: FontWeight.w500,
@@ -29,9 +43,12 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: RecipesHome(),
+        initialRoute: Recipes.routeName,
         routes: {
+          Recipes.routeName: (ctx) => Recipes(),
           NewRecipe.routeName: (ctx) => NewRecipe(),
+          CoffeeBeans.routeName: (ctx) => CoffeeBeans(),
+          AboutAeroquest.routeName: (ctx) => AboutAeroquest(),
         },
       ),
     );
