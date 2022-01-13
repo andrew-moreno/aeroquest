@@ -21,8 +21,18 @@ class AboutAeroquest extends StatelessWidget {
         title: const AppBarText(text: "About AEROQUEST"),
       ),
       drawer: const CustomDrawer(),
-      body: SafeArea(
-        child: Container(),
+      body: const SafeArea(
+        child: Padding(
+          padding: EdgeInsets.all(20.0),
+          child: Text(
+            "Hope u like my app and make great coffee :)",
+            style: TextStyle(
+              fontFamily: "Poppins",
+              fontSize: 15,
+              color: kTextColor,
+            ),
+          ),
+        ),
       ),
     );
   }
