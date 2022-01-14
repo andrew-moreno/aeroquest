@@ -1,9 +1,10 @@
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/models/recipe.dart';
+import 'package:aeroquest/widgets/card_header/card_header_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
 
-import 'recipe_card/header.dart';
+import '../../../widgets/card_header/card_header.dart';
 import 'recipe_card/recipe_settings.dart';
 import 'recipe_card/recipe_method.dart';
 
@@ -76,9 +77,17 @@ class RecipeCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Header(
+          CardHeader(
             title: _title,
             description: _description,
+            actions: [
+              CardHeaderButton(
+                icon: Icons.edit,
+                onTap: () {
+                  print("Hello");
+                },
+              ),
+            ],
           ),
           const Divider(
             color: Color(0x00000000),
