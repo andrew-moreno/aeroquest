@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:aeroquest/constraints.dart';
-import 'package:aeroquest/models/recipe.dart';
+import 'package:aeroquest/models/recipe_entry.dart';
 import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -15,7 +15,7 @@ class RecipeSettings extends StatelessWidget {
         _verticalPadding = verticalPadding,
         super(key: key);
 
-  final List<Coffee> _coffee;
+  final List<CoffeeSetting> _coffee;
   final _controller = PageController();
   final double _verticalPadding;
 
@@ -68,7 +68,7 @@ class RecipeSettings extends StatelessWidget {
             vertical: 2,
           ),
           child: Text(
-            coffee[index].name,
+            coffee[index].beanName,
             style: Theme.of(ctx)
                 .textTheme
                 .subtitle1!

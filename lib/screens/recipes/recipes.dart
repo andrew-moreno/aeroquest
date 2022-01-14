@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 import 'local widgets/recipe_card.dart';
 import '../../models/recipe_data.dart';
-import '../../models/recipe.dart';
+import '../../models/recipe_entry.dart';
 import '../../widgets/custom_drawer.dart';
 
 class Recipes extends StatelessWidget {
@@ -15,7 +15,7 @@ class Recipes extends StatelessWidget {
 
   static const routeName = "/recipes";
 
-  final List<Recipe> _recipeData = RecipeData().recipes;
+  final List<RecipeEntry> _recipeData = RecipeData().recipes;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class Recipes extends StatelessWidget {
             return RecipeCard(
               title: _recipeData[index].title,
               description: _recipeData[index].description,
-              coffee: _recipeData[index].coffee,
+              coffee: _recipeData[index].coffeeSetting,
               pushPressure: _recipeData[index].pushPressure,
               brewMethod: _recipeData[index].brewMethod,
               notes: _recipeData[index].notes,

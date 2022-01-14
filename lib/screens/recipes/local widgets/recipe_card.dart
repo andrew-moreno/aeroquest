@@ -1,5 +1,5 @@
 import 'package:aeroquest/constraints.dart';
-import 'package:aeroquest/models/recipe.dart';
+import 'package:aeroquest/models/recipe_entry.dart';
 import 'package:aeroquest/widgets/card_header/card_header_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
@@ -27,7 +27,7 @@ class RecipeCard extends StatelessWidget {
 
   final String _title;
   final String _description;
-  final List<Coffee> _coffee;
+  final List<CoffeeSetting> _coffee;
   final PushPressure _pushPressure;
   final BrewMethod _brewMethod;
   final List<Notes> _notes;
