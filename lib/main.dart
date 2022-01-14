@@ -36,6 +36,12 @@ class MyApp extends StatelessWidget {
               fontWeight: FontWeight.bold,
               fontFamily: "Spectral",
             ),
+            headline3: TextStyle(
+              color: kTextColor,
+              fontFamily: "Spectral",
+              fontWeight: FontWeight.w700,
+              fontSize: 24,
+            ),
             subtitle1: TextStyle(
               fontFamily: "Poppins",
               fontWeight: FontWeight.w500,
