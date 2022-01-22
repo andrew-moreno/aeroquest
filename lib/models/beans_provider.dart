@@ -30,9 +30,8 @@ class BeansProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // void addBean(String beanName) {
-  //   _beans.add(beanName);
-  //   notifyListeners();
-  //   print(_beans);
-  // }
+  void addBean(String beanName, String description) {
+    _beans.add(CoffeeBeanEntry(beanName: beanName, description: description));
+    notifyListeners();
+  }
 }
