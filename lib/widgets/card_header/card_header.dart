@@ -6,7 +6,7 @@ class CardHeader extends StatelessWidget {
   const CardHeader({
     Key? key,
     required title,
-    required description,
+    description,
     required actions,
   })  : _title = title,
         _description = description,
@@ -14,7 +14,7 @@ class CardHeader extends StatelessWidget {
         super(key: key);
 
   final String _title;
-  final String _description;
+  final String? _description;
   final List<Widget> _actions;
 
   @override
@@ -40,14 +40,16 @@ class CardHeader extends StatelessWidget {
         ),
         Align(
           alignment: Alignment.centerLeft,
-          child: Text(
-            _description,
-            textAlign: TextAlign.left,
-            style: Theme.of(context)
-                .textTheme
-                .subtitle1!
-                .copyWith(color: kSubtitleColor),
-          ),
+          child: (_description != null)
+              ? Text(
+                  _description!,
+                  textAlign: TextAlign.left,
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle1!
+                      .copyWith(color: kSubtitleColor),
+                )
+              : Container(),
         ),
       ],
     );

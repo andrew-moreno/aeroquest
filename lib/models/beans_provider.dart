@@ -14,14 +14,18 @@ class BeansProvider extends ChangeNotifier {
     CoffeeBeanEntry(
         beanName: "More coffee woohoo",
         description: "Idk what to write here anymore"),
-    CoffeeBeanEntry(
-        beanName: "Omg theres more??",
-        description: "yes there is u lil bitch boi more coffee more coffee"),
+    CoffeeBeanEntry(beanName: "Omg theres more??"),
     CoffeeBeanEntry(beanName: "Hello", description: "There u suck"),
   ];
 
   UnmodifiableListView<CoffeeBeanEntry> get beans {
     return UnmodifiableListView(_beans);
+  }
+
+  void addBean(String beanName, String? description) {
+    _beans.add(CoffeeBeanEntry(beanName: beanName, description: description));
+    print("beans added");
+    notifyListeners();
   }
 
   void deleteBean(int index) {
@@ -30,8 +34,8 @@ class BeansProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addBean(String beanName, String description) {
-    _beans.add(CoffeeBeanEntry(beanName: beanName, description: description));
-    notifyListeners();
+  void editBean(String beanName, String? description, int index) {
+    _beans[index].beanName = beanName;
+    _beans[index].description = description;
   }
 }
