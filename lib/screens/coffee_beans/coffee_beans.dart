@@ -20,6 +20,11 @@ class CoffeeBeans extends StatefulWidget {
   State<CoffeeBeans> createState() => _CoffeeBeansState();
 }
 
+enum ModalAction {
+  add,
+  edit,
+}
+
 class _CoffeeBeansState extends State<CoffeeBeans> {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
 
@@ -27,7 +32,7 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => BeansProvider(),
-      builder: (context, child) {
+      builder: (builderContext, child) {
         return Scaffold(
           appBar: AppBar(
             backgroundColor: kBackgroundColor,
@@ -38,64 +43,18 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
             actions: [
               AppBarAddButton(
                 onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(kCornerRadius)),
-                    ),
-                    isScrollControlled: true,
-                    builder: (_) {
-                      return Padding(
-                        padding: EdgeInsets.only(
-                            top: 20,
-                            left: 20,
-                            right: 20,
-                            bottom: MediaQuery.of(context).viewInsets.bottom),
-                        child: FormBuilder(
-                          key: _formKey,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              _buildFormField(
-                                  formName: "beanName",
-                                  hint: "Name",
-                                  autoFocus: true,
-                                  validate: true),
-                              const Divider(
-                                  height: 20, color: Color(0x00000000)),
-                              _buildFormField(
-                                  formName: "description",
-                                  hint: "Description",
-                                  autoFocus: false,
-                                  validate: false),
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: IconButton(
-                                  onPressed: () {
-                                    if (!_formKey.currentState!.validate()) {
-                                      return;
-                                    }
-                                    String beanName = _formKey.currentState!
-                                        .fields["beanName"]!.value;
-                                    String? description = _formKey.currentState!
-                                        .fields["description"]?.value;
-                                    Provider.of<BeansProvider>(context,
-                                            listen: false)
-                                        .addBean(beanName, description);
-                                    Navigator.of(context).pop();
-                                  },
-                                  icon: const Icon(
-                                    Icons.send,
-                                    color: kAccentYellow,
-                                    size: 25,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
+                  _showCustomModalSheet(
+                    submitAction: () {
+                      if (!_formKey.currentState!.validate()) {
+                        return;
+                      }
+                      String beanName =
+                          _formKey.currentState!.fields["beanName"]!.value;
+                      String? description =
+                          _formKey.currentState!.fields["description"]?.value;
+                      Provider.of<BeansProvider>(builderContext, listen: false)
+                          .addBean(beanName, description);
+                      Navigator.of(context).pop();
                     },
                   );
                 },
@@ -130,6 +89,8 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
     );
   }
 
+  // template for the each coffee bean entry
+  // layout builder required for provider use
   LayoutBuilder _buildBeansContainer(beanName, description, index) {
     return LayoutBuilder(
       builder: (builderContext, constraints) => Container(
@@ -148,66 +109,21 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
             CardHeaderButton(
               icon: Icons.edit,
               onTap: () {
-                showModalBottomSheet(
-                  context: context,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(kCornerRadius)),
-                  ),
-                  isScrollControlled: true,
-                  builder: (_) {
-                    return Padding(
-                      padding: EdgeInsets.only(
-                          top: 20,
-                          left: 20,
-                          right: 20,
-                          bottom: MediaQuery.of(context).viewInsets.bottom),
-                      child: FormBuilder(
-                        key: _formKey,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            _buildFormField(
-                                formName: "beanName",
-                                hint: "Name",
-                                autoFocus: false,
-                                validate: true,
-                                initialValue: beanName),
-                            const Divider(height: 20, color: Color(0x00000000)),
-                            _buildFormField(
-                                formName: "description",
-                                hint: "Description",
-                                autoFocus: false,
-                                validate: false,
-                                initialValue: description),
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: IconButton(
-                                onPressed: () {
-                                  if (!_formKey.currentState!.validate()) {
-                                    return;
-                                  }
-                                  String beanName = _formKey
-                                      .currentState!.fields["beanName"]!.value;
-                                  String? description = _formKey.currentState!
-                                      .fields["description"]?.value;
-                                  Provider.of<BeansProvider>(builderContext,
-                                          listen: false)
-                                      .editBean(beanName, description, index);
-                                  Navigator.of(context).pop();
-                                },
-                                icon: const Icon(
-                                  Icons.send,
-                                  color: kAccentYellow,
-                                  size: 25,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
+                _showCustomModalSheet(
+                  submitAction: () {
+                    if (!_formKey.currentState!.validate()) {
+                      return;
+                    }
+                    String beanName =
+                        _formKey.currentState!.fields["beanName"]!.value;
+                    String? description =
+                        _formKey.currentState!.fields["description"]?.value;
+                    Provider.of<BeansProvider>(builderContext, listen: false)
+                        .editBean(beanName, description, index);
+                    Navigator.of(context).pop();
                   },
+                  beanName: beanName,
+                  description: description,
                 );
               },
             ),
@@ -224,11 +140,72 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
     );
   }
 
+  // template for the modal bottom sheet when editing or adding bean entries
+  // if beanName and description are input, they are set as the initial value in the text field
+  void _showCustomModalSheet({
+    required dynamic submitAction,
+    String? beanName,
+    String? description,
+  }) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius:
+            BorderRadius.vertical(top: Radius.circular(kCornerRadius)),
+      ),
+      isScrollControlled: true,
+      builder: (_) {
+        return Padding(
+          padding: EdgeInsets.only(
+              top: 20,
+              left: 20,
+              right: 20,
+              bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: FormBuilder(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildFormField(
+                    formName: "beanName",
+                    hint: "Name",
+                    autoFocus: true,
+                    validate: true,
+                    initialValue: beanName),
+                const Divider(height: 20, color: Color(0x00000000)),
+                _buildFormField(
+                    formName: "description",
+                    hint: "Description",
+                    autoFocus: false,
+                    validate: false,
+                    initialValue: description),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: IconButton(
+                    onPressed: () {
+                      submitAction();
+                    },
+                    icon: const Icon(
+                      Icons.send,
+                      color: kAccentYellow,
+                      size: 25,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // template for the text field
   FormBuilderTextField _buildFormField({
     required String formName,
-    required String hint,
-    required bool autoFocus,
-    required bool validate,
+    required String hint, // hint to display in the text field
+    required bool autoFocus, // autofocus on Name field
+    required bool validate, // description doesn't require validation
     String? initialValue,
   }) {
     return FormBuilderTextField(
