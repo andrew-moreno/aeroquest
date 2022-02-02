@@ -20,11 +20,6 @@ class CoffeeBeans extends StatefulWidget {
   State<CoffeeBeans> createState() => _CoffeeBeansState();
 }
 
-enum ModalAction {
-  add,
-  edit,
-}
-
 class _CoffeeBeansState extends State<CoffeeBeans> {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
 
