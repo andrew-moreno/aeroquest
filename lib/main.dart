@@ -22,23 +22,23 @@ class MyApp extends StatelessWidget {
       designSize: const Size(392.73, 759.27),
       builder: () => MaterialApp(
         theme: ThemeData(
-          backgroundColor: kBackgroundColor,
-          canvasColor: kBackgroundColor,
+          backgroundColor: kPrimary,
+          canvasColor: kPrimary,
           textTheme: const TextTheme(
             headline1: TextStyle(
-              color: kTextColor,
+              color: kLightSecondary,
               fontSize: 32,
               fontWeight: FontWeight.bold,
               fontFamily: "Spectral",
             ),
             headline2: TextStyle(
-              color: kTextColor,
+              color: kLightSecondary,
               fontSize: 27,
               fontWeight: FontWeight.bold,
               fontFamily: "Spectral",
             ),
             headline3: TextStyle(
-              color: kTextColor,
+              color: kLightSecondary,
               fontFamily: "Spectral",
               fontWeight: FontWeight.w700,
               fontSize: 24,
@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
             subtitle1: TextStyle(
               fontFamily: "Poppins",
               fontWeight: FontWeight.w500,
-              fontSize: 12,
+              fontSize: 13,
             ),
           ),
         ),

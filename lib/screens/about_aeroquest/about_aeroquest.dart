@@ -14,7 +14,7 @@ class AboutAeroquest extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: kBackgroundColor,
+        backgroundColor: kPrimary,
         elevation: 0,
         centerTitle: true,
         leading: const AppBarLeading(function: LeadingFunction.menu),
@@ -29,7 +29,7 @@ class AboutAeroquest extends StatelessWidget {
             style: TextStyle(
               fontFamily: "Poppins",
               fontSize: 15,
-              color: kTextColor,
+              color: kLightSecondary,
             ),
           ),
         ),

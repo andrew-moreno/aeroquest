@@ -13,7 +13,7 @@ class NewRecipe extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: kBackgroundColor,
+        backgroundColor: kPrimary,
         elevation: 0,
         centerTitle: true,
         leading: const AppBarLeading(function: LeadingFunction.back),

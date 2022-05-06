@@ -18,12 +18,12 @@ class AppBarAddButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(7),
         child: Ink(
           decoration: BoxDecoration(
-            color: kLightNavy,
+            color: kLightSecondary,
             borderRadius: BorderRadius.circular(7),
           ),
           child: const Icon(
             Icons.add,
-            color: kAccentYellow,
+            color: kAccent,
             size: 35,
           ),
         ),

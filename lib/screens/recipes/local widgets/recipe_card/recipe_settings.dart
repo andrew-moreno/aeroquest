@@ -26,7 +26,7 @@ class RecipeSettings extends StatelessWidget {
         Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            color: kDarkNavy,
+            color: kDarkSecondary,
             borderRadius: BorderRadius.circular(10),
           ),
           child: ExpandablePageView(
@@ -49,8 +49,8 @@ class RecipeSettings extends StatelessWidget {
                 effect: const WormEffect(
                   dotHeight: 6,
                   dotWidth: 6,
-                  activeDotColor: kAccentYellow,
-                  dotColor: kBackgroundColor,
+                  activeDotColor: kAccent,
+                  dotColor: Colors.grey,
                 ),
               )
             : Container(),
@@ -58,21 +58,19 @@ class RecipeSettings extends StatelessWidget {
     );
   }
 
-  // template for the settings of a single coffee type
+  // template for the settings of a single coffee bean
   Column _buildSettings(ctx, coffee, index) {
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 5,
-            vertical: 2,
+            vertical: 0,
           ),
           child: Text(
             coffee[index].beanName,
-            style: Theme.of(ctx)
-                .textTheme
-                .subtitle1!
-                .copyWith(color: kDarkSubtitleColor),
+            style:
+                Theme.of(ctx).textTheme.subtitle1!.copyWith(color: kSubtitle),
           ),
         ),
         Container(
@@ -83,7 +81,7 @@ class RecipeSettings extends StatelessWidget {
           ),
           padding: const EdgeInsets.all(7),
           decoration: BoxDecoration(
-            color: kMediumNavy,
+            color: kLightSecondary,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
@@ -129,7 +127,7 @@ class RecipeSettings extends StatelessWidget {
         Text(
           setting,
           style: const TextStyle(
-            color: kAccentOrange,
+            color: kAccent,
             fontFamily: "Poppins",
             fontSize: 19,
             fontWeight: FontWeight.w600,
@@ -141,7 +139,7 @@ class RecipeSettings extends StatelessWidget {
               .textTheme
               .subtitle1!
               // kOrangeAccent with transparency
-              .copyWith(color: const Color.fromRGBO(182, 124, 107, 0.5)),
+              .copyWith(color: kAccentTransparent),
         ),
       ],
     );

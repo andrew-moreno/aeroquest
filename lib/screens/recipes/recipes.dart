@@ -21,7 +21,7 @@ class Recipes extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: kBackgroundColor,
+        backgroundColor: kPrimary,
         elevation: 0,
         centerTitle: true,
         leading: const AppBarLeading(function: LeadingFunction.menu),
@@ -45,9 +45,6 @@ class Recipes extends StatelessWidget {
               title: _recipeData[index].title,
               description: _recipeData[index].description,
               coffee: _recipeData[index].coffeeSetting,
-              pushPressure: _recipeData[index].pushPressure,
-              brewMethod: _recipeData[index].brewMethod,
-              notes: _recipeData[index].notes,
             );
           },
           separatorBuilder: (context, index) {

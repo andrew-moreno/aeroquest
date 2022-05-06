@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
 
-const kBackgroundColor = Color(0xFF1C1C1E);
-const kTextColor = Color(0xFFD5C3B1);
-const kSubtitleColor = Color.fromRGBO(217, 204, 191, 0.5);
+const kPrimary = Color(0xFFD8D4CF);
+const kDarkSecondary = Color(0xFF17233A);
+const kLightSecondary = Color(0xFF26395D);
+const kAccent = Color(0xFFF58C95);
+const kAccentTransparent = Color.fromRGBO(245, 140, 149, 0.5);
+const kSubtitle = Color(0xFF5875B1);
+const kDeleteRed = Color(0xFFF64353);
+
 const kCornerRadius = 10.0;
-
-const kDarkNavy = Color(0xFF191B2C);
-const kMediumNavy = Color(0xFF1F2130);
-const kLightNavy = Color(0xFF242739);
-const kAccentOrange = Color(0xFFB67C6B);
-const kAccentYellow = Color(0xFFDDB262);
-const kDarkSubtitleColor = Color(0xFF404665);
-
-
-// const kDarkNavy = Color(0xFF1A263D);
-// const kMediumNavy = Color(0xFF213150);
-// const kLightNavy = Color(0xFF2A3957);
-// const kAccentOrange = Color(0xFFF58C95);
-// const kAccentYellow = Color(0xFF2AB08F);
-// const kDarkSubtitleColor = Color(0xFF5875B1);
+final kBoxShadow = BoxShadow(
+  color: Colors.black.withOpacity(0.2),
+  spreadRadius: 1,
+  blurRadius: 10,
+);

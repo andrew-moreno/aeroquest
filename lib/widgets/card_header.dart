@@ -7,15 +7,12 @@ class CardHeader extends StatelessWidget {
     Key? key,
     required title,
     description,
-    required actions,
   })  : _title = title,
         _description = description,
-        _actions = actions,
         super(key: key);
 
   final String _title;
   final String? _description;
-  final List<Widget> _actions;
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +30,6 @@ class CardHeader extends StatelessWidget {
                 ),
               ),
             ),
-            Row(
-              children: _actions,
-            )
           ],
         ),
         Align(
@@ -47,7 +41,7 @@ class CardHeader extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .subtitle1!
-                      .copyWith(color: kSubtitleColor),
+                      .copyWith(color: kLightSecondary),
                 )
               : Container(),
         ),

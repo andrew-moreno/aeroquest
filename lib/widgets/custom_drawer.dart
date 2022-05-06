@@ -34,7 +34,7 @@ class CustomDrawer extends StatelessWidget {
               _menuItemBuilder(
                 ctx: context,
                 icon: Image.asset("assets/images/coffee_bean.png",
-                    scale: 25, color: kSubtitleColor),
+                    scale: 25, color: kLightSecondary),
                 route: CoffeeBeans.routeName,
                 text: "Coffee Beans",
                 isAbout: false,
@@ -78,12 +78,12 @@ class CustomDrawer extends StatelessWidget {
         }
       },
       horizontalTitleGap: 0,
-      iconColor: (isAbout) ? kAccentOrange : kSubtitleColor,
+      iconColor: (isAbout) ? kAccent : kLightSecondary,
       leading: icon,
       title: Text(
         text,
         style: TextStyle(
-          color: (isAbout) ? kAccentOrange : kSubtitleColor,
+          color: (isAbout) ? kAccent : kLightSecondary,
           fontFamily: "Poppins",
           fontSize: 17,
           fontWeight: FontWeight.w400,

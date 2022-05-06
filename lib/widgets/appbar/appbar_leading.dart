@@ -18,7 +18,7 @@ class AppBarLeading extends StatelessWidget {
             onPressed: () => Scaffold.of(context).openDrawer(),
             icon: const Icon(
               Icons.menu,
-              color: kTextColor,
+              color: kLightSecondary,
               size: 30,
             ),
           );
@@ -27,7 +27,7 @@ class AppBarLeading extends StatelessWidget {
             onPressed: () => Navigator.of(context).pop(),
             icon: const Icon(
               Icons.arrow_back,
-              color: kTextColor,
+              color: kLightSecondary,
               size: 30,
             ),
           );
