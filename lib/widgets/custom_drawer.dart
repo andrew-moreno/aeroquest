@@ -86,7 +86,7 @@ class CustomDrawer extends StatelessWidget {
           color: (isAbout) ? kAccent : kLightSecondary,
           fontFamily: "Poppins",
           fontSize: 17,
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.w500,
         ),
       ),
     );

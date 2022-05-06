@@ -146,7 +146,7 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius:
-            BorderRadius.vertical(top: Radius.circular(kCornerRadius)),
+            BorderRadius.vertical(top: Radius.circular(kModalCornerRadius)),
       ),
       backgroundColor: kDarkSecondary,
       isScrollControlled: true,

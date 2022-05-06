@@ -34,7 +34,8 @@ class CardHeader extends StatelessWidget {
         ),
         Align(
           alignment: Alignment.centerLeft,
-          child: (_description != null)
+          child: (_description?.isNotEmpty ??
+                  false) // if _description is not empty or not null
               ? Text(
                   _description!,
                   textAlign: TextAlign.left,

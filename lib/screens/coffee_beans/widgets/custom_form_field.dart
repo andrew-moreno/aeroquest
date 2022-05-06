@@ -21,38 +21,34 @@ class CustomFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        boxShadow: [kBoxShadow],
-        color: kLightSecondary,
-        borderRadius: BorderRadius.circular(
-          kCornerRadius,
+    return FormBuilderTextField(
+      cursorColor: kPrimary,
+      cursorWidth: 1,
+      name: formName,
+      initialValue: initialValue,
+      style: const TextStyle(color: kPrimary, fontSize: 16),
+      autofocus: autoFocus,
+      decoration: InputDecoration(
+        contentPadding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+        hintText: hint,
+        hintStyle: const TextStyle(
+          color: kPrimary,
+          fontFamily: "Poppins",
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
         ),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: FormBuilderTextField(
-        cursorColor: kPrimary,
-        cursorWidth: 1,
-        name: formName,
-        initialValue: initialValue,
-        style: const TextStyle(color: kPrimary, fontSize: 16),
-        autofocus: autoFocus,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: hint,
-          hintStyle: const TextStyle(
-            color: kPrimary,
-            fontFamily: "Poppins",
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(kCornerRadius),
+          borderSide: BorderSide.none,
         ),
-        validator: (value) {
-          if (validate && (value == null || value.isEmpty)) {
-            return "Please enter a name for these beans";
-          }
-        },
+        filled: true,
+        fillColor: kLightSecondary,
       ),
+      validator: (value) {
+        if (validate && (value == null || value.isEmpty)) {
+          return "Please enter a name for these beans";
+        }
+      },
     );
   }
 }
