@@ -1,54 +1,57 @@
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/models/recipe_entry.dart';
 import 'package:flutter/material.dart';
-
+import 'package:aeroquest/screens/recipe_details/recipe_details.dart';
 import '../../../widgets/card_header.dart';
-import 'recipe_card/recipe_settings.dart';
+import '../../../widgets/recipe_settings.dart';
 
 class RecipeCard extends StatelessWidget {
   const RecipeCard({
     Key? key,
-    required title,
-    required description,
-    required coffee,
-  })  : _title = title,
-        _description = description,
-        _coffee = coffee,
+    required recipeData,
+  })  : _recipeData = recipeData,
         super(key: key);
 
-  final String _title;
-  final String _description;
-  final List<CoffeeSetting> _coffee;
-
-  static const double verticalPadding = 7;
+  final RecipeEntry _recipeData;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        vertical: verticalPadding,
-        horizontal: 15,
-      ),
-      decoration: BoxDecoration(
-        color: kPrimary,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [kBoxShadow],
-      ),
-      child: Column(
-        children: [
-          CardHeader(
-            title: _title,
-            description: _description,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => RecipeDetails(
+              recipeData: _recipeData,
+            ),
           ),
-          const Divider(
-            color: Color(0x00000000),
-            height: 10,
-          ),
-          RecipeSettings(
-            coffee: _coffee,
-            verticalPadding: verticalPadding,
-          ),
-        ],
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          vertical: kRecipeSettingsVerticalPadding,
+          horizontal: 15,
+        ),
+        decoration: BoxDecoration(
+          color: kPrimary,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [kBoxShadow],
+        ),
+        child: Column(
+          children: [
+            CardHeader(
+              title: _recipeData.title,
+              description: _recipeData.description,
+            ),
+            const Divider(
+              color: Color(0x00000000),
+              height: 10,
+            ),
+            RecipeSettings(
+              coffeeSettings: _recipeData.coffeeSettings,
+            ),
+          ],
+        ),
       ),
     );
   }

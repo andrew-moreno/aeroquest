@@ -54,6 +54,7 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
                     },
                   );
                 },
+                icon: Icons.add,
               ),
             ],
           ),

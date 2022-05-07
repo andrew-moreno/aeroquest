@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import '../../constraints.dart';
 
 class AppBarAddButton extends StatelessWidget {
-  const AppBarAddButton({Key? key, required onTap})
+  const AppBarAddButton({Key? key, required onTap, required icon})
       : _onTap = onTap,
+        _icon = icon,
         super(key: key);
 
   final Function()? _onTap;
+  final IconData _icon;
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +23,8 @@ class AppBarAddButton extends StatelessWidget {
             color: kLightSecondary,
             borderRadius: BorderRadius.circular(7),
           ),
-          child: const Icon(
-            Icons.add,
+          child: Icon(
+            _icon,
             color: kAccent,
             size: 35,
           ),

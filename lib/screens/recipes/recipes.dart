@@ -27,9 +27,12 @@ class Recipes extends StatelessWidget {
         leading: const AppBarLeading(function: LeadingFunction.menu),
         title: const AppBarText(text: "RECIPES"),
         actions: [
-          AppBarAddButton(onTap: () {
-            Navigator.pushNamed(context, NewRecipe.routeName);
-          })
+          AppBarAddButton(
+            onTap: () {
+              Navigator.pushNamed(context, NewRecipe.routeName);
+            },
+            icon: Icons.add,
+          )
         ],
       ),
       drawer: const Drawer(
@@ -42,9 +45,7 @@ class Recipes extends StatelessWidget {
           itemCount: _recipeData.length,
           itemBuilder: (BuildContext context, int index) {
             return RecipeCard(
-              title: _recipeData[index].title,
-              description: _recipeData[index].description,
-              coffee: _recipeData[index].coffeeSetting,
+              recipeData: _recipeData[index],
             );
           },
           separatorBuilder: (context, index) {

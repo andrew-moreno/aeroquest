@@ -8,10 +8,12 @@ const kAccentTransparent = Color.fromRGBO(245, 140, 149, 0.5);
 const kSubtitle = Color(0xFF5875B1);
 const kDeleteRed = Color(0xFFF64353);
 
+const kRecipeSettingsVerticalPadding = 7.0;
 const kCornerRadius = 10.0;
 const kModalCornerRadius = 25.0;
 final kBoxShadow = BoxShadow(
   color: Colors.black.withOpacity(0.2),
-  spreadRadius: 1,
-  blurRadius: 10,
+  offset: const Offset(0, 3),
+  spreadRadius: 0,
+  blurRadius: 7,
 );

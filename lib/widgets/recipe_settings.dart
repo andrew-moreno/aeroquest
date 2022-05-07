@@ -9,15 +9,12 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 class RecipeSettings extends StatelessWidget {
   RecipeSettings({
     Key? key,
-    required coffee,
-    required verticalPadding,
-  })  : _coffee = coffee,
-        _verticalPadding = verticalPadding,
+    required coffeeSettings,
+  })  : _coffeeSettings = coffeeSettings,
         super(key: key);
 
-  final List<CoffeeSetting> _coffee;
+  final List<CoffeeSettings> _coffeeSettings;
   final _controller = PageController();
-  final double _verticalPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -33,19 +30,19 @@ class RecipeSettings extends StatelessWidget {
             // handles scrolling
             controller: _controller,
             children: List.generate(
-              _coffee.length,
-              (index) => _buildSettings(context, _coffee, index),
+              _coffeeSettings.length,
+              (index) => _buildSettings(context, _coffeeSettings, index),
             ),
           ),
         ),
-        Divider(
-          color: const Color(0x00000000),
-          height: _verticalPadding,
+        const Divider(
+          color: Color(0x00000000),
+          height: kRecipeSettingsVerticalPadding,
         ),
-        (_coffee.length > 1)
+        (_coffeeSettings.length > 1)
             ? SmoothPageIndicator(
                 controller: _controller,
-                count: _coffee.length,
+                count: _coffeeSettings.length,
                 effect: const WormEffect(
                   dotHeight: 6,
                   dotWidth: 6,
