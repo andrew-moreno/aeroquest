@@ -37,5 +37,6 @@ class BeansProvider extends ChangeNotifier {
   void editBean(String beanName, String? description, int index) {
     _beans[index].beanName = beanName;
     _beans[index].description = description;
+    notifyListeners();
   }
 }

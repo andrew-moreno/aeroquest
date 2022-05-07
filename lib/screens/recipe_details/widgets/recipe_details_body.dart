@@ -1,5 +1,5 @@
 import 'package:aeroquest/models/recipe_entry.dart';
-import 'package:aeroquest/widgets/recipe_settings.dart';
+import 'package:aeroquest/widgets/recipe_settings/recipe_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:aeroquest/constraints.dart';
 
