@@ -25,9 +25,18 @@ class RecipeData {
           isHidden: true,
         ),
       ],
-      pushPressure: PushPressure.weak,
+      pushPressure: PushPressure.light,
       brewMethod: BrewMethod.regular,
       notes: [
+        Notes(time: "2:30", note: "Lightly swirl to bring grounds to bottom"),
+        Notes(time: "2:30", note: "Lightly swirl to bring grounds to bottom"),
+        Notes(time: "2:30", note: "Lightly swirl to bring grounds to bottom"),
+        Notes(time: "2:30", note: "Lightly swirl to bring grounds to bottom"),
+        Notes(time: "2:30", note: "Lightly swirl to bring grounds to bottom"),
+        Notes(time: "2:30", note: "Lightly swirl to bring grounds to bottom"),
+        Notes(time: "2:30", note: "Lightly swirl to bring grounds to bottom"),
+        Notes(time: "2:30", note: "Lightly swirl to bring grounds to bottom"),
+        Notes(time: "2:30", note: "Lightly swirl to bring grounds to bottom"),
         Notes(time: "2:30", note: "Lightly swirl to bring grounds to bottom"),
       ],
     ),
@@ -46,7 +55,7 @@ class RecipeData {
           isHidden: true,
         )
       ],
-      pushPressure: PushPressure.weak,
+      pushPressure: PushPressure.light,
       brewMethod: BrewMethod.inverted,
       notes: [
         Notes(
@@ -79,7 +88,7 @@ class RecipeData {
           isHidden: true,
         ),
       ],
-      pushPressure: PushPressure.weak,
+      pushPressure: PushPressure.light,
       brewMethod: BrewMethod.regular,
       notes: [
         Notes(time: "2:30", note: "Lightly swirl to bring grounds to bottom"),
@@ -109,7 +118,7 @@ class RecipeData {
           isHidden: true,
         ),
       ],
-      pushPressure: PushPressure.weak,
+      pushPressure: PushPressure.light,
       brewMethod: BrewMethod.regular,
       notes: [
         Notes(time: "2:30", note: "Lightly swirl to bring grounds to bottom"),
@@ -138,7 +147,7 @@ class RecipeData {
           isHidden: true,
         ),
       ],
-      pushPressure: PushPressure.weak,
+      pushPressure: PushPressure.light,
       brewMethod: BrewMethod.regular,
       notes: [
         Notes(time: "2:30", note: "Lightly swirl to bring grounds to bottom"),

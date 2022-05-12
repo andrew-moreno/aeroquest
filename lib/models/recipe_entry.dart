@@ -17,9 +17,9 @@ class RecipeEntry {
 }
 
 enum PushPressure {
-  weak,
-  medium,
-  strong,
+  light,
+  moderate,
+  heavy,
 }
 
 enum BrewMethod {
