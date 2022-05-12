@@ -27,10 +27,10 @@ class AboutAeroquest extends StatelessWidget {
           child: Text(
             "Hope u like my app and make great coffee :)",
             style: TextStyle(
-              fontFamily: "Poppins",
-              fontSize: 15,
-              color: kLightSecondary,
-            ),
+                fontFamily: "Poppins",
+                fontSize: 17,
+                color: kLightSecondary,
+                fontWeight: FontWeight.w500),
           ),
         ),
       ),
