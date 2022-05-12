@@ -22,6 +22,11 @@ class RecipeSettings extends StatelessWidget {
     return Column(
       children: [
         Container(
+          padding: const EdgeInsets.only(
+            left: 5,
+            right: 5,
+            bottom: 5,
+          ),
           width: double.infinity,
           decoration: BoxDecoration(
             color: kDarkSecondary,
@@ -33,8 +38,7 @@ class RecipeSettings extends StatelessWidget {
             children: List.generate(
               _coffeeSettings.length,
               (index) => BeanSettings(
-                coffeeSettings: _coffeeSettings,
-                index: index,
+                coffeeSetting: _coffeeSettings[index],
               ),
             ),
           ),

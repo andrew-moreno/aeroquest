@@ -5,13 +5,11 @@ import 'package:aeroquest/constraints.dart';
 
 // template for the settings of a single coffee bean
 class BeanSettings extends StatelessWidget {
-  const BeanSettings({Key? key, required coffeeSettings, required index})
-      : _coffeeSettings = coffeeSettings,
-        _index = index,
+  const BeanSettings({Key? key, required coffeeSetting})
+      : _coffeeSetting = coffeeSetting,
         super(key: key);
 
-  final List<CoffeeSettings> _coffeeSettings;
-  final int _index;
+  final CoffeeSettings _coffeeSetting;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +21,7 @@ class BeanSettings extends StatelessWidget {
             vertical: 0,
           ),
           child: Text(
-            _coffeeSettings[_index].beanName,
+            _coffeeSetting.beanName,
             style: Theme.of(context)
                 .textTheme
                 .subtitle1!
@@ -31,11 +29,6 @@ class BeanSettings extends StatelessWidget {
           ),
         ),
         Container(
-          margin: const EdgeInsets.only(
-            left: 5,
-            right: 5,
-            bottom: 5,
-          ),
           padding: const EdgeInsets.all(7),
           decoration: BoxDecoration(
             color: kLightSecondary,
@@ -45,23 +38,23 @@ class BeanSettings extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               SettingsValue(
-                setting: _coffeeSettings[_index].grindSetting.toString(),
+                setting: _coffeeSetting.grindSetting.toString(),
                 settingType: "Grind",
               ),
               SettingsValue(
-                setting: _coffeeSettings[_index].coffeeAmount.toString() + "g",
+                setting: _coffeeSetting.coffeeAmount.toString() + "g",
                 settingType: "Coffee",
               ),
               SettingsValue(
-                setting: _coffeeSettings[_index].waterAmount.toString() + "g",
+                setting: _coffeeSetting.waterAmount.toString() + "g",
                 settingType: "Water",
               ),
               SettingsValue(
-                setting: _coffeeSettings[_index].waterTemp.toString(),
+                setting: _coffeeSetting.waterTemp.toString(),
                 settingType: "Temp",
               ),
               SettingsValue(
-                setting: _coffeeSettings[_index].brewTime.toString(),
+                setting: _coffeeSetting.brewTime.toString(),
                 settingType: "Time",
               ),
             ],
