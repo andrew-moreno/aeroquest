@@ -59,9 +59,9 @@ class MyApp extends StatelessWidget {
         initialRoute: Recipes.routeName,
         routes: {
           Recipes.routeName: (ctx) => Recipes(),
-          NewRecipe.routeName: (ctx) => NewRecipe(),
-          CoffeeBeans.routeName: (ctx) => CoffeeBeans(),
-          AboutAeroquest.routeName: (ctx) => AboutAeroquest(),
+          NewRecipe.routeName: (ctx) => const NewRecipe(),
+          CoffeeBeans.routeName: (ctx) => const CoffeeBeans(),
+          AboutAeroquest.routeName: (ctx) => const AboutAeroquest(),
         },
       ),
     );
