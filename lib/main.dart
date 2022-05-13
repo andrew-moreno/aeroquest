@@ -57,10 +57,26 @@ class MyApp extends StatelessWidget {
           ),
         ),
         initialRoute: Recipes.routeName,
+        onGenerateRoute: (settings) {
+          if (settings.name == Recipes.routeName) {
+            return PageRouteBuilder(
+                settings:
+                    settings, // Pass this to make popUntil(), pushNamedAndRemoveUntil(), works
+                pageBuilder: (_, __, ___) => Recipes(),
+                transitionsBuilder: (_, a, __, c) =>
+                    FadeTransition(opacity: a, child: c));
+          }
+          if (settings.name == CoffeeBeans.routeName) {
+            return PageRouteBuilder(
+                settings:
+                    settings, // Pass this to make popUntil(), pushNamedAndRemoveUntil(), works
+                pageBuilder: (_, __, ___) => const CoffeeBeans(),
+                transitionsBuilder: (_, animation, __, child) =>
+                    FadeTransition(opacity: animation, child: child));
+          }
+        },
         routes: {
-          Recipes.routeName: (ctx) => Recipes(),
           NewRecipe.routeName: (ctx) => const NewRecipe(),
-          CoffeeBeans.routeName: (ctx) => const CoffeeBeans(),
           AboutAeroquest.routeName: (ctx) => const AboutAeroquest(),
         },
       ),
