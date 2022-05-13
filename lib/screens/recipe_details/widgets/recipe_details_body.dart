@@ -20,11 +20,6 @@ class _RecipeDetailsBodyState extends State<RecipeDetailsBody> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        color: kDarkSecondary,
-        borderRadius:
-            BorderRadius.vertical(top: Radius.circular(kCornerRadius)),
-      ),
       padding: const EdgeInsets.only(top: 20, left: 35, right: 35, bottom: 20),
       child: Column(
         children: [
