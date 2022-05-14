@@ -50,10 +50,10 @@ class CoffeeSettings {
 
 class Notes {
   final String time;
-  final String note;
+  final String text;
 
   Notes({
     required this.time,
-    required this.note,
+    required this.text,
   });
 }

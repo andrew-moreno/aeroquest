@@ -1,9 +1,9 @@
+import 'package:flutter/material.dart';
+
 import 'package:aeroquest/widgets/appbar/appbar_leading.dart';
 import 'package:aeroquest/widgets/appbar/appbar_text.dart';
 import 'package:aeroquest/widgets/custom_drawer.dart';
-import 'package:flutter/material.dart';
-
-import '../../constraints.dart';
+import 'package:aeroquest/constraints.dart';
 
 class AboutAeroquest extends StatelessWidget {
   const AboutAeroquest({Key? key}) : super(key: key);

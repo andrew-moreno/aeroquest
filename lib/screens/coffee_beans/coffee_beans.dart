@@ -1,15 +1,15 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:provider/provider.dart';
+
 import 'package:aeroquest/screens/coffee_beans/widgets/beans_container.dart';
 import 'package:aeroquest/screens/coffee_beans/widgets/custom_modal_sheet.dart';
 import 'package:aeroquest/widgets/appbar/appbar_addButton.dart';
 import 'package:aeroquest/widgets/appbar/appbar_leading.dart';
 import 'package:aeroquest/widgets/appbar/appbar_text.dart';
 import 'package:aeroquest/widgets/custom_drawer.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:provider/provider.dart';
-
-import '../../models/beans_provider.dart';
-import '../../constraints.dart';
+import 'package:aeroquest/models/beans_provider.dart';
+import 'package:aeroquest/constraints.dart';
 
 class CoffeeBeans extends StatefulWidget {
   const CoffeeBeans({Key? key}) : super(key: key);

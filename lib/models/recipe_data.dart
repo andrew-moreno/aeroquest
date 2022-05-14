@@ -28,16 +28,16 @@ class RecipeData {
       pushPressure: PushPressure.light,
       brewMethod: BrewMethod.regular,
       notes: [
-        Notes(time: "2:30", note: "Lightly swirl to bring grounds to bottom"),
-        Notes(time: "2:30", note: "Lightly swirl to bring grounds to bottom"),
-        Notes(time: "2:30", note: "Lightly swirl to bring grounds to bottom"),
-        Notes(time: "2:30", note: "Lightly swirl to bring grounds to bottom"),
-        Notes(time: "2:30", note: "Lightly swirl to bring grounds to bottom"),
-        Notes(time: "2:30", note: "Lightly swirl to bring grounds to bottom"),
-        Notes(time: "2:30", note: "Lightly swirl to bring grounds to bottom"),
-        Notes(time: "2:30", note: "Lightly swirl to bring grounds to bottom"),
-        Notes(time: "2:30", note: "Lightly swirl to bring grounds to bottom"),
-        Notes(time: "2:30", note: "Lightly swirl to bring grounds to bottom"),
+        Notes(time: "2:30", text: "Lightly swirl to bring grounds to bottom"),
+        Notes(time: "2:30", text: "Lightly swirl to bring grounds to bottom"),
+        Notes(time: "2:30", text: "Lightly swirl to bring grounds to bottom"),
+        Notes(time: "2:30", text: "Lightly swirl to bring grounds to bottom"),
+        Notes(time: "2:30", text: "Lightly swirl to bring grounds to bottom"),
+        Notes(time: "2:30", text: "Lightly swirl to bring grounds to bottom"),
+        Notes(time: "2:30", text: "Lightly swirl to bring grounds to bottom"),
+        Notes(time: "2:30", text: "Lightly swirl to bring grounds to bottom"),
+        Notes(time: "2:30", text: "Lightly swirl to bring grounds to bottom"),
+        Notes(time: "2:30", text: "Lightly swirl to bring grounds to bottom"),
       ],
     ),
     RecipeEntry(
@@ -60,9 +60,9 @@ class RecipeData {
       notes: [
         Notes(
             time: "0:00",
-            note: "Stir back and forth to wet all grounds in Aeropress"),
+            text: "Stir back and forth to wet all grounds in Aeropress"),
         Notes(
-            time: "2:00", note: "Be like omg this about to be yum can't wait!"),
+            time: "2:00", text: "Be like omg this about to be yum can't wait!"),
       ],
     ),
     RecipeEntry(
@@ -91,7 +91,7 @@ class RecipeData {
       pushPressure: PushPressure.light,
       brewMethod: BrewMethod.regular,
       notes: [
-        Notes(time: "2:30", note: "Lightly swirl to bring grounds to bottom"),
+        Notes(time: "2:30", text: "Lightly swirl to bring grounds to bottom"),
       ],
     ),
     RecipeEntry(
@@ -121,7 +121,7 @@ class RecipeData {
       pushPressure: PushPressure.light,
       brewMethod: BrewMethod.regular,
       notes: [
-        Notes(time: "2:30", note: "Lightly swirl to bring grounds to bottom"),
+        Notes(time: "2:30", text: "Lightly swirl to bring grounds to bottom"),
       ],
     ),
     RecipeEntry(
@@ -150,7 +150,7 @@ class RecipeData {
       pushPressure: PushPressure.light,
       brewMethod: BrewMethod.regular,
       notes: [
-        Notes(time: "2:30", note: "Lightly swirl to bring grounds to bottom"),
+        Notes(time: "2:30", text: "Lightly swirl to bring grounds to bottom"),
       ],
     ),
   ];

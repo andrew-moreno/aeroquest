@@ -1,8 +1,8 @@
-import 'package:aeroquest/widgets/modal_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
-import 'custom_form_field.dart';
+import 'package:aeroquest/widgets/modal_button.dart';
+import 'package:aeroquest/screens/coffee_beans/widgets/custom_form_field.dart';
 
 class CustomModalSheet extends StatelessWidget {
   const CustomModalSheet({

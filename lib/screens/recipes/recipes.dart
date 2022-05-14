@@ -1,15 +1,14 @@
+import 'package:flutter/material.dart';
+
 import 'package:aeroquest/constraints.dart';
-import 'package:aeroquest/screens/new_recipe/new_recipe.dart';
 import 'package:aeroquest/widgets/appbar/appbar_addButton.dart';
 import 'package:aeroquest/widgets/appbar/appbar_leading.dart';
 import 'package:aeroquest/widgets/appbar/appbar_text.dart';
 import 'package:aeroquest/widgets/modal_button.dart';
-import 'package:flutter/material.dart';
-
-import 'local widgets/recipe_card.dart';
-import '../../models/recipe_data.dart';
-import '../../models/recipe_entry.dart';
-import '../../widgets/custom_drawer.dart';
+import 'package:aeroquest/screens/recipes/local widgets/recipe_card.dart';
+import 'package:aeroquest/models/recipe_data.dart';
+import 'package:aeroquest/models/recipe_entry.dart';
+import 'package:aeroquest/widgets/custom_drawer.dart';
 
 class Recipes extends StatelessWidget {
   Recipes({Key? key}) : super(key: key);
@@ -65,9 +64,7 @@ class Recipes extends StatelessWidget {
           title: const AppBarText(text: "RECIPES"),
           actions: [
             AppBarAddButton(
-              onTap: () {
-                Navigator.pushNamed(context, NewRecipe.routeName);
-              },
+              onTap: () {},
               icon: Icons.add,
             )
           ],

@@ -1,9 +1,10 @@
+import 'package:flutter/material.dart';
+
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/models/recipe_entry.dart';
-import 'package:flutter/material.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details.dart';
-import '../../../widgets/card_header.dart';
-import '../../../widgets/recipe_settings/recipe_settings.dart';
+import 'package:aeroquest/widgets/card_header.dart';
+import 'package:aeroquest/widgets/recipe_settings/recipe_settings.dart';
 
 class RecipeCard extends StatelessWidget {
   const RecipeCard({
