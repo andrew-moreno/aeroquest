@@ -8,7 +8,7 @@ import 'package:aeroquest/models/recipe_entry.dart';
 import 'package:aeroquest/models/recipes_provider.dart';
 import 'package:aeroquest/screens/recipe_details/widgets/recipe_details_body.dart';
 import 'package:aeroquest/screens/recipe_details/widgets/recipe_details_header.dart';
-import 'package:aeroquest/widgets/appbar/appbar_Button.dart';
+import 'package:aeroquest/widgets/appbar/appbar_button.dart';
 import 'package:aeroquest/widgets/appbar/appbar_leading.dart';
 import 'package:aeroquest/widgets/exit_dialog.dart';
 import 'package:aeroquest/constraints.dart';
