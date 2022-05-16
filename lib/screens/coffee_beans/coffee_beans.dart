@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:aeroquest/screens/coffee_beans/widgets/beans_container.dart';
 import 'package:aeroquest/screens/coffee_beans/widgets/custom_modal_sheet.dart';
-import 'package:aeroquest/widgets/appbar/appbar_addButton.dart';
+import 'package:aeroquest/widgets/appbar/appbar_Button.dart';
 import 'package:aeroquest/widgets/appbar/appbar_leading.dart';
 import 'package:aeroquest/widgets/appbar/appbar_text.dart';
 import 'package:aeroquest/widgets/custom_drawer.dart';
@@ -36,7 +36,7 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
             leading: const AppBarLeading(function: LeadingFunction.menu),
             title: const AppBarText(text: "BEANS"),
             actions: [
-              AppBarAddButton(
+              AppBarButton(
                 onTap: () {
                   showCustomModalSheet(
                     submitAction: () {
@@ -63,7 +63,6 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
           body: SafeArea(
             child: Consumer<BeansProvider>(
               builder: (context, data, child) => ListView.separated(
-                physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.all(20),
                 itemCount: data.beans.length,
                 itemBuilder: (BuildContext context, int index) {
