@@ -1,7 +1,8 @@
 import 'dart:collection';
+import 'dart:developer';
+import 'package:flutter/material.dart';
 
 import 'package:aeroquest/models/coffee_bean_entry.dart';
-import 'package:flutter/material.dart';
 
 class BeansProvider extends ChangeNotifier {
   final List<CoffeeBeanEntry> _beans = [
@@ -24,13 +25,13 @@ class BeansProvider extends ChangeNotifier {
 
   void addBean(String beanName, String? description) {
     _beans.add(CoffeeBeanEntry(beanName: beanName, description: description));
-    print("beans added");
+    log("Beans added");
     notifyListeners();
   }
 
   void deleteBean(int index) {
-    print("index: " + index.toString());
     _beans.removeAt(index);
+    log("beans removed at index: " + index.toString());
     notifyListeners();
   }
 
