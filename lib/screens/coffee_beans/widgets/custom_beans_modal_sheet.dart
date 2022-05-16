@@ -5,12 +5,12 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:aeroquest/widgets/modal_button.dart';
 import 'package:aeroquest/constraints.dart';
 
-class CustomModalSheet extends StatelessWidget {
-  const CustomModalSheet({
+class CustomBeansModalSheet extends StatelessWidget {
+  const CustomBeansModalSheet({
     Key? key,
     required formKey,
-    required dynamic submitAction,
-    dynamic deleteAction,
+    required Function submitAction,
+    Function? deleteAction,
     String? beanName,
     String? description,
   })  : _formKey = formKey,
@@ -21,8 +21,8 @@ class CustomModalSheet extends StatelessWidget {
         super(key: key);
 
   final GlobalKey<FormBuilderState> _formKey;
-  final dynamic _submitAction;
-  final dynamic _deleteAction;
+  final Function _submitAction;
+  final Function? _deleteAction;
   final String? _beanName;
   final String? _description;
 

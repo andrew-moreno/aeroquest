@@ -3,7 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 
 import 'package:aeroquest/screens/coffee_beans/widgets/beans_container.dart';
-import 'package:aeroquest/screens/coffee_beans/widgets/custom_modal_sheet.dart';
+import 'package:aeroquest/screens/coffee_beans/widgets/custom_beans_modal_sheet.dart';
 import 'package:aeroquest/widgets/appbar/appbar_button.dart';
 import 'package:aeroquest/widgets/appbar/appbar_leading.dart';
 import 'package:aeroquest/widgets/appbar/appbar_text.dart';
@@ -88,10 +88,10 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
 // template for the modal bottom sheet when editing or adding bean entries
 // if beanName and description are input, they are set as the initial value in the text field
 void showCustomModalSheet({
-  required dynamic submitAction,
   required BuildContext context,
   required GlobalKey<FormBuilderState> formKey,
-  dynamic deleteAction,
+  required Function submitAction,
+  Function? deleteAction,
   String? beanName,
   String? description,
   int? index,
@@ -105,7 +105,7 @@ void showCustomModalSheet({
     backgroundColor: kDarkSecondary,
     isScrollControlled: true,
     builder: (_) {
-      return CustomModalSheet(
+      return CustomBeansModalSheet(
         formKey: formKey,
         submitAction: submitAction,
         deleteAction: deleteAction,
