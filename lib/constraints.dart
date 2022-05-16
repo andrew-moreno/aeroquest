@@ -17,3 +17,9 @@ final kBoxShadow = BoxShadow(
   spreadRadius: 0,
   blurRadius: 7,
 );
+final kSettingsBoxShadow = BoxShadow(
+  color: Colors.black.withOpacity(0.3),
+  offset: const Offset(0, 3),
+  spreadRadius: 0,
+  blurRadius: 7,
+);
