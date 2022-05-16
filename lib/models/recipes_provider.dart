@@ -1,8 +1,13 @@
-import 'recipe_entry.dart';
+import 'dart:collection';
+import 'dart:developer';
+import 'package:flutter/material.dart';
 
-class RecipeData {
-  final List<RecipeEntry> recipes = [
+import 'package:aeroquest/models/recipe_entry.dart';
+
+class RecipesProvider extends ChangeNotifier {
+  final List<RecipeEntry> _recipes = [
     RecipeEntry(
+      id: 1,
       title: "The Hoffman Special",
       description: "Hot cup that serves one",
       coffeeSettings: [
@@ -41,6 +46,7 @@ class RecipeData {
       ],
     ),
     RecipeEntry(
+      id: 2,
       title: "StrongBoi 3000 That Is Just RichBoi",
       description:
           "Rich and full-bodied hot cup that serves one and is yum yum in my tum tum and im making this super long on purpose omg this is a long description",
@@ -66,6 +72,7 @@ class RecipeData {
       ],
     ),
     RecipeEntry(
+      id: 3,
       title: "The Hoffman Special",
       description: "Hot cup that serves one",
       coffeeSettings: [
@@ -95,6 +102,7 @@ class RecipeData {
       ],
     ),
     RecipeEntry(
+      id: 4,
       title: "The Hoffman Special",
       description: "Hot cup that serves one",
       coffeeSettings: [
@@ -125,6 +133,7 @@ class RecipeData {
       ],
     ),
     RecipeEntry(
+      id: 5,
       title: "The Hoffman Special",
       description: "Hot cup that serves one",
       coffeeSettings: [
@@ -154,4 +163,35 @@ class RecipeData {
       ],
     ),
   ];
+
+  EditMode editMode = EditMode.disabled;
+
+  UnmodifiableListView<RecipeEntry> get recipes {
+    return UnmodifiableListView(_recipes);
+  }
+
+  void changeEditMode() {
+    if (editMode == EditMode.disabled) {
+      editMode = EditMode.enabled;
+      log("edit mode enabled");
+    } else {
+      editMode = EditMode.disabled;
+      log("edit mode disabled");
+    }
+    notifyListeners();
+  }
+
+  void deleteRecipe(int id) {
+    _recipes.removeWhere((recipe) => recipe.id == id);
+    notifyListeners();
+    log("Recipe of id $id deleted");
+  }
+
+  void editRecipe(String title, String? description, int id) {
+    _recipes.firstWhere((recipe) => recipe.id == id).title = title;
+    _recipes.firstWhere((recipe) => recipe.id == id).description = description;
+    notifyListeners();
+  }
 }
+
+enum EditMode { enabled, disabled }

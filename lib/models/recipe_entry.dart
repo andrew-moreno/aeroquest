@@ -1,14 +1,16 @@
 class RecipeEntry {
-  final String title;
-  final String description;
-  final List<CoffeeSettings> coffeeSettings;
-  final PushPressure pushPressure;
-  final BrewMethod brewMethod;
-  final List<Notes> notes;
+  int id;
+  String title;
+  String? description;
+  List<CoffeeSettings> coffeeSettings;
+  PushPressure pushPressure;
+  BrewMethod brewMethod;
+  List<Notes> notes;
 
-  const RecipeEntry({
+  RecipeEntry({
+    required this.id,
     required this.title,
-    required this.description,
+    this.description,
     required this.coffeeSettings,
     required this.pushPressure,
     required this.brewMethod,
