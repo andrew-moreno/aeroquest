@@ -1,9 +1,12 @@
-import 'package:aeroquest/widgets/recipe_settings/widgets/bean_settings.dart';
 import 'package:flutter/material.dart';
+import 'package:expandable_page_view/expandable_page_view.dart';
+import 'package:provider/provider.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
+import 'package:aeroquest/models/recipes_provider.dart';
+import 'package:aeroquest/widgets/recipe_settings/widgets/bean_settings.dart';
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/models/recipe_entry.dart';
-import 'package:expandable_page_view/expandable_page_view.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 // displays bean and recipe settings information
 // grind, coffee and water amount, temp, time
@@ -22,15 +25,11 @@ class RecipeSettings extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.only(
-            left: 5,
-            right: 5,
-            bottom: 5,
-          ),
+          padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
           width: double.infinity,
           decoration: BoxDecoration(
             color: kDarkSecondary,
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(kCornerRadius),
           ),
           child: ExpandablePageView(
             // handles scrolling

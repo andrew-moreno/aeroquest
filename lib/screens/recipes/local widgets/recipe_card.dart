@@ -35,7 +35,7 @@ class RecipeCard extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: kPrimary,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(kCornerRadius),
           boxShadow: [kBoxShadow],
         ),
         child: Column(
