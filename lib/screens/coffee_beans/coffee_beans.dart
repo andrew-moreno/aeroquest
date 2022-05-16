@@ -30,9 +30,6 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
       builder: (builderContext, child) {
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: kPrimary,
-            elevation: 0,
-            centerTitle: true,
             leading: const AppBarLeading(function: LeadingFunction.menu),
             title: const AppBarText(text: "BEANS"),
             actions: [

@@ -25,6 +25,12 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           theme: ThemeData(
             useMaterial3: true,
+            appBarTheme: const AppBarTheme(
+              surfaceTintColor: kPrimary,
+              backgroundColor: kPrimary,
+              centerTitle: true,
+              shadowColor: Colors.black,
+            ),
             backgroundColor: kPrimary,
             canvasColor: kPrimary,
             textTheme: const TextTheme(

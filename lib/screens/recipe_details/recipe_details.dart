@@ -82,8 +82,8 @@ class _RecipeDetailsState extends State<RecipeDetails> {
           leftAction: () {
             Provider.of<RecipesProvider>(context, listen: false)
                 .deleteRecipe(widget._recipeData.id);
-            Navigator.of(context).pop();
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(false);
+            Navigator.of(context).pop(false);
             if (Provider.of<RecipesProvider>(context, listen: false).editMode ==
                 EditMode.enabled) {
               Provider.of<RecipesProvider>(context, listen: false)
@@ -91,7 +91,7 @@ class _RecipeDetailsState extends State<RecipeDetails> {
             }
           },
           rightAction: () {
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(false);
           },
           leftText: "Delete",
           rightText: "Cancel",

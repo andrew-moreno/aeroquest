@@ -33,9 +33,6 @@ class Recipes extends StatelessWidget {
       onWillPop: showExitPopup,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: kPrimary,
-          elevation: 0,
-          centerTitle: true,
           leading: const AppBarLeading(function: LeadingFunction.menu),
           title: const AppBarText(text: "RECIPES"),
           actions: [
