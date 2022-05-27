@@ -1,4 +1,3 @@
-import 'package:control_style/decorated_input_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
@@ -8,23 +7,18 @@ import 'package:aeroquest/constraints.dart';
 class CustomBeansModalSheet extends StatelessWidget {
   const CustomBeansModalSheet({
     Key? key,
-    required formKey,
-    required Function submitAction,
-    Function? deleteAction,
-    String? beanName,
-    String? description,
-  })  : _formKey = formKey,
-        _submitAction = submitAction,
-        _deleteAction = deleteAction,
-        _beanName = beanName,
-        _description = description,
-        super(key: key);
+    required this.formKey,
+    required this.submitAction,
+    this.deleteAction,
+    this.beanName,
+    this.description,
+  }) : super(key: key);
 
-  final GlobalKey<FormBuilderState> _formKey;
-  final Function _submitAction;
-  final Function? _deleteAction;
-  final String? _beanName;
-  final String? _description;
+  final GlobalKey<FormBuilderState> formKey;
+  final Function submitAction;
+  final Function? deleteAction;
+  final String? beanName;
+  final String? description;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +29,7 @@ class CustomBeansModalSheet extends StatelessWidget {
           right: 20,
           bottom: MediaQuery.of(context).viewInsets.bottom + 20),
       child: FormBuilder(
-        key: _formKey,
+        key: formKey,
         child: LayoutBuilder(
           builder: (_, constraints) => Column(
             mainAxisSize: MainAxisSize.min,
@@ -45,7 +39,7 @@ class CustomBeansModalSheet extends StatelessWidget {
                 hint: "Name",
                 autoFocus: true,
                 validate: true,
-                initialValue: _beanName,
+                initialValue: beanName,
               ),
               const Divider(height: 20, color: Color(0x00000000)),
               CustomFormField(
@@ -53,23 +47,23 @@ class CustomBeansModalSheet extends StatelessWidget {
                 hint: "Description",
                 autoFocus: false,
                 validate: false,
-                initialValue: _description,
+                initialValue: description,
               ),
               const Divider(height: 20, color: Color(0x00000000)),
               Row(
-                mainAxisAlignment: (_deleteAction != null)
+                mainAxisAlignment: (deleteAction != null)
                     ? MainAxisAlignment.spaceBetween
                     : MainAxisAlignment.center,
                 children: [
                   ModalButton(
-                    onTap: _submitAction,
+                    onTap: submitAction,
                     buttonType: ButtonType.positive,
                     text: "Save",
                     width: constraints.maxWidth / 2 - 10,
                   ),
-                  (_deleteAction != null)
+                  (deleteAction != null)
                       ? ModalButton(
-                          onTap: _deleteAction,
+                          onTap: deleteAction!,
                           buttonType: ButtonType.negative,
                           text: "Delete",
                           width: constraints.maxWidth / 2 - 10,
@@ -110,29 +104,12 @@ class CustomFormField extends StatelessWidget {
       initialValue: initialValue,
       style: const TextStyle(color: kPrimary, fontSize: 16),
       autofocus: autoFocus,
-      decoration: InputDecoration(
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-          hintText: hint,
-          hintStyle: const TextStyle(
-            color: kPrimary,
-            fontFamily: "Poppins",
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
-          filled: true,
-          fillColor: kLightSecondary,
-          border: DecoratedInputBorder(
-            shadow: [kBoxShadow],
-            child: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(kCornerRadius),
-              borderSide: BorderSide.none,
-            ),
-          )),
+      decoration: InputDecoration(hintText: hint),
       validator: (value) {
         if (validate && (value == null || value.isEmpty)) {
           return "Please enter a name for these beans";
         }
+        return null;
       },
     );
   }
