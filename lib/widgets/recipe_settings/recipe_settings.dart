@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:expandable_page_view/expandable_page_view.dart';
-import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import 'package:aeroquest/models/recipes_provider.dart';
 import 'package:aeroquest/widgets/recipe_settings/widgets/bean_settings.dart';
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/models/recipe_entry.dart';
@@ -13,11 +11,10 @@ import 'package:aeroquest/models/recipe_entry.dart';
 class RecipeSettings extends StatelessWidget {
   RecipeSettings({
     Key? key,
-    required coffeeSettings,
-  })  : _coffeeSettings = coffeeSettings,
-        super(key: key);
+    required this.coffeeSettings,
+  }) : super(key: key);
 
-  final List<CoffeeSettings> _coffeeSettings;
+  final List<CoffeeSettings> coffeeSettings;
   final _controller = PageController();
 
   @override
@@ -35,9 +32,9 @@ class RecipeSettings extends StatelessWidget {
             // handles scrolling
             controller: _controller,
             children: List.generate(
-              _coffeeSettings.length,
+              coffeeSettings.length,
               (index) => BeanSettings(
-                coffeeSetting: _coffeeSettings[index],
+                coffeeSetting: coffeeSettings[index],
               ),
             ),
           ),
@@ -46,10 +43,10 @@ class RecipeSettings extends StatelessWidget {
           color: Color(0x00000000),
           height: kRecipeSettingsVerticalPadding,
         ),
-        (_coffeeSettings.length > 1)
+        (coffeeSettings.length > 1)
             ? SmoothPageIndicator(
                 controller: _controller,
-                count: _coffeeSettings.length,
+                count: coffeeSettings.length,
                 effect: const WormEffect(
                   dotHeight: 6,
                   dotWidth: 6,

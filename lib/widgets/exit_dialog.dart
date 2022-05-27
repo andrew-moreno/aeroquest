@@ -6,29 +6,24 @@ import 'package:aeroquest/widgets/modal_button.dart';
 class ExitDialog extends StatelessWidget {
   const ExitDialog(
       {Key? key,
-      required titleText,
-      required leftAction,
-      required rightAction,
-      leftText = "No",
-      rightText = "Yes"})
-      : _titleText = titleText,
-        _leftAction = leftAction,
-        _rightAction = rightAction,
-        _leftText = leftText,
-        _rightText = rightText,
-        super(key: key);
+      required this.titleText,
+      required this.leftAction,
+      required this.rightAction,
+      this.leftText = "No",
+      this.rightText = "Yes"})
+      : super(key: key);
 
-  final String _titleText;
-  final Function _leftAction;
-  final Function _rightAction;
-  final String _leftText;
-  final String _rightText;
+  final String titleText;
+  final Function leftAction;
+  final Function rightAction;
+  final String leftText;
+  final String rightText;
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(
-        _titleText,
+        titleText,
         style: const TextStyle(
           color: kPrimary,
           fontFamily: "Poppins",
@@ -39,14 +34,14 @@ class ExitDialog extends StatelessWidget {
       actionsAlignment: MainAxisAlignment.spaceAround,
       actions: [
         ModalButton(
-            onTap: _leftAction,
+            onTap: leftAction,
             buttonType: ButtonType.positive,
-            text: _leftText,
+            text: leftText,
             width: 100.0),
         ModalButton(
-            onTap: _rightAction,
+            onTap: rightAction,
             buttonType: ButtonType.negative,
-            text: _rightText,
+            text: rightText,
             width: 100.0)
       ],
       backgroundColor: kDarkSecondary,

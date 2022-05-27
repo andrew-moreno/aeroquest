@@ -3,11 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:aeroquest/constraints.dart';
 
 class AppBarLeading extends StatelessWidget {
-  const AppBarLeading({Key? key, required function})
-      : _function = function,
-        super(key: key);
+  const AppBarLeading({Key? key, required this.function}) : super(key: key);
 
-  final LeadingFunction _function;
+  final LeadingFunction function;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +32,7 @@ class AppBarLeading extends StatelessWidget {
       }
     }
 
-    return _leadingButton(_function);
+    return _leadingButton(function);
   }
 }
 

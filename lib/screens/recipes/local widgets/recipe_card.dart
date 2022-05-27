@@ -9,11 +9,10 @@ import 'package:aeroquest/widgets/recipe_settings/recipe_settings.dart';
 class RecipeCard extends StatelessWidget {
   const RecipeCard({
     Key? key,
-    required recipeData,
-  })  : _recipeData = recipeData,
-        super(key: key);
+    required this.recipeData,
+  }) : super(key: key);
 
-  final RecipeEntry _recipeData;
+  final RecipeEntry recipeData;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +22,7 @@ class RecipeCard extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (_) => RecipeDetails(
-              recipeData: _recipeData,
+              recipeData: recipeData,
             ),
           ),
         );
@@ -41,15 +40,15 @@ class RecipeCard extends StatelessWidget {
         child: Column(
           children: [
             CardHeader(
-              title: _recipeData.title,
-              description: _recipeData.description,
+              title: recipeData.title,
+              description: recipeData.description,
             ),
             const Divider(
               color: Color(0x00000000),
               height: 10,
             ),
             RecipeSettings(
-              coffeeSettings: _recipeData.coffeeSettings,
+              coffeeSettings: recipeData.coffeeSettings,
             ),
           ],
         ),

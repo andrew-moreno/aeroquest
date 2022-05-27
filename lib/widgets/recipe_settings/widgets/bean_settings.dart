@@ -5,11 +5,9 @@ import 'package:aeroquest/constraints.dart';
 
 // template for the settings of a single coffee bean
 class BeanSettings extends StatelessWidget {
-  const BeanSettings({Key? key, required coffeeSetting})
-      : _coffeeSetting = coffeeSetting,
-        super(key: key);
+  const BeanSettings({Key? key, required this.coffeeSetting}) : super(key: key);
 
-  final CoffeeSettings _coffeeSetting;
+  final CoffeeSettings coffeeSetting;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +19,7 @@ class BeanSettings extends StatelessWidget {
             vertical: 0,
           ),
           child: Text(
-            _coffeeSetting.beanName,
+            coffeeSetting.beanName,
             style: Theme.of(context)
                 .textTheme
                 .subtitle1!
@@ -38,23 +36,23 @@ class BeanSettings extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               SettingsValue(
-                setting: _coffeeSetting.grindSetting.toString(),
+                setting: coffeeSetting.grindSetting.toString(),
                 settingType: "Grind",
               ),
               SettingsValue(
-                setting: _coffeeSetting.coffeeAmount.toString() + "g",
+                setting: coffeeSetting.coffeeAmount.toString() + "g",
                 settingType: "Coffee",
               ),
               SettingsValue(
-                setting: _coffeeSetting.waterAmount.toString() + "g",
+                setting: coffeeSetting.waterAmount.toString() + "g",
                 settingType: "Water",
               ),
               SettingsValue(
-                setting: _coffeeSetting.waterTemp.toString(),
+                setting: coffeeSetting.waterTemp.toString(),
                 settingType: "Temp",
               ),
               SettingsValue(
-                setting: _coffeeSetting.brewTime.toString(),
+                setting: coffeeSetting.brewTime.toString(),
                 settingType: "Time",
               ),
             ],

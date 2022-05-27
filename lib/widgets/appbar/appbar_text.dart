@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 
 class AppBarText extends StatelessWidget {
-  const AppBarText({Key? key, required text})
-      : _text = text,
-        super(key: key);
+  const AppBarText({Key? key, required this.text}) : super(key: key);
 
-  final String _text;
+  final String text;
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      _text,
+      text,
       style: Theme.of(context).textTheme.headline2!,
     );
   }

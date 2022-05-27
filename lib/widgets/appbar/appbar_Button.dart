@@ -5,13 +5,11 @@ import 'package:aeroquest/constraints.dart';
 import 'package:provider/provider.dart';
 
 class AppBarButton extends StatelessWidget {
-  AppBarButton({Key? key, required onTap, required icon})
-      : _onTap = onTap,
-        _icon = icon,
-        super(key: key);
+  const AppBarButton({Key? key, required this.onTap, required this.icon})
+      : super(key: key);
 
-  final Function()? _onTap;
-  final IconData _icon;
+  final Function()? onTap;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +18,7 @@ class AppBarButton extends StatelessWidget {
       child:
           Consumer<RecipesProvider>(builder: (builderContext, recipes, child) {
         return InkWell(
-          onTap: _onTap,
+          onTap: onTap,
           borderRadius: BorderRadius.circular(7),
           child: Ink(
             padding: const EdgeInsets.all(5),
@@ -31,7 +29,7 @@ class AppBarButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(7),
             ),
             child: Icon(
-              _icon,
+              icon,
               color: (recipes.editMode == EditMode.enabled)
                   ? kLightSecondary
                   : kAccent,

@@ -6,14 +6,12 @@ import 'package:aeroquest/constraints.dart';
 class CardHeader extends StatelessWidget {
   const CardHeader({
     Key? key,
-    required title,
-    description,
-  })  : _title = title,
-        _description = description,
-        super(key: key);
+    required this.title,
+    this.description,
+  }) : super(key: key);
 
-  final String _title;
-  final String? _description;
+  final String title;
+  final String? description;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +23,7 @@ class CardHeader extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  _title,
+                  title,
                   textAlign: TextAlign.left,
                   style: Theme.of(context).textTheme.headline3!,
                 ),
@@ -35,10 +33,10 @@ class CardHeader extends StatelessWidget {
         ),
         Align(
           alignment: Alignment.centerLeft,
-          child: (_description?.isNotEmpty ??
+          child: (description?.isNotEmpty ??
                   false) // if _description is not empty or not null
               ? Text(
-                  _description!,
+                  description!,
                   textAlign: TextAlign.left,
                   style: Theme.of(context)
                       .textTheme

@@ -12,20 +12,16 @@ import '../coffee_beans.dart';
 class BeansContainer extends StatefulWidget {
   const BeansContainer({
     Key? key,
-    required formKey,
-    required beanName,
-    description,
-    required index,
-  })  : _formKey = formKey,
-        _beanName = beanName,
-        _description = description,
-        _index = index,
-        super(key: key);
+    required this.formKey,
+    required this.beanName,
+    this.description,
+    required this.index,
+  }) : super(key: key);
 
-  final GlobalKey<FormBuilderState> _formKey;
-  final String _beanName;
-  final String? _description;
-  final int _index;
+  final GlobalKey<FormBuilderState> formKey;
+  final String beanName;
+  final String? description;
+  final int index;
 
   @override
   State<BeansContainer> createState() => _BeansContainerState();
@@ -47,34 +43,34 @@ class _BeansContainerState extends State<BeansContainer> {
             boxShadow: [kBoxShadow],
           ),
           child: CardHeader(
-            title: widget._beanName,
-            description: widget._description,
+            title: widget.beanName,
+            description: widget.description,
           ),
         ),
         onTap: () {
           showCustomModalSheet(
             submitAction: () {
-              if (!widget._formKey.currentState!.validate()) {
+              if (!widget.formKey.currentState!.validate()) {
                 return;
               }
               String beanName =
-                  widget._formKey.currentState!.fields["beanName"]!.value;
+                  widget.formKey.currentState!.fields["beanName"]!.value;
               String? description =
-                  widget._formKey.currentState!.fields["description"]?.value;
+                  widget.formKey.currentState!.fields["description"]?.value;
               Provider.of<BeansProvider>(builderContext, listen: false)
-                  .editBean(beanName, description, widget._index);
+                  .editBean(beanName, description, widget.index);
               Navigator.of(context).pop();
             },
             deleteAction: () {
               Provider.of<BeansProvider>(builderContext, listen: false)
-                  .deleteBean(widget._index);
+                  .deleteBean(widget.index);
               Navigator.of(context).pop();
             },
             context: builderContext,
-            formKey: widget._formKey,
-            beanName: widget._beanName,
-            description: widget._description,
-            index: widget._index,
+            formKey: widget.formKey,
+            beanName: widget.beanName,
+            description: widget.description,
+            index: widget.index,
           );
         },
       ),

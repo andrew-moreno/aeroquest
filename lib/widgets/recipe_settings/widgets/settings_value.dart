@@ -4,13 +4,12 @@ import 'package:aeroquest/constraints.dart';
 // defines the template for displaying recipe information values
 // eg. grind: 17
 class SettingsValue extends StatefulWidget {
-  const SettingsValue({Key? key, required setting, required settingType})
-      : _setting = setting,
-        _settingType = settingType,
-        super(key: key);
+  const SettingsValue(
+      {Key? key, required this.setting, required this.settingType})
+      : super(key: key);
 
-  final String _setting;
-  final String _settingType;
+  final String setting;
+  final String settingType;
 
   @override
   State<SettingsValue> createState() => _SettingsValueState();
@@ -22,7 +21,7 @@ class _SettingsValueState extends State<SettingsValue> {
     return Column(
       children: [
         Text(
-          widget._setting,
+          widget.setting,
           style: const TextStyle(
             color: kAccent,
             fontFamily: "Poppins",
@@ -31,7 +30,7 @@ class _SettingsValueState extends State<SettingsValue> {
           ),
         ),
         Text(
-          widget._settingType,
+          widget.settingType,
           style: Theme.of(context)
               .textTheme
               .subtitle1!
