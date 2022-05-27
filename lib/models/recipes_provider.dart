@@ -12,7 +12,7 @@ class RecipesProvider extends ChangeNotifier {
       description: "Hot cup that serves one",
       coffeeSettings: [
         CoffeeSettings(
-          beanName: "JJBean",
+          beanName: "JJBean Bros",
           grindSetting: 17,
           coffeeAmount: 11,
           waterAmount: 200,
@@ -21,13 +21,13 @@ class RecipesProvider extends ChangeNotifier {
           isHidden: true,
         ),
         CoffeeSettings(
-          beanName: "Dark Xmas Gift from Parentals",
+          beanName: "JJBean Bros",
           grindSetting: 17,
           coffeeAmount: 12,
           waterAmount: 200,
           waterTemp: 86,
           brewTime: "2:30",
-          isHidden: true,
+          isHidden: false,
         ),
       ],
       pushPressure: PushPressure.light,
