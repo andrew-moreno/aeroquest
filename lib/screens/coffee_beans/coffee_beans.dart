@@ -25,62 +25,57 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => BeansProvider(),
-      builder: (builderContext, child) {
-        return Scaffold(
-          appBar: AppBar(
-            leading: const AppBarLeading(function: LeadingFunction.menu),
-            title: const AppBarText(text: "BEANS"),
-            actions: [
-              AppBarButton(
-                onTap: () {
-                  showCustomModalSheet(
-                    submitAction: () {
-                      if (!_formKey.currentState!.validate()) {
-                        return;
-                      }
-                      String beanName =
-                          _formKey.currentState!.fields["beanName"]!.value;
-                      String? description =
-                          _formKey.currentState!.fields["description"]?.value;
-                      Provider.of<BeansProvider>(builderContext, listen: false)
-                          .addBean(beanName, description);
-                      Navigator.of(context).pop();
-                    },
-                    context: context,
-                    formKey: _formKey,
-                  );
+    return Scaffold(
+      appBar: AppBar(
+        leading: const AppBarLeading(function: LeadingFunction.menu),
+        title: const AppBarText(text: "BEANS"),
+        actions: [
+          AppBarButton(
+            onTap: () {
+              showCustomModalSheet(
+                submitAction: () {
+                  if (!_formKey.currentState!.validate()) {
+                    return;
+                  }
+                  String beanName =
+                      _formKey.currentState!.fields["beanName"]!.value;
+                  String? description =
+                      _formKey.currentState!.fields["description"]?.value;
+                  Provider.of<BeansProvider>(context, listen: false)
+                      .addBean(beanName, description);
+                  Navigator.of(context).pop();
                 },
-                icon: Icons.add,
-              ),
-            ],
+                context: context,
+                formKey: _formKey,
+              );
+            },
+            icon: Icons.add,
           ),
-          drawer: const CustomDrawer(),
-          body: SafeArea(
-            child: Consumer<BeansProvider>(
-              builder: (context, data, child) => ListView.separated(
-                padding: const EdgeInsets.all(20),
-                itemCount: data.beans.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return BeansContainer(
-                    formKey: _formKey,
-                    beanName: data.beans[index].beanName,
-                    description: data.beans[index].description,
-                    index: index,
-                  );
-                },
-                separatorBuilder: (context, index) {
-                  return const Divider(
-                    color: Color(0x00000000),
-                    height: 20,
-                  );
-                },
-              ),
-            ),
+        ],
+      ),
+      drawer: const CustomDrawer(),
+      body: SafeArea(
+        child: Consumer<BeansProvider>(
+          builder: (context, data, child) => ListView.separated(
+            padding: const EdgeInsets.all(20),
+            itemCount: data.beans.length,
+            itemBuilder: (BuildContext context, int index) {
+              return BeansContainer(
+                formKey: _formKey,
+                beanName: data.beans[index].beanName,
+                description: data.beans[index].description,
+                index: index,
+              );
+            },
+            separatorBuilder: (context, index) {
+              return const Divider(
+                color: Color(0x00000000),
+                height: 20,
+              );
+            },
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }
