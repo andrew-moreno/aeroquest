@@ -2,12 +2,11 @@ import 'package:aeroquest/widgets/exit_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
-import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/widgets/appbar/appbar_button.dart';
 import 'package:aeroquest/widgets/appbar/appbar_leading.dart';
 import 'package:aeroquest/widgets/appbar/appbar_text.dart';
 import 'package:aeroquest/screens/recipes/local widgets/recipe_card.dart';
-import 'package:aeroquest/models/recipes_provider.dart';
+import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/widgets/custom_drawer.dart';
 
 class Recipes extends StatelessWidget {

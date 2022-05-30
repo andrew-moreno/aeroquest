@@ -8,7 +8,7 @@ import 'package:aeroquest/widgets/appbar/appbar_button.dart';
 import 'package:aeroquest/widgets/appbar/appbar_leading.dart';
 import 'package:aeroquest/widgets/appbar/appbar_text.dart';
 import 'package:aeroquest/widgets/custom_drawer.dart';
-import 'package:aeroquest/models/beans_provider.dart';
+import 'package:aeroquest/providers/beans_provider.dart';
 import 'package:aeroquest/constraints.dart';
 
 class CoffeeBeans extends StatefulWidget {

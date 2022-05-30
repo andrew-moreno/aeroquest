@@ -1,4 +1,4 @@
-import 'package:aeroquest/models/beans_provider.dart';
+import 'package:aeroquest/providers/beans_provider.dart';
 import 'package:aeroquest/widgets/card_header.dart';
 import 'package:flutter/material.dart';
 import 'package:aeroquest/constraints.dart';

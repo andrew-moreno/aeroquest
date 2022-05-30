@@ -1,11 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 
 import 'package:aeroquest/models/recipe_entry.dart';
-import 'package:aeroquest/models/recipes_provider.dart';
+import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/screens/recipe_details/widgets/recipe_details_body.dart';
 import 'package:aeroquest/screens/recipe_details/widgets/recipe_details_header.dart';
 import 'package:aeroquest/widgets/appbar/appbar_button.dart';

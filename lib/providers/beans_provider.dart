@@ -24,6 +24,7 @@ class BeansProvider extends ChangeNotifier {
   }
 
   void addBean(String beanName, String? description) {
+    //TODO: prevent duplicate beans from being added
     _beans.add(CoffeeBeanEntry(beanName: beanName, description: description));
     log("Beans added");
     notifyListeners();

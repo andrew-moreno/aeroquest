@@ -1,4 +1,4 @@
-import 'package:aeroquest/models/recipes_provider.dart';
+import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:aeroquest/constraints.dart';

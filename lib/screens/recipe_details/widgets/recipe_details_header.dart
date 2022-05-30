@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
-import 'package:aeroquest/models/recipes_provider.dart';
+import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/constraints.dart';
 
 class RecipeDetailsHeader extends StatelessWidget {
@@ -119,6 +119,7 @@ class CustomFormField extends StatelessWidget {
             if (_validate && (value == null || value.isEmpty)) {
               return "Please enter a title";
             }
+            return null;
           },
         );
       },
