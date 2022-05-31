@@ -33,19 +33,19 @@ enum BrewMethod {
 class CoffeeSettings {
   final String beanName;
   final double grindSetting;
-  final int coffeeAmount;
+  final double coffeeAmount;
   final int waterAmount;
   final int waterTemp;
-  final String brewTime;
+  final int brewTime;
   final bool isHidden;
 
   CoffeeSettings({
     required this.beanName,
     required this.grindSetting,
-    required this.coffeeAmount,
-    required this.waterAmount,
-    required this.waterTemp,
-    required this.brewTime,
+    required this.coffeeAmount, // in grams
+    required this.waterAmount, // in grams
+    required this.waterTemp, // in celsius
+    required this.brewTime, // in 10 second intervals
     required this.isHidden,
   });
 }

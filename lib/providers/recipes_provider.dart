@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 
+import 'package:aeroquest/widgets/recipe_settings/widgets/settings_value.dart';
 import 'package:aeroquest/models/recipe_entry.dart';
 
 class RecipesProvider extends ChangeNotifier {
@@ -17,7 +18,7 @@ class RecipesProvider extends ChangeNotifier {
           coffeeAmount: 11,
           waterAmount: 200,
           waterTemp: 100,
-          brewTime: "2:30",
+          brewTime: 15,
           isHidden: true,
         ),
         CoffeeSettings(
@@ -26,7 +27,7 @@ class RecipesProvider extends ChangeNotifier {
           coffeeAmount: 12,
           waterAmount: 200,
           waterTemp: 86,
-          brewTime: "2:30",
+          brewTime: 15,
           isHidden: false,
         ),
       ],
@@ -57,7 +58,7 @@ class RecipesProvider extends ChangeNotifier {
           coffeeAmount: 18,
           waterAmount: 260,
           waterTemp: 95,
-          brewTime: "8:30",
+          brewTime: 51,
           isHidden: true,
         )
       ],
@@ -82,7 +83,7 @@ class RecipesProvider extends ChangeNotifier {
           coffeeAmount: 11,
           waterAmount: 200,
           waterTemp: 100,
-          brewTime: "2:30",
+          brewTime: 15,
           isHidden: true,
         ),
         CoffeeSettings(
@@ -91,7 +92,7 @@ class RecipesProvider extends ChangeNotifier {
           coffeeAmount: 12,
           waterAmount: 200,
           waterTemp: 86,
-          brewTime: "2:30",
+          brewTime: 15,
           isHidden: true,
         ),
       ],
@@ -112,7 +113,7 @@ class RecipesProvider extends ChangeNotifier {
           coffeeAmount: 11,
           waterAmount: 200,
           waterTemp: 100,
-          brewTime: "2:30",
+          brewTime: 15,
           isHidden: true,
         ),
         CoffeeSettings(
@@ -122,7 +123,7 @@ class RecipesProvider extends ChangeNotifier {
           coffeeAmount: 12,
           waterAmount: 200,
           waterTemp: 86,
-          brewTime: "2:30",
+          brewTime: 15,
           isHidden: true,
         ),
       ],
@@ -143,7 +144,7 @@ class RecipesProvider extends ChangeNotifier {
           coffeeAmount: 11,
           waterAmount: 200,
           waterTemp: 100,
-          brewTime: "2:30",
+          brewTime: 15,
           isHidden: true,
         ),
         CoffeeSettings(
@@ -152,7 +153,7 @@ class RecipesProvider extends ChangeNotifier {
           coffeeAmount: 12,
           waterAmount: 200,
           waterTemp: 86,
-          brewTime: "2:30",
+          brewTime: 15,
           isHidden: true,
         ),
       ],
@@ -190,6 +191,50 @@ class RecipesProvider extends ChangeNotifier {
   void editRecipe(String title, String? description, int id) {
     _recipes.firstWhere((recipe) => recipe.id == id).title = title;
     _recipes.firstWhere((recipe) => recipe.id == id).description = description;
+    notifyListeners();
+  }
+
+  /// methods and variables for editing/adding settings to a recipe
+  double? tempGrindSetting;
+  double? tempCoffeeAmount;
+  int? tempWaterAmount;
+  int? tempWaterTemp;
+  int? tempBrewTime;
+
+  // currently active setting to adjust when editing/adding
+  late SettingType activeSetting;
+
+  /// used to activate/deactive editing of a setting for a recipe
+  void settingOnTap(SettingType settingType) {
+    if (activeSetting == settingType) {
+      activeSetting = SettingType.none;
+    } else {
+      activeSetting = settingType;
+    }
+    notifyListeners();
+  }
+
+  /// defines which value is getting changed when sliding the slider
+  void sliderOnChanged(double value, SettingType settingType) {
+    switch (settingType) {
+      case SettingType.grindSetting:
+        tempGrindSetting = value;
+        break;
+      case SettingType.coffeeAmount:
+        tempCoffeeAmount = value;
+        break;
+      case SettingType.waterAmount:
+        tempWaterAmount = value.toInt();
+        break;
+      case SettingType.waterTemp:
+        tempWaterTemp = value.toInt();
+        break;
+      case SettingType.brewTime:
+        tempBrewTime = value.toInt();
+        break;
+      case SettingType.none:
+        break;
+    }
     notifyListeners();
   }
 }
