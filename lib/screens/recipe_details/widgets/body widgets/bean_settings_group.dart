@@ -71,7 +71,7 @@ void showCustomModalSheet({
   required BuildContext context,
   required Function() submitAction,
   required CoffeeSettings coffeeSettingsData,
-  Function? deleteAction,
+  Function()? deleteAction,
 }) {
   showModalBottomSheet(
     context: context,
@@ -99,8 +99,8 @@ class CustomSettingsModalSheet extends StatefulWidget {
     this.coffeeSettingsData,
   }) : super(key: key);
 
-  final Function submitAction;
-  final Function? deleteAction;
+  final Function() submitAction;
+  final Function()? deleteAction;
   final CoffeeSettings? coffeeSettingsData;
 
   @override
@@ -173,14 +173,14 @@ class _CustomSettingsModalSheetState extends State<CustomSettingsModalSheet> {
                   : MainAxisAlignment.center,
               children: [
                 ModalButton(
-                  onTap: widget.submitAction(),
+                  onTap: widget.submitAction,
                   buttonType: ButtonType.positive,
                   text: "Save",
                   width: constraints.maxWidth / 2 - 10,
                 ),
                 (widget.deleteAction != null)
                     ? ModalButton(
-                        onTap: widget.deleteAction!(),
+                        onTap: widget.deleteAction!,
                         buttonType: ButtonType.negative,
                         text: "Delete",
                         width: constraints.maxWidth / 2 - 10,
