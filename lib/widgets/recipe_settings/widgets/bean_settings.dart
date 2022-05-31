@@ -36,24 +36,24 @@ class BeanSettings extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               SettingsValue(
-                setting: coffeeSetting.grindSetting.toString(),
-                settingType: "Grind",
+                settingValue: coffeeSetting.grindSetting,
+                settingType: SettingType.grindSetting,
               ),
               SettingsValue(
-                setting: coffeeSetting.coffeeAmount.toString() + "g",
-                settingType: "Coffee",
+                settingValue: coffeeSetting.coffeeAmount,
+                settingType: SettingType.coffeeAmount,
               ),
               SettingsValue(
-                setting: coffeeSetting.waterAmount.toString() + "g",
-                settingType: "Water",
+                settingValue: coffeeSetting.waterAmount,
+                settingType: SettingType.waterAmount,
               ),
               SettingsValue(
-                setting: coffeeSetting.waterTemp.toString(),
-                settingType: "Temp",
+                settingValue: coffeeSetting.waterTemp,
+                settingType: SettingType.waterTemp,
               ),
               SettingsValue(
-                setting: coffeeSetting.brewTime.toString(),
-                settingType: "Time",
+                settingValue: coffeeSetting.brewTime,
+                settingType: SettingType.brewTime,
               ),
             ],
           ),
