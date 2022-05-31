@@ -15,8 +15,8 @@ class CustomBeansModalSheet extends StatelessWidget {
   }) : super(key: key);
 
   final GlobalKey<FormBuilderState> formKey;
-  final Function submitAction;
-  final Function? deleteAction;
+  final Function() submitAction;
+  final Function()? deleteAction;
   final String? beanName;
   final String? description;
 

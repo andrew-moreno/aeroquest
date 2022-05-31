@@ -10,7 +10,7 @@ class ModalButton extends StatelessWidget {
       required this.width})
       : super(key: key);
 
-  final Function onTap;
+  final Function() onTap;
   // defines style of button based on positive or negative use (save vs delete)
   final ButtonType buttonType;
   final String text;
@@ -19,7 +19,7 @@ class ModalButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        onTap: onTap(),
+        onTap: onTap,
         borderRadius: BorderRadius.circular(7),
         child: Ink(
           padding: const EdgeInsets.symmetric(vertical: 5),

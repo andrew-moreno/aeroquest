@@ -14,8 +14,8 @@ class ExitDialog extends StatelessWidget {
       : super(key: key);
 
   final String titleText;
-  final Function leftAction;
-  final Function rightAction;
+  final Function() leftAction;
+  final Function() rightAction;
   final String leftText;
   final String rightText;
 

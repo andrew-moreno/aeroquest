@@ -85,8 +85,8 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
 void showCustomModalSheet({
   required BuildContext context,
   required GlobalKey<FormBuilderState> formKey,
-  required Function submitAction,
-  Function? deleteAction,
+  required Function() submitAction,
+  Function()? deleteAction,
   String? beanName,
   String? description,
   int? index,
