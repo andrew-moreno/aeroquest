@@ -2,6 +2,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/bean_settings_group_widgets/settings_value_slider.dart';
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/models/recipe_entry.dart';
@@ -27,6 +28,15 @@ class CustomSettingsModalSheet extends StatefulWidget {
 }
 
 class _CustomSettingsModalSheetState extends State<CustomSettingsModalSheet> {
+  final List<String> _animatedToggleValues = const ["Show", "Hide"];
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<RecipesProvider>(context, listen: false).tempSettingVisibility =
+        widget.coffeeSettingsData?.visibility ?? SettingVisibility.shown;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -40,10 +50,23 @@ class _CustomSettingsModalSheetState extends State<CustomSettingsModalSheet> {
           mainAxisSize: MainAxisSize.min,
           children: [
             AnimatedToggle(
-              values: const ["Show", "Hide"],
-              onToggleCallback: (_) {},
+              values: _animatedToggleValues,
+              onToggleCallback: (index) {
+                print(index);
+                index == 0
+                    ? Provider.of<RecipesProvider>(context, listen: false)
+                        .tempSettingVisibility = SettingVisibility.shown
+                    : Provider.of<RecipesProvider>(context, listen: false)
+                        .tempSettingVisibility = SettingVisibility.hidden;
+                print(Provider.of<RecipesProvider>(context, listen: false)
+                    .tempSettingVisibility);
+              },
               initialPosition:
-                  (widget.coffeeSettingsData?.isHidden ?? true) ? false : true,
+                  (Provider.of<RecipesProvider>(context, listen: false)
+                              .tempSettingVisibility ==
+                          SettingVisibility.shown)
+                      ? Position.left
+                      : Position.right,
             ),
             const Divider(height: 20, color: Color(0x00000000)),
             DropdownButtonHideUnderline(
@@ -62,6 +85,8 @@ class _CustomSettingsModalSheetState extends State<CustomSettingsModalSheet> {
                 ),
                 value: widget.coffeeSettingsData?.beanName,
                 onChanged: (value) {
+                  Provider.of<RecipesProvider>(context, listen: false)
+                      .tempBeanName = value.toString();
                   setState(() {});
                 },
                 decoration: const InputDecoration(

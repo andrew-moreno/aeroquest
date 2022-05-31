@@ -28,8 +28,19 @@ class BeanSettingsGroup extends StatelessWidget {
             onTap: () {
               if (recipes.editMode == EditMode.enabled) {
                 showCustomModalSheet(
-                    submitAction: () {},
-                    deleteAction: () {},
+                    submitAction: () {
+                      Provider.of<RecipesProvider>(context, listen: false)
+                          .editSetting(recipeData.coffeeSettings[index]);
+                      Navigator.of(context).pop();
+                    },
+                    deleteAction: recipeData.coffeeSettings.length > 1
+                        ? () {
+                            Provider.of<RecipesProvider>(context, listen: false)
+                                .deleteSetting(recipeData.id,
+                                    recipeData.coffeeSettings[index].id);
+                            Navigator.of(context).pop();
+                          }
+                        : null,
                     coffeeSettingsData: recipeData.coffeeSettings[index],
                     context: buildContext);
               }

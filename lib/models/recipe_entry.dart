@@ -1,5 +1,5 @@
 class RecipeEntry {
-  int id;
+  final int id;
   String title;
   String? description;
   List<CoffeeSettings> coffeeSettings;
@@ -31,24 +31,28 @@ enum BrewMethod {
 
 // defines object for the settings for each bean
 class CoffeeSettings {
-  final String beanName;
-  final double grindSetting;
-  final double coffeeAmount;
-  final int waterAmount;
-  final int waterTemp;
-  final int brewTime;
-  final bool isHidden;
+  final int id;
+  String beanName;
+  double grindSetting;
+  double coffeeAmount;
+  int waterAmount;
+  int waterTemp;
+  int brewTime;
+  SettingVisibility visibility;
 
   CoffeeSettings({
+    required this.id,
     required this.beanName,
     required this.grindSetting,
     required this.coffeeAmount, // in grams
     required this.waterAmount, // in grams
     required this.waterTemp, // in celsius
     required this.brewTime, // in 10 second intervals
-    required this.isHidden,
+    required this.visibility,
   });
 }
+
+enum SettingVisibility { shown, hidden }
 
 class Notes {
   final String time;

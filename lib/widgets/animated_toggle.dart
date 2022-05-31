@@ -1,10 +1,8 @@
 import 'package:aeroquest/constraints.dart';
 import 'package:flutter/material.dart';
 
+// only works for 2 positions
 class AnimatedToggle extends StatefulWidget {
-  final List<String> values;
-  final ValueChanged onToggleCallback;
-
   AnimatedToggle({
     Key? key,
     required this.values,
@@ -12,7 +10,9 @@ class AnimatedToggle extends StatefulWidget {
     required this.initialPosition,
   }) : super(key: key);
 
-  bool initialPosition;
+  final List<String> values;
+  final ValueChanged onToggleCallback;
+  Position initialPosition;
 
   @override
   _AnimatedToggleState createState() => _AnimatedToggleState();
@@ -26,9 +26,11 @@ class _AnimatedToggleState extends State<AnimatedToggle> {
       height: 40,
       child: GestureDetector(
         onTap: () {
-          widget.initialPosition = !widget.initialPosition;
           var index = 0;
-          if (!widget.initialPosition) {
+          if (widget.initialPosition == Position.right) {
+            widget.initialPosition = Position.left;
+          } else {
+            widget.initialPosition = Position.right;
             index = 1;
           }
           widget.onToggleCallback(index);
@@ -73,7 +75,7 @@ class _AnimatedToggleState extends State<AnimatedToggle> {
             AnimatedAlign(
               duration: const Duration(milliseconds: 250),
               curve: Curves.decelerate,
-              alignment: widget.initialPosition
+              alignment: widget.initialPosition == Position.left
                   ? Alignment.centerLeft
                   : Alignment.centerRight,
               child: Container(
@@ -86,7 +88,9 @@ class _AnimatedToggleState extends State<AnimatedToggle> {
                   ),
                 ),
                 child: Text(
-                  widget.initialPosition ? widget.values[0] : widget.values[1],
+                  widget.initialPosition == Position.left
+                      ? widget.values[0]
+                      : widget.values[1],
                   style: const TextStyle(
                     fontFamily: 'Poppins',
                     fontSize: 20,
@@ -103,3 +107,5 @@ class _AnimatedToggleState extends State<AnimatedToggle> {
     );
   }
 }
+
+enum Position { left, right }
