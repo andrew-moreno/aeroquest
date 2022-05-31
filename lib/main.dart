@@ -2,8 +2,8 @@ import 'package:control_style/decorated_input_border.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
-import 'package:aeroquest/models/beans_provider.dart';
-import 'package:aeroquest/models/recipes_provider.dart';
+import 'package:aeroquest/providers/beans_provider.dart';
+import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/screens/about_aeroquest/about_aeroquest.dart';
 import 'package:aeroquest/screens/coffee_beans/coffee_beans.dart';
 import 'package:aeroquest/constraints.dart';
