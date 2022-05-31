@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 
 import 'package:aeroquest/models/recipe_entry.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
-import 'package:aeroquest/screens/recipe_details/widgets/recipe_details_body.dart';
-import 'package:aeroquest/screens/recipe_details/widgets/recipe_details_header.dart';
+import 'package:aeroquest/screens/recipe_details/recipe_details_body/recipe_details_body.dart';
+import 'package:aeroquest/screens/recipe_details/recipe_details_header.dart';
 import 'package:aeroquest/widgets/appbar/appbar_button.dart';
 import 'package:aeroquest/widgets/appbar/appbar_leading.dart';
 import 'package:aeroquest/widgets/exit_dialog.dart';

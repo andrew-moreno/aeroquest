@@ -2,8 +2,8 @@ import 'package:aeroquest/constraints.dart';
 import 'package:flutter/material.dart';
 
 import 'package:aeroquest/models/recipe_entry.dart';
-import 'package:aeroquest/screens/recipe_details/widgets/body widgets/bean_settings_group.dart';
-import 'package:aeroquest/screens/recipe_details/widgets/body widgets/recipe_method.dart';
+import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/bean_settings_group.dart';
+import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/recipe_method.dart';
 
 class RecipeDetailsBody extends StatefulWidget {
   const RecipeDetailsBody({
