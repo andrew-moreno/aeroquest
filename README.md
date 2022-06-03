@@ -4,4 +4,4 @@ The AeroPress is one of the most versatile coffee brewers on the market, and wit
 
 AEROQUEST is an app designed for passionate AeroPress users who want assistance tracking their favourite recipes and are looking to get the most out of each AeroPress brew. 
 
-![Showcase](https://user-images.githubusercontent.com/46725252/171764839-d628a843-2f27-4051-a455-0e40a5a204b1.jpg)
+![Showcase](https://user-images.githubusercontent.com/46725252/171765442-6af4cd52-52fc-4e93-8a37-df03bb86a825.jpg)
