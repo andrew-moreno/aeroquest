@@ -8,8 +8,11 @@ import 'package:aeroquest/widgets/appbar/appbar_button.dart';
 import 'package:aeroquest/widgets/appbar/appbar_leading.dart';
 import 'package:aeroquest/widgets/appbar/appbar_text.dart';
 import 'package:aeroquest/widgets/custom_drawer.dart';
-import 'package:aeroquest/providers/beans_provider.dart';
+import 'package:aeroquest/providers/coffee_bean_provider.dart';
 import 'package:aeroquest/constraints.dart';
+import 'package:aeroquest/databases/coffee_beans_database.dart';
+
+import '../../models/coffee_bean.dart';
 
 class CoffeeBeans extends StatefulWidget {
   const CoffeeBeans({Key? key}) : super(key: key);
@@ -22,6 +25,13 @@ class CoffeeBeans extends StatefulWidget {
 
 class _CoffeeBeansState extends State<CoffeeBeans> {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
+
+  @override
+  void dispose() {
+    CoffeeBeansDatabase.instance.close();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +51,7 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
                       _formKey.currentState!.fields["beanName"]!.value;
                   String? description =
                       _formKey.currentState!.fields["description"]?.value;
-                  Provider.of<BeansProvider>(context, listen: false)
+                  Provider.of<CoffeeBeanProvider>(context, listen: false)
                       .addBean(beanName, description);
                   Navigator.of(context).pop();
                 },
@@ -55,25 +65,37 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
       ),
       drawer: const CustomDrawer(),
       body: SafeArea(
-        child: Consumer<BeansProvider>(
-          builder: (context, data, child) => ListView.separated(
-            padding: const EdgeInsets.all(20),
-            itemCount: data.beans.length,
-            itemBuilder: (BuildContext context, int index) {
-              return BeansContainer(
-                formKey: _formKey,
-                beanName: data.beans[index].beanName,
-                description: data.beans[index].description,
-                index: index,
-              );
-            },
-            separatorBuilder: (context, index) {
-              return const Divider(
-                color: Color(0x00000000),
-                height: 20,
-              );
-            },
-          ),
+        child: Consumer<CoffeeBeanProvider>(
+          builder: (builderContext, data, child) {
+            return FutureBuilder(
+                future: CoffeeBeansDatabase.instance.readAllCoffeeBeans(),
+                builder:
+                    (futureContext, AsyncSnapshot<List<CoffeeBean>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done &&
+                      snapshot.hasData) {
+                    return ListView.separated(
+                      padding: const EdgeInsets.all(20),
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (BuildContext listViewContext, int index) {
+                        return BeansContainer(
+                          formKey: _formKey,
+                          beanName: snapshot.data![index].beanName,
+                          description: snapshot.data![index].description,
+                          id: snapshot.data![index].id!,
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return const Divider(
+                          color: Color(0x00000000),
+                          height: 20,
+                        );
+                      },
+                    );
+                  } else {
+                    return const CircularProgressIndicator();
+                  }
+                });
+          },
         ),
       ),
     );
@@ -89,7 +111,7 @@ void showCustomModalSheet({
   Function()? deleteAction,
   String? beanName,
   String? description,
-  int? index,
+  int? id,
 }) {
   showModalBottomSheet(
     context: context,

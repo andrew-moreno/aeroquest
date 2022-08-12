@@ -42,6 +42,7 @@ dependencies:
   vertical_weight_slider:
     path: ./packages/modified_vertical_weight_slider
   horizontal_blocked_scroll_physics: ^4.0.1
+  sqflite: ^2.0.2+1
 
 dev_dependencies:
   flutter_test:

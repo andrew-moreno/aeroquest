@@ -1,4 +1,4 @@
-import 'package:aeroquest/providers/beans_provider.dart';
+import 'package:aeroquest/providers/coffee_bean_provider.dart';
 import 'package:aeroquest/widgets/card_header.dart';
 import 'package:flutter/material.dart';
 import 'package:aeroquest/constraints.dart';
@@ -15,13 +15,13 @@ class BeansContainer extends StatefulWidget {
     required this.formKey,
     required this.beanName,
     this.description,
-    required this.index,
+    required this.id,
   }) : super(key: key);
 
   final GlobalKey<FormBuilderState> formKey;
   final String beanName;
   final String? description;
-  final int index;
+  final int id;
 
   @override
   State<BeansContainer> createState() => _BeansContainerState();
@@ -57,20 +57,20 @@ class _BeansContainerState extends State<BeansContainer> {
                   widget.formKey.currentState!.fields["beanName"]!.value;
               String? description =
                   widget.formKey.currentState!.fields["description"]?.value;
-              Provider.of<BeansProvider>(builderContext, listen: false)
-                  .editBean(beanName, description, widget.index);
+              Provider.of<CoffeeBeanProvider>(builderContext, listen: false)
+                  .editBean(widget.id, beanName, description);
               Navigator.of(context).pop();
             },
             deleteAction: () {
-              Provider.of<BeansProvider>(builderContext, listen: false)
-                  .deleteBean(widget.index);
+              Provider.of<CoffeeBeanProvider>(builderContext, listen: false)
+                  .deleteBean(widget.id);
               Navigator.of(context).pop();
             },
             context: builderContext,
             formKey: widget.formKey,
             beanName: widget.beanName,
             description: widget.description,
-            index: widget.index,
+            id: widget.id,
           );
         },
       ),

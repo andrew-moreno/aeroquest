@@ -2,7 +2,7 @@ import 'package:control_style/decorated_input_border.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
-import 'package:aeroquest/providers/beans_provider.dart';
+import 'package:aeroquest/providers/coffee_bean_provider.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/screens/about_aeroquest/about_aeroquest.dart';
 import 'package:aeroquest/screens/coffee_beans/coffee_beans.dart';
@@ -24,8 +24,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<RecipesProvider>(
           create: (_) => RecipesProvider(),
         ),
-        ChangeNotifierProvider<BeansProvider>(
-          create: (_) => BeansProvider(),
+        ChangeNotifierProvider<CoffeeBeanProvider>(
+          create: (_) => CoffeeBeanProvider(),
         )
       ],
       child: Builder(
