@@ -25,11 +25,11 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
 
   @override
   void initState() {
-    cacheCoffeeBeansList();
+    cacheCoffeeBeanData();
     super.initState();
   }
 
-  cacheCoffeeBeansList() async {
+  cacheCoffeeBeanData() async {
     await Provider.of<CoffeeBeanProvider>(context, listen: false).cacheBeans();
   }
 
