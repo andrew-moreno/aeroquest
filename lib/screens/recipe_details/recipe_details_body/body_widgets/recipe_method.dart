@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 
-import 'package:aeroquest/models/recipe_entry.dart';
+import 'package:aeroquest/models/recipe.dart';
+import 'package:aeroquest/models/note.dart';
 import 'package:aeroquest/constraints.dart';
 
 class RecipeMethod extends StatelessWidget {
   const RecipeMethod({
     Key? key,
-    required pushPressure,
-    required brewMethod,
-    required notes,
-  })  : _pushPressure = pushPressure,
-        _brewMethod = brewMethod,
-        _notes = notes,
-        super(key: key);
+    required this.pushPressure,
+    required this.brewMethod,
+    required this.notes,
+  }) : super(key: key);
 
-  final PushPressure _pushPressure;
-  final BrewMethod _brewMethod;
-  final List<Notes> _notes;
+  final PushPressure pushPressure;
+  final BrewMethod brewMethod;
+  final List<Note> notes;
 
   static const double _methodPadding = 15;
 
@@ -57,7 +55,7 @@ class RecipeMethod extends StatelessWidget {
             children: [
               RecipeMethodDescription(
                 description: "Push Pressure",
-                data: _pushPressureText(_pushPressure),
+                data: _pushPressureText(pushPressure),
               ),
               const VerticalDivider(
                 color: Color(0x00000000),
@@ -65,7 +63,7 @@ class RecipeMethod extends StatelessWidget {
               ),
               RecipeMethodDescription(
                 description: "Brew Method  ",
-                data: _brewMethodText(_brewMethod),
+                data: _brewMethodText(brewMethod),
               ),
             ],
           ),
@@ -76,9 +74,9 @@ class RecipeMethod extends StatelessWidget {
           ListView.separated(
             physics: const BouncingScrollPhysics(),
             shrinkWrap: true,
-            itemCount: _notes.length,
+            itemCount: notes.length,
             itemBuilder: (BuildContext context, int index) {
-              return RecipeMethodNotes(note: _notes[index]);
+              return RecipeMethodNotes(note: notes[index]);
             },
             separatorBuilder: (context, index) {
               return const Divider(
@@ -131,11 +129,9 @@ class RecipeMethodDescription extends StatelessWidget {
 }
 
 class RecipeMethodNotes extends StatelessWidget {
-  const RecipeMethodNotes({Key? key, required note})
-      : _note = note,
-        super(key: key);
+  const RecipeMethodNotes({Key? key, required this.note}) : super(key: key);
 
-  final Notes _note;
+  final Note note;
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +149,7 @@ class RecipeMethodNotes extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Text(
-              _note.time,
+              note.time.toString(),
               style: const TextStyle(
                 color: kPrimary,
                 fontSize: 17,
@@ -167,7 +163,7 @@ class RecipeMethodNotes extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                _note.text,
+                note.text,
                 style: const TextStyle(
                   color: kPrimary,
                   fontSize: 13,

@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:vertical_weight_slider/vertical_weight_slider.dart';
 
 import 'package:aeroquest/constraints.dart';
-import 'package:aeroquest/models/recipe_entry.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/widgets/recipe_settings/widgets/settings_value.dart';
+import 'package:aeroquest/models/coffee_settings.dart';
 
 class SettingsValueSlider extends StatefulWidget {
   const SettingsValueSlider({
@@ -238,7 +238,7 @@ class SettingsValueContainer extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        provider.settingOnTap(settingType);
+        provider.selectSetting(settingType);
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 7),
