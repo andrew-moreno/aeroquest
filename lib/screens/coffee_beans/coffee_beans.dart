@@ -10,9 +10,6 @@ import 'package:aeroquest/widgets/appbar/appbar_text.dart';
 import 'package:aeroquest/widgets/custom_drawer.dart';
 import 'package:aeroquest/providers/coffee_bean_provider.dart';
 import 'package:aeroquest/constraints.dart';
-import 'package:aeroquest/databases/coffee_beans_database.dart';
-
-import '../../models/coffee_bean.dart';
 
 class CoffeeBeans extends StatefulWidget {
   const CoffeeBeans({Key? key}) : super(key: key);
@@ -25,6 +22,16 @@ class CoffeeBeans extends StatefulWidget {
 
 class _CoffeeBeansState extends State<CoffeeBeans> {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
+
+  @override
+  void initState() {
+    cacheCoffeeBeansList();
+    super.initState();
+  }
+
+  cacheCoffeeBeansList() async {
+    await Provider.of<CoffeeBeanProvider>(context, listen: false).cacheBeans();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,38 +65,28 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
       ),
       drawer: const CustomDrawer(),
       body: SafeArea(
-        child: Consumer<CoffeeBeanProvider>(
-          builder: (_, __, ___) {
-            return FutureBuilder(
-              future: CoffeeBeansDatabase.instance.readAllCoffeeBeans(),
-              builder: (_, AsyncSnapshot<List<CoffeeBean>> snapshot) {
-                if (snapshot.connectionState == ConnectionState.done &&
-                    snapshot.hasData) {
-                  return ListView.separated(
-                    padding: const EdgeInsets.all(20),
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (BuildContext listViewContext, int index) {
-                      return BeansContainer(
-                        formKey: _formKey,
-                        beanName: snapshot.data![index].beanName,
-                        description: snapshot.data![index].description,
-                        id: snapshot.data![index].id!,
-                      );
-                    },
-                    separatorBuilder: (_, __) {
-                      return const Divider(
-                        color: Color(0x00000000),
-                        height: 20,
-                      );
-                    },
-                  );
-                } else {
-                  return const CircularProgressIndicator();
-                }
-              },
-            );
-          },
-        ),
+        child:
+            Consumer<CoffeeBeanProvider>(builder: (_, coffeeBeanProvider, ___) {
+          return ListView.separated(
+            padding: const EdgeInsets.all(20),
+            itemCount: coffeeBeanProvider.coffeeBeansList.length,
+            itemBuilder: (BuildContext listViewContext, int index) {
+              return BeansContainer(
+                formKey: _formKey,
+                beanName: coffeeBeanProvider.coffeeBeansList[index].beanName,
+                description:
+                    coffeeBeanProvider.coffeeBeansList[index].description,
+                id: coffeeBeanProvider.coffeeBeansList[index].id!,
+              );
+            },
+            separatorBuilder: (_, __) {
+              return const Divider(
+                color: Color(0x00000000),
+                height: 20,
+              );
+            },
+          );
+        }),
       ),
     );
   }

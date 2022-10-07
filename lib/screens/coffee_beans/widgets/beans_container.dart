@@ -26,7 +26,7 @@ class BeansContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (_, constraints) => GestureDetector(
+      builder: (_, __) => GestureDetector(
         child: Container(
           padding: const EdgeInsets.symmetric(
             vertical: 7,
