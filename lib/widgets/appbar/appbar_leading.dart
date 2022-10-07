@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:aeroquest/constraints.dart';
 
 class AppBarLeading extends StatelessWidget {
-  const AppBarLeading({Key? key, required this.function}) : super(key: key);
+  const AppBarLeading({Key? key, required this.function, this.onPressed})
+      : super(key: key);
 
   final LeadingFunction function;
+  final Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,7 @@ class AppBarLeading extends StatelessWidget {
           );
         case LeadingFunction.back:
           return IconButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: onPressed ?? () => Navigator.of(context).pop(),
             icon: const Icon(
               Icons.arrow_back,
               color: kLightSecondary,

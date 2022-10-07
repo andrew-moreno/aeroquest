@@ -1,11 +1,11 @@
-import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:flutter/material.dart';
-
-import 'package:aeroquest/constraints.dart';
 import 'package:provider/provider.dart';
 
+import 'package:aeroquest/constraints.dart';
+import 'package:aeroquest/providers/recipes_provider.dart';
+
 class AppBarButton extends StatelessWidget {
-  const AppBarButton({Key? key, required this.onTap, required this.icon})
+  const AppBarButton({Key? key, this.onTap, required this.icon})
       : super(key: key);
 
   final Function()? onTap;

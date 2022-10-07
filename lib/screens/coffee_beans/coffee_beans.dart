@@ -27,13 +27,6 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
 
   @override
-  void dispose() {
-    CoffeeBeansDatabase.instance.close();
-
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -66,35 +59,35 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
       drawer: const CustomDrawer(),
       body: SafeArea(
         child: Consumer<CoffeeBeanProvider>(
-          builder: (builderContext, data, child) {
+          builder: (_, __, ___) {
             return FutureBuilder(
-                future: CoffeeBeansDatabase.instance.readAllCoffeeBeans(),
-                builder:
-                    (futureContext, AsyncSnapshot<List<CoffeeBean>> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done &&
-                      snapshot.hasData) {
-                    return ListView.separated(
-                      padding: const EdgeInsets.all(20),
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (BuildContext listViewContext, int index) {
-                        return BeansContainer(
-                          formKey: _formKey,
-                          beanName: snapshot.data![index].beanName,
-                          description: snapshot.data![index].description,
-                          id: snapshot.data![index].id!,
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return const Divider(
-                          color: Color(0x00000000),
-                          height: 20,
-                        );
-                      },
-                    );
-                  } else {
-                    return const CircularProgressIndicator();
-                  }
-                });
+              future: CoffeeBeansDatabase.instance.readAllCoffeeBeans(),
+              builder: (_, AsyncSnapshot<List<CoffeeBean>> snapshot) {
+                if (snapshot.connectionState == ConnectionState.done &&
+                    snapshot.hasData) {
+                  return ListView.separated(
+                    padding: const EdgeInsets.all(20),
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (BuildContext listViewContext, int index) {
+                      return BeansContainer(
+                        formKey: _formKey,
+                        beanName: snapshot.data![index].beanName,
+                        description: snapshot.data![index].description,
+                        id: snapshot.data![index].id!,
+                      );
+                    },
+                    separatorBuilder: (_, __) {
+                      return const Divider(
+                        color: Color(0x00000000),
+                        height: 20,
+                      );
+                    },
+                  );
+                } else {
+                  return const CircularProgressIndicator();
+                }
+              },
+            );
           },
         ),
       ),

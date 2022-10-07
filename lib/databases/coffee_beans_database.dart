@@ -69,13 +69,6 @@ class CoffeeBeansDatabase {
     return result.map((json) => CoffeeBean.fromJson(json)).toList();
   }
 
-  Future<int> getCount() async {
-    final db = await instance.database;
-    return Sqflite.firstIntValue(
-            await db.rawQuery("SELECT COUNT(*) FROM $tableCoffeeBeans")) ??
-        0;
-  }
-
   Future<int> update(CoffeeBean coffeeBean) async {
     final db = await instance.database;
 
@@ -94,6 +87,13 @@ class CoffeeBeansDatabase {
       where: "${CoffeeBeanFields.id} = ?",
       whereArgs: [id],
     );
+  }
+
+  Future<void> deleteDB() async {
+    final dbPath = await getDatabasesPath();
+    final path = join(dbPath, "coffeeBeans.db");
+
+    deleteDatabase(path);
   }
 
   Future close() async {

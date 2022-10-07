@@ -98,7 +98,7 @@ class MyApp extends StatelessWidget {
                 return PageRouteBuilder(
                     settings:
                         settings, // Pass this to make popUntil(), pushNamedAndRemoveUntil(), works
-                    pageBuilder: (_, __, ___) => const Recipes(),
+                    pageBuilder: (_, __, ___) => Recipes(),
                     transitionsBuilder: (_, a, __, c) =>
                         FadeTransition(opacity: a, child: c));
               }

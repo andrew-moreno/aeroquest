@@ -4,7 +4,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import 'package:aeroquest/widgets/recipe_settings/widgets/bean_settings.dart';
 import 'package:aeroquest/constraints.dart';
-import 'package:aeroquest/models/recipe_entry.dart';
+import 'package:aeroquest/models/coffee_settings.dart';
 
 // displays bean and recipe settings information
 // grind, coffee and water amount, temp, time

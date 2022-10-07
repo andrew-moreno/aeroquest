@@ -5,10 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:aeroquest/models/coffee_bean.dart';
 
 class CoffeeBeanProvider extends ChangeNotifier {
-  Future<List<CoffeeBean>> get coffeeBeansList {
-    return CoffeeBeansDatabase.instance.readAllCoffeeBeans();
-  }
-
   Future<void> addBean(String beanName, String? description) async {
     //TODO: prevent duplicate beans from being added
     final newCoffeeBean = CoffeeBean(
@@ -33,6 +29,7 @@ class CoffeeBeanProvider extends ChangeNotifier {
       description: description,
     );
     await CoffeeBeansDatabase.instance.update(coffeeBean);
+
     log("beans updated with id: " + id.toString());
     notifyListeners();
   }
