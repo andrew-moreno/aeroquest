@@ -24,16 +24,6 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
 
   @override
-  void initState() {
-    cacheCoffeeBeanData();
-    super.initState();
-  }
-
-  cacheCoffeeBeanData() async {
-    await Provider.of<CoffeeBeanProvider>(context, listen: false).cacheBeans();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -65,28 +55,40 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
       ),
       drawer: const CustomDrawer(),
       body: SafeArea(
-        child:
-            Consumer<CoffeeBeanProvider>(builder: (_, coffeeBeanProvider, ___) {
-          return ListView.separated(
-            padding: const EdgeInsets.all(20),
-            itemCount: coffeeBeanProvider.coffeeBeansList.length,
-            itemBuilder: (BuildContext listViewContext, int index) {
-              return BeansContainer(
-                formKey: _formKey,
-                beanName: coffeeBeanProvider.coffeeBeansList[index].beanName,
-                description:
-                    coffeeBeanProvider.coffeeBeansList[index].description,
-                id: coffeeBeanProvider.coffeeBeansList[index].id!,
+        child: FutureBuilder(
+          future: Provider.of<CoffeeBeanProvider>(context, listen: false)
+              .cacheCoffeeBeans(),
+          builder: (_, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return Consumer<CoffeeBeanProvider>(
+                builder: (_, coffeeBeanProvider, ___) {
+                  return ListView.separated(
+                    padding: const EdgeInsets.all(20),
+                    itemCount: coffeeBeanProvider.coffeeBeans.length,
+                    itemBuilder: (BuildContext listViewContext, int index) {
+                      return BeansContainer(
+                        formKey: _formKey,
+                        beanName:
+                            coffeeBeanProvider.coffeeBeans[index].beanName,
+                        description:
+                            coffeeBeanProvider.coffeeBeans[index].description,
+                        id: coffeeBeanProvider.coffeeBeans[index].id!,
+                      );
+                    },
+                    separatorBuilder: (_, __) {
+                      return const Divider(
+                        color: Color(0x00000000),
+                        height: 20,
+                      );
+                    },
+                  );
+                },
               );
-            },
-            separatorBuilder: (_, __) {
-              return const Divider(
-                color: Color(0x00000000),
-                height: 20,
-              );
-            },
-          );
-        }),
+            } else {
+              return const CircularProgressIndicator();
+            }
+          },
+        ),
       ),
     );
   }
