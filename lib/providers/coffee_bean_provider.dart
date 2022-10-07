@@ -14,7 +14,6 @@ class CoffeeBeanProvider extends ChangeNotifier {
 
   Future<void> cacheCoffeeBeans() async {
     _coffeeBeans = await CoffeeBeansDatabase.instance.readAllCoffeeBeans();
-    print("done");
   }
 
   Future<void> addBean(String beanName, String? description) async {
