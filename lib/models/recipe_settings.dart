@@ -1,6 +1,6 @@
-const String tableCoffeeSettings = "coffeeSettings";
+const String tableRecipeSettings = "recipeSettings";
 
-class CoffeeSettingsFields {
+class RecipeSettingsFields {
   static final List<String> values = [
     id,
     recipeEntryId,
@@ -25,7 +25,7 @@ class CoffeeSettingsFields {
 }
 
 // defines object for the settings for each bean
-class CoffeeSettings {
+class RecipeSettings {
   final int? id;
   int recipeEntryId;
   int beanId;
@@ -36,7 +36,7 @@ class CoffeeSettings {
   int brewTime;
   String visibility;
 
-  CoffeeSettings({
+  RecipeSettings({
     this.id,
     required this.recipeEntryId,
     required this.beanId,
@@ -48,7 +48,7 @@ class CoffeeSettings {
     required this.visibility,
   });
 
-  CoffeeSettings copy({
+  RecipeSettings copy({
     int? id,
     int? recipeEntryId,
     int? beanId,
@@ -59,7 +59,7 @@ class CoffeeSettings {
     int? brewTime,
     String? visibility,
   }) =>
-      CoffeeSettings(
+      RecipeSettings(
         id: id ?? this.id,
         recipeEntryId: recipeEntryId ?? this.recipeEntryId,
         beanId: beanId ?? this.beanId,
@@ -72,27 +72,27 @@ class CoffeeSettings {
       );
 
   Map<String, Object?> toJson() => {
-        CoffeeSettingsFields.id: id,
-        CoffeeSettingsFields.recipeEntryId: recipeEntryId,
-        CoffeeSettingsFields.beanId: beanId,
-        CoffeeSettingsFields.grindSetting: grindSetting,
-        CoffeeSettingsFields.coffeeAmount: coffeeAmount,
-        CoffeeSettingsFields.waterAmount: waterAmount,
-        CoffeeSettingsFields.waterTemp: waterTemp,
-        CoffeeSettingsFields.brewTime: brewTime,
-        CoffeeSettingsFields.visibility: visibility,
+        RecipeSettingsFields.id: id,
+        RecipeSettingsFields.recipeEntryId: recipeEntryId,
+        RecipeSettingsFields.beanId: beanId,
+        RecipeSettingsFields.grindSetting: grindSetting,
+        RecipeSettingsFields.coffeeAmount: coffeeAmount,
+        RecipeSettingsFields.waterAmount: waterAmount,
+        RecipeSettingsFields.waterTemp: waterTemp,
+        RecipeSettingsFields.brewTime: brewTime,
+        RecipeSettingsFields.visibility: visibility,
       };
 
-  static CoffeeSettings fromJson(Map<String, Object?> json) => CoffeeSettings(
-        id: json[CoffeeSettingsFields.id] as int?,
-        recipeEntryId: json[CoffeeSettingsFields.recipeEntryId] as int,
-        beanId: json[CoffeeSettingsFields.beanId] as int,
-        waterAmount: json[CoffeeSettingsFields.waterAmount] as int,
-        waterTemp: json[CoffeeSettingsFields.waterTemp] as int,
-        brewTime: json[CoffeeSettingsFields.brewTime] as int,
-        coffeeAmount: json[CoffeeSettingsFields.coffeeAmount] as double,
-        grindSetting: json[CoffeeSettingsFields.grindSetting] as double,
-        visibility: json[CoffeeSettingsFields.visibility] as String,
+  static RecipeSettings fromJson(Map<String, Object?> json) => RecipeSettings(
+        id: json[RecipeSettingsFields.id] as int?,
+        recipeEntryId: json[RecipeSettingsFields.recipeEntryId] as int,
+        beanId: json[RecipeSettingsFields.beanId] as int,
+        waterAmount: json[RecipeSettingsFields.waterAmount] as int,
+        waterTemp: json[RecipeSettingsFields.waterTemp] as int,
+        brewTime: json[RecipeSettingsFields.brewTime] as int,
+        coffeeAmount: json[RecipeSettingsFields.coffeeAmount] as double,
+        grindSetting: json[RecipeSettingsFields.grindSetting] as double,
+        visibility: json[RecipeSettingsFields.visibility] as String,
       );
 
   static SettingVisibility stringToSettingVisibility(String action) {
