@@ -38,7 +38,6 @@ class _RecipeDetailsBodyState extends State<RecipeDetailsBody> {
             color: Color(0x00000000),
           ),
           BeanSettingsGroup(
-            recipeData: widget.recipeData,
             recipeSettingsData: widget.recipeSettingsData,
           ),
           const Divider(

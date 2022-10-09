@@ -8,16 +8,13 @@ import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widget
 import 'package:aeroquest/models/recipe_settings.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/widgets/recipe_settings/widgets/bean_settings.dart';
-import 'package:aeroquest/models/recipe.dart';
 
 class BeanSettingsGroup extends StatefulWidget {
   const BeanSettingsGroup({
     Key? key,
-    required this.recipeData,
     required this.recipeSettingsData,
   }) : super(key: key);
 
-  final Recipe recipeData;
   final List<RecipeSettings> recipeSettingsData;
 
   @override
@@ -30,7 +27,7 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
     return Consumer<RecipesProvider>(builder: (_, recipesProvider, ___) {
       return ListView.separated(
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: widget.recipeSettingsData.length,
+        itemCount: recipesProvider.recipeSettings.length,
         shrinkWrap: true,
         itemBuilder: (_, int index) {
           return GestureDetector(
@@ -78,7 +75,7 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
                         : [],
                   ),
                   child: BeanSettings(
-                    recipeSetting: widget.recipeSettingsData[index],
+                    recipeSetting: recipesProvider.recipeSettings[index],
                   ),
                 ),
               ),
