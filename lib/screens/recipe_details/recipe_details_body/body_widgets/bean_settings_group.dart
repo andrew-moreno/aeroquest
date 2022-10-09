@@ -1,3 +1,4 @@
+import 'package:aeroquest/widgets/custom_button.dart';
 import 'package:provider/provider.dart';
 import 'dart:core';
 
@@ -12,10 +13,10 @@ import 'package:aeroquest/widgets/recipe_settings/widgets/bean_settings.dart';
 class BeanSettingsGroup extends StatefulWidget {
   const BeanSettingsGroup({
     Key? key,
-    required this.recipeSettingsData,
+    required this.recipeEntryId,
   }) : super(key: key);
 
-  final List<RecipeSettings> recipeSettingsData;
+  final int recipeEntryId;
 
   @override
   State<BeanSettingsGroup> createState() => _BeanSettingsGroupState();
@@ -24,79 +25,121 @@ class BeanSettingsGroup extends StatefulWidget {
 class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<RecipesProvider>(builder: (_, recipesProvider, ___) {
-      return ListView.separated(
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: recipesProvider.recipeSettings.length,
-        shrinkWrap: true,
-        itemBuilder: (_, int index) {
-          return GestureDetector(
-            onTap: () {
-              if (recipesProvider.editMode == EditMode.enabled) {
-                showCustomModalSheet(
-                    submitAction: () {
-                      recipesProvider
-                          .editSetting(widget.recipeSettingsData[index]);
-                      Navigator.of(context).pop();
-                    },
-                    deleteAction: widget.recipeSettingsData.length > 1
-                        ? () {
-                            recipesProvider.deleteSetting(
-                                widget.recipeSettingsData[index].id!);
+    List<RecipeSettings> recipeSettings =
+        Provider.of<RecipesProvider>(context, listen: true)
+            .recipeSettings
+            .where((recipeSetting) =>
+                recipeSetting.recipeEntryId == widget.recipeEntryId)
+            .toList();
+
+    return Consumer<RecipesProvider>(
+      builder: (_, recipesProvider, ___) {
+        return Column(
+          children: [
+            ListView.separated(
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: recipeSettings.length,
+              shrinkWrap: true,
+              itemBuilder: (_, int index) {
+                return GestureDetector(
+                  onTap: () {
+                    if (recipesProvider.editMode == EditMode.enabled) {
+                      showCustomModalSheet(
+                          submitAction: () {
+                            recipesProvider.editSetting(recipeSettings[index]);
                             Navigator.of(context).pop();
-                          }
-                        : null,
-                    recipeSettingsData: widget.recipeSettingsData[index],
-                    context: _);
-              }
-            },
-            child: Visibility(
-              visible: (recipesProvider.editMode == EditMode.disabled &&
-                      RecipeSettings.stringToSettingVisibility(
-                              widget.recipeSettingsData[index].visibility) ==
-                          SettingVisibility.hidden)
-                  ? false
-                  : true,
-              child: Opacity(
-                opacity: (recipesProvider.editMode == EditMode.enabled &&
-                        RecipeSettings.stringToSettingVisibility(
-                                widget.recipeSettingsData[index].visibility) ==
-                            SettingVisibility.hidden)
-                    ? 0.5
-                    : 1,
-                child: Container(
-                  padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: kDarkSecondary,
-                    borderRadius: BorderRadius.circular(kCornerRadius),
-                    boxShadow: (recipesProvider.editMode == EditMode.enabled)
-                        ? [kSettingsBoxShadow]
-                        : [],
+                          },
+                          deleteAction: recipesProvider.recipeSettings
+                                      .where((recipeSetting) =>
+                                          recipeSetting.recipeEntryId ==
+                                          widget.recipeEntryId)
+                                      .length >
+                                  1
+                              ? () {
+                                  recipesProvider
+                                      .deleteSetting(recipeSettings[index].id!);
+                                  Navigator.of(context).pop();
+                                }
+                              : null,
+                          recipeSettingsData: recipeSettings[index],
+                          context: _);
+                    }
+                  },
+                  child: Visibility(
+                    visible: (recipesProvider.editMode == EditMode.disabled &&
+                            RecipeSettings.stringToSettingVisibility(
+                                    recipeSettings[index].visibility) ==
+                                SettingVisibility.hidden)
+                        ? false
+                        : true,
+                    child: Opacity(
+                      opacity: (recipesProvider.editMode == EditMode.enabled &&
+                              RecipeSettings.stringToSettingVisibility(
+                                      recipeSettings[index].visibility) ==
+                                  SettingVisibility.hidden)
+                          ? 0.5
+                          : 1,
+                      child: Container(
+                        padding:
+                            const EdgeInsets.only(left: 5, right: 5, bottom: 5),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: kDarkSecondary,
+                          borderRadius: BorderRadius.circular(kCornerRadius),
+                          boxShadow:
+                              (recipesProvider.editMode == EditMode.enabled)
+                                  ? [kSettingsBoxShadow]
+                                  : [],
+                        ),
+                        child: BeanSettings(
+                          recipeSetting: recipesProvider.recipeSettings[index],
+                        ),
+                      ),
+                    ),
                   ),
-                  child: BeanSettings(
-                    recipeSetting: recipesProvider.recipeSettings[index],
-                  ),
-                ),
-              ),
+                );
+              },
+              separatorBuilder: (_, index) {
+                return const Divider(
+                  color: Color(0x00000000),
+                  height: 10,
+                );
+              },
             ),
-          );
-        },
-        separatorBuilder: (context, index) {
-          return const Divider(
-            color: Color(0x00000000),
-            height: 10,
-          );
-        },
-      );
-    });
+            const Divider(
+              color: Color(0x00000000),
+              height: 20,
+            ),
+            (recipesProvider.editMode == EditMode.enabled)
+                ? Material(
+                    color: Colors.transparent,
+                    child: CustomButton(
+                      onTap: () {
+                        showCustomModalSheet(
+                            submitAction: () {
+                              recipesProvider.addSetting(widget
+                                  .recipeEntryId); // index doesn't matter for recipe entry id
+                              Navigator.of(context).pop();
+                            },
+                            context: _);
+                      },
+                      buttonType: ButtonType.positive,
+                      text: "Add Setting",
+                      width: 200,
+                    ),
+                  )
+                : Container(),
+          ],
+        );
+      },
+    );
   }
 }
 
 void showCustomModalSheet({
   required BuildContext context,
   required Function() submitAction,
-  required RecipeSettings recipeSettingsData,
+  RecipeSettings? recipeSettingsData,
   Function()? deleteAction,
 }) {
   showModalBottomSheet(

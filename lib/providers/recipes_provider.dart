@@ -62,14 +62,9 @@ class RecipesProvider extends ChangeNotifier {
   }
 
   Future<void> editRecipe(Recipe recipeData) async {
-    _recipes.firstWhere((recipe) => recipe.id == recipeData.id).title =
-        recipeData.title;
-    _recipes.firstWhere((recipe) => recipe.id == recipeData.id).description =
-        recipeData.description;
-    _recipes.firstWhere((recipe) => recipe.id == recipeData.id).pushPressure =
-        recipeData.pushPressure;
-    _recipes.firstWhere((recipe) => recipe.id == recipeData.id).brewMethod =
-        recipeData.brewMethod;
+    _recipes[_recipes.indexWhere((recipe) => recipe.id == recipeData.id)] =
+        recipeData;
+
     await RecipesDatabase.instance.update(recipeData);
     notifyListeners();
   }
@@ -121,6 +116,23 @@ class RecipesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> addSetting(int recipeEntryId) async {
+    RecipeSettings newRecipeSettings =
+        await RecipeSettingsDatabase.instance.create(RecipeSettings(
+      recipeEntryId: recipeEntryId,
+      beanId: tempBeanId!,
+      grindSetting: tempGrindSetting!,
+      coffeeAmount: tempCoffeeAmount!,
+      waterAmount: tempWaterAmount!,
+      waterTemp: tempWaterTemp!,
+      brewTime: tempBrewTime!,
+      visibility: describeEnum(tempSettingVisibility!),
+    ));
+    _recipeSettings.add(newRecipeSettings);
+    notifyListeners();
+    log("Recipe setting added with id: ${newRecipeSettings.id}");
+  }
+
   Future<void> deleteSetting(int settingId) async {
     _recipeSettings
         .removeWhere((recipeSetting) => recipeSetting.id == settingId);
@@ -162,6 +174,9 @@ class RecipesProvider extends ChangeNotifier {
       newCoffeeSettingsData.visibility = describeEnum(tempSettingVisibility!);
       log("Visibility set to $tempSettingVisibility");
     }
+    _recipeSettings[_recipeSettings.indexWhere(
+            (recipeSetting) => recipeSetting.id == recipeSettingsData.id)] =
+        newCoffeeSettingsData;
     await RecipeSettingsDatabase.instance.update(newCoffeeSettingsData);
     notifyListeners();
   }
