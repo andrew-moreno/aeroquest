@@ -11,11 +11,11 @@ class SettingsValueSlider extends StatefulWidget {
   const SettingsValueSlider({
     Key? key,
     required this.maxWidth,
-    this.coffeeSettingsData,
+    this.recipeSettingsData,
   }) : super(key: key);
 
   final double maxWidth;
-  final RecipeSettings? coffeeSettingsData;
+  final RecipeSettings? recipeSettingsData;
 
   @override
   State<SettingsValueSlider> createState() => _SettingsValueSliderState();
@@ -38,15 +38,15 @@ class _SettingsValueSliderState extends State<SettingsValueSlider> {
   void initState() {
     super.initState();
     Provider.of<RecipesProvider>(context, listen: false).tempGrindSetting =
-        widget.coffeeSettingsData?.grindSetting ?? 0;
+        widget.recipeSettingsData?.grindSetting ?? 0;
     Provider.of<RecipesProvider>(context, listen: false).tempCoffeeAmount =
-        widget.coffeeSettingsData?.coffeeAmount ?? 0;
+        widget.recipeSettingsData?.coffeeAmount ?? 0;
     Provider.of<RecipesProvider>(context, listen: false).tempWaterAmount =
-        widget.coffeeSettingsData?.waterAmount ?? 0;
+        widget.recipeSettingsData?.waterAmount ?? 0;
     Provider.of<RecipesProvider>(context, listen: false).tempWaterTemp =
-        widget.coffeeSettingsData?.waterTemp ?? 100;
+        widget.recipeSettingsData?.waterTemp ?? 100;
     Provider.of<RecipesProvider>(context, listen: false).tempBrewTime =
-        widget.coffeeSettingsData?.brewTime ?? 0;
+        widget.recipeSettingsData?.brewTime ?? 0;
     Provider.of<RecipesProvider>(context, listen: false).activeSetting =
         SettingType.none;
   }

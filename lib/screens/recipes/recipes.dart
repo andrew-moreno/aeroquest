@@ -97,12 +97,12 @@ class _RecipesState extends State<Recipes> {
         ),
         body: SafeArea(
           child: FutureBuilder(
-              future: Provider.of<RecipesProvider>(context, listen: false)
-                  .cacheRecipesAndSettings(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return Consumer<RecipesProvider>(
-                      builder: (_, recipesProvider, ___) {
+            future: Provider.of<RecipesProvider>(context, listen: false)
+                .cacheRecipesAndSettings(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return Consumer<RecipesProvider>(
+                  builder: (_, recipesProvider, ___) {
                     return ListView.separated(
                       padding: const EdgeInsets.all(20),
                       itemCount: recipesProvider.recipes.length,
@@ -118,11 +118,13 @@ class _RecipesState extends State<Recipes> {
                         );
                       },
                     );
-                  });
-                } else {
-                  return const CircularProgressIndicator();
-                }
-              }),
+                  },
+                );
+              } else {
+                return const CircularProgressIndicator();
+              }
+            },
+          ),
         ),
       ),
     );

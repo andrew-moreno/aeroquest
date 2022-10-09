@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:aeroquest/constraints.dart';
-import 'package:aeroquest/widgets/modal_button.dart';
+import 'package:aeroquest/widgets/custom_button.dart';
 
 class ExitDialog extends StatelessWidget {
   const ExitDialog(
@@ -33,12 +33,12 @@ class ExitDialog extends StatelessWidget {
       ),
       actionsAlignment: MainAxisAlignment.spaceAround,
       actions: [
-        ModalButton(
+        CustomButton(
             onTap: leftAction,
             buttonType: ButtonType.positive,
             text: leftText,
             width: 100.0),
-        ModalButton(
+        CustomButton(
             onTap: rightAction,
             buttonType: ButtonType.negative,
             text: rightText,

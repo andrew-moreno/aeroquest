@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
-import 'package:aeroquest/widgets/modal_button.dart';
+import 'package:aeroquest/widgets/custom_button.dart';
 import 'package:aeroquest/constraints.dart';
 
 class CustomBeansModalSheet extends StatelessWidget {
@@ -55,14 +55,14 @@ class CustomBeansModalSheet extends StatelessWidget {
                     ? MainAxisAlignment.spaceBetween
                     : MainAxisAlignment.center,
                 children: [
-                  ModalButton(
+                  CustomButton(
                     onTap: submitAction,
                     buttonType: ButtonType.positive,
                     text: "Save",
                     width: constraints.maxWidth / 2 - 10,
                   ),
                   (deleteAction != null)
-                      ? ModalButton(
+                      ? CustomButton(
                           onTap: deleteAction!,
                           buttonType: ButtonType.negative,
                           text: "Delete",

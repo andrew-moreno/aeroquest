@@ -8,7 +8,7 @@ import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/bean_settings_group_widgets/settings_value_slider.dart';
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/widgets/animated_toggle.dart';
-import 'package:aeroquest/widgets/modal_button.dart';
+import 'package:aeroquest/widgets/custom_button.dart';
 import 'package:aeroquest/models/recipe_settings.dart';
 import 'package:aeroquest/models/recipe.dart';
 
@@ -127,7 +127,7 @@ class _CustomSettingsModalSheetState extends State<CustomSettingsModalSheet> {
             const Divider(height: 20, color: Color(0x00000000)),
             SettingsValueSlider(
               maxWidth: constraints.maxWidth,
-              coffeeSettingsData: widget.recipeSettingsData,
+              recipeSettingsData: widget.recipeSettingsData,
             ),
             const Divider(height: 20, color: Color(0x00000000)),
             Row(
@@ -135,14 +135,14 @@ class _CustomSettingsModalSheetState extends State<CustomSettingsModalSheet> {
                   ? MainAxisAlignment.spaceBetween
                   : MainAxisAlignment.center,
               children: [
-                ModalButton(
+                CustomButton(
                   onTap: widget.submitAction,
                   buttonType: ButtonType.positive,
                   text: "Save",
                   width: constraints.maxWidth / 2 - 10,
                 ),
                 (widget.deleteAction != null)
-                    ? ModalButton(
+                    ? CustomButton(
                         onTap: widget.deleteAction!,
                         buttonType: ButtonType.negative,
                         text: "Delete",
