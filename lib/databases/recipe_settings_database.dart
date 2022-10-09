@@ -81,6 +81,14 @@ class RecipeSettingsDatabase {
     return result.map((json) => RecipeSettings.fromJson(json)).toList();
   }
 
+  Future<List<RecipeSettings>> readAllRecipeSettings() async {
+    final db = await instance.database;
+
+    final result = await db.query(tableRecipeSettings);
+
+    return result.map((json) => RecipeSettings.fromJson(json)).toList();
+  }
+
   Future<int> update(RecipeSettings recipeSetting) async {
     final db = await instance.database;
 

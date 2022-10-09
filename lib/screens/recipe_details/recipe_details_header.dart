@@ -8,27 +8,23 @@ import 'package:aeroquest/constraints.dart';
 
 class RecipeDetailsHeader extends StatelessWidget {
   const RecipeDetailsHeader(
-      {Key? key, required titleValue, descriptionValue, required formKey})
-      : _titleValue = titleValue,
-        _descriptionValue = descriptionValue,
-        _formKey = formKey,
-        super(key: key);
+      {Key? key, required this.titleValue, this.descriptionValue})
+      : super(key: key);
 
-  final String _titleValue;
-  final String? _descriptionValue;
-  final GlobalKey<FormBuilderState> _formKey;
+  final String titleValue;
+  final String? descriptionValue;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 40),
       child: FormBuilder(
-        key: _formKey,
+        key: Provider.of<RecipesProvider>(context).formKey,
         child: Column(
           children: [
             CustomFormField(
               name: "recipeTitle",
-              initialValue: _titleValue,
+              initialValue: titleValue,
               hintText: "Title",
               textStyle: const TextStyle(
                   color: kLightSecondary,
@@ -42,12 +38,12 @@ class RecipeDetailsHeader extends StatelessWidget {
               height: 10,
               color: Color(0x00000000),
             ),
-            ((_descriptionValue != null && _descriptionValue != "") ||
+            ((descriptionValue != null && descriptionValue != "") ||
                     Provider.of<RecipesProvider>(context).editMode ==
                         EditMode.enabled)
                 ? CustomFormField(
                     name: "recipeDescription",
-                    initialValue: _descriptionValue,
+                    initialValue: descriptionValue,
                     hintText: "Description",
                     textStyle: const TextStyle(
                       color: kLightSecondary,

@@ -1,184 +1,44 @@
 import 'dart:collection';
 import 'dart:developer';
+import 'package:aeroquest/databases/coffee_beans_database.dart';
+import 'package:aeroquest/models/coffee_bean.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:aeroquest/widgets/recipe_settings/widgets/settings_value.dart';
-import 'package:aeroquest/models/recipe_entry.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:aeroquest/databases/recipe_settings_database.dart';
+import 'package:aeroquest/databases/recipes_database.dart';
+import 'package:aeroquest/models/recipe.dart';
+import '../models/recipe_settings.dart';
 
 class RecipesProvider extends ChangeNotifier {
-  final List<RecipeEntry> _recipes = [
-    RecipeEntry(
-      id: 1,
-      title: "The Hoffman Special",
-      description: "Hot cup that serves one",
-      coffeeSettings: [
-        CoffeeSettings(
-          id: 1,
-          beanName: "JJBean Bros",
-          grindSetting: 17,
-          coffeeAmount: 11,
-          waterAmount: 200,
-          waterTemp: 100,
-          brewTime: 15,
-          visibility: SettingVisibility.shown,
-        ),
-        CoffeeSettings(
-          id: 2,
-          beanName: "JJBean Bros",
-          grindSetting: 17,
-          coffeeAmount: 12,
-          waterAmount: 200,
-          waterTemp: 86,
-          brewTime: 15,
-          visibility: SettingVisibility.shown,
-        ),
-      ],
-      pushPressure: PushPressure.light,
-      brewMethod: BrewMethod.regular,
-      notes: [
-        Notes(time: "2:30", text: "Lightly swirl to bring grounds to bottom"),
-        Notes(time: "2:30", text: "Lightly swirl to bring grounds to bottom"),
-        Notes(time: "2:30", text: "Lightly swirl to bring grounds to bottom"),
-        Notes(time: "2:30", text: "Lightly swirl to bring grounds to bottom"),
-        Notes(time: "2:30", text: "Lightly swirl to bring grounds to bottom"),
-        Notes(time: "2:30", text: "Lightly swirl to bring grounds to bottom"),
-        Notes(time: "2:30", text: "Lightly swirl to bring grounds to bottom"),
-        Notes(time: "2:30", text: "Lightly swirl to bring grounds to bottom"),
-        Notes(time: "2:30", text: "Lightly swirl to bring grounds to bottom"),
-        Notes(time: "2:30", text: "Lightly swirl to bring grounds to bottom"),
-      ],
-    ),
-    RecipeEntry(
-      id: 2,
-      title: "StrongBoi 3000 That Is Just RichBoi",
-      description:
-          "Rich and full-bodied hot cup that serves one and is yum yum in my tum tum and im making this super long on purpose omg this is a long description",
-      coffeeSettings: [
-        CoffeeSettings(
-          id: 1,
-          beanName: "JJBean Bros",
-          grindSetting: 16.5,
-          coffeeAmount: 18,
-          waterAmount: 260,
-          waterTemp: 95,
-          brewTime: 51,
-          visibility: SettingVisibility.hidden,
-        )
-      ],
-      pushPressure: PushPressure.light,
-      brewMethod: BrewMethod.inverted,
-      notes: [
-        Notes(
-            time: "0:00",
-            text: "Stir back and forth to wet all grounds in Aeropress"),
-        Notes(
-            time: "2:00", text: "Be like omg this about to be yum can't wait!"),
-      ],
-    ),
-    RecipeEntry(
-      id: 3,
-      title: "The Hoffman Special",
-      description: "Hot cup that serves one",
-      coffeeSettings: [
-        CoffeeSettings(
-          id: 1,
-          beanName: "JJBean Bros",
-          grindSetting: 17,
-          coffeeAmount: 11,
-          waterAmount: 200,
-          waterTemp: 100,
-          brewTime: 15,
-          visibility: SettingVisibility.hidden,
-        ),
-        CoffeeSettings(
-          id: 2,
-          beanName: "JJBean Bros",
-          grindSetting: 17,
-          coffeeAmount: 12,
-          waterAmount: 200,
-          waterTemp: 86,
-          brewTime: 15,
-          visibility: SettingVisibility.hidden,
-        ),
-      ],
-      pushPressure: PushPressure.light,
-      brewMethod: BrewMethod.regular,
-      notes: [
-        Notes(time: "2:30", text: "Lightly swirl to bring grounds to bottom"),
-      ],
-    ),
-    RecipeEntry(
-      id: 4,
-      title: "The Hoffman Special",
-      description: "Hot cup that serves one",
-      coffeeSettings: [
-        CoffeeSettings(
-          id: 1,
-          beanName: "JJBean Bros",
-          grindSetting: 17,
-          coffeeAmount: 11,
-          waterAmount: 200,
-          waterTemp: 100,
-          brewTime: 15,
-          visibility: SettingVisibility.hidden,
-        ),
-        CoffeeSettings(
-          id: 2,
-          beanName:
-              "Dark Xmas Gift from Parentals that is super yummy and this is gonna be long also wowee woo wawa omg omg omg i like coffee",
-          grindSetting: 17,
-          coffeeAmount: 12,
-          waterAmount: 200,
-          waterTemp: 86,
-          brewTime: 15,
-          visibility: SettingVisibility.hidden,
-        ),
-      ],
-      pushPressure: PushPressure.light,
-      brewMethod: BrewMethod.regular,
-      notes: [
-        Notes(time: "2:30", text: "Lightly swirl to bring grounds to bottom"),
-      ],
-    ),
-    RecipeEntry(
-      id: 5,
-      title: "The Hoffman Special",
-      description: "Hot cup that serves one",
-      coffeeSettings: [
-        CoffeeSettings(
-          id: 1,
-          beanName: "JJBean",
-          grindSetting: 17,
-          coffeeAmount: 11,
-          waterAmount: 200,
-          waterTemp: 100,
-          brewTime: 15,
-          visibility: SettingVisibility.hidden,
-        ),
-        CoffeeSettings(
-          id: 2,
-          beanName: "Dark Xmas Gift from Parentals",
-          grindSetting: 17,
-          coffeeAmount: 12,
-          waterAmount: 200,
-          waterTemp: 86,
-          brewTime: 15,
-          visibility: SettingVisibility.hidden,
-        ),
-      ],
-      pushPressure: PushPressure.light,
-      brewMethod: BrewMethod.regular,
-      notes: [
-        Notes(time: "2:30", text: "Lightly swirl to bring grounds to bottom"),
-      ],
-    ),
-  ];
+  late List<Recipe> _recipes;
+  late List<RecipeSettings> _recipeSettings;
+  late List<CoffeeBean> _coffeeBeans;
+
+  UnmodifiableListView<Recipe> get recipes {
+    return UnmodifiableListView(_recipes);
+  }
+
+  UnmodifiableListView<RecipeSettings> get recipeSettings {
+    return UnmodifiableListView(_recipeSettings);
+  }
+
+  UnmodifiableListView<CoffeeBean> get coffeeBeans {
+    return UnmodifiableListView(_coffeeBeans);
+  }
+
+  cacheRecipesAndSettings() async {
+    _recipes = await RecipesDatabase.instance.readAllRecipes();
+    _recipeSettings =
+        await RecipeSettingsDatabase.instance.readAllRecipeSettings();
+    _coffeeBeans = await CoffeeBeansDatabase.instance.readAllCoffeeBeans();
+  }
 
   EditMode editMode = EditMode.disabled;
 
-  UnmodifiableListView<RecipeEntry> get recipes {
-    return UnmodifiableListView(_recipes);
-  }
+  GlobalKey<FormBuilderState> formKey = GlobalKey<FormBuilderState>();
 
   void changeEditMode() {
     if (editMode == EditMode.disabled) {
@@ -191,22 +51,33 @@ class RecipesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void deleteRecipe(int id) {
-    _recipes.removeWhere((recipe) => recipe.id == id);
+  void deleteRecipe(int recipeId) async {
+    _recipes.removeWhere((recipe) => recipe.id == recipeId);
+    _recipeSettings.removeWhere(
+        (recipeSetting) => recipeSetting.recipeEntryId == recipeId);
+    await RecipesDatabase.instance.delete(recipeId);
+    await RecipeSettingsDatabase.instance.deleteAllSettingsForRecipe(recipeId);
     notifyListeners();
-    log("Recipe of id $id deleted");
+    log("Recipe of id $recipeId deleted");
   }
 
-  void editRecipe(String title, String? description, int id) {
-    _recipes.firstWhere((recipe) => recipe.id == id).title = title;
-    _recipes.firstWhere((recipe) => recipe.id == id).description = description;
+  Future<void> editRecipe(Recipe recipeData) async {
+    _recipes.firstWhere((recipe) => recipe.id == recipeData.id).title =
+        recipeData.title;
+    _recipes.firstWhere((recipe) => recipe.id == recipeData.id).description =
+        recipeData.description;
+    _recipes.firstWhere((recipe) => recipe.id == recipeData.id).pushPressure =
+        recipeData.pushPressure;
+    _recipes.firstWhere((recipe) => recipe.id == recipeData.id).brewMethod =
+        recipeData.brewMethod;
+    await RecipesDatabase.instance.update(recipeData);
     notifyListeners();
   }
 
   /// methods and variables for editing/adding settings to a recipe
   /// contain values for the currently edited/added setting
   SettingVisibility? tempSettingVisibility;
-  String? tempBeanName;
+  int? tempBeanId;
   double? tempGrindSetting;
   double? tempCoffeeAmount;
   int? tempWaterAmount;
@@ -217,7 +88,7 @@ class RecipesProvider extends ChangeNotifier {
   late SettingType activeSetting;
 
   /// used to activate/deactive editing of a setting for a recipe
-  void settingOnTap(SettingType settingType) {
+  void selectSetting(SettingType settingType) {
     if (activeSetting == settingType) {
       activeSetting = SettingType.none;
     } else {
@@ -250,45 +121,48 @@ class RecipesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void deleteSetting(int recipeId, int settingId) {
-    _recipes
-        .firstWhere((recipe) => recipe.id == recipeId)
-        .coffeeSettings
-        .removeWhere((coffeeSetting) => coffeeSetting.id == settingId);
+  Future<void> deleteSetting(int settingId) async {
+    _recipeSettings
+        .removeWhere((recipeSetting) => recipeSetting.id == settingId);
+    await RecipeSettingsDatabase.instance.delete(settingId);
+    log("Recipe settings of setting id $settingId deleted");
     notifyListeners();
-    log("Recipe settings of recipe id $recipeId and setting id $settingId deleted");
   }
 
-  void editSetting(CoffeeSettings coffeeSettingsData) {
-    //coffeeSettingsData.beanName
-    if (coffeeSettingsData.grindSetting != tempGrindSetting) {
-      coffeeSettingsData.grindSetting = tempGrindSetting!;
+  // when save button pressed
+  Future<void> editSetting(RecipeSettings recipeSettingsData) async {
+    RecipeSettings newCoffeeSettingsData = recipeSettingsData;
+    if (recipeSettingsData.grindSetting != tempGrindSetting) {
+      newCoffeeSettingsData.grindSetting = tempGrindSetting!;
       log("Grind setting set to $tempGrindSetting");
     }
-    if (coffeeSettingsData.coffeeAmount != tempCoffeeAmount) {
-      coffeeSettingsData.coffeeAmount = tempCoffeeAmount!;
+    if (recipeSettingsData.coffeeAmount != tempCoffeeAmount) {
+      newCoffeeSettingsData.coffeeAmount = tempCoffeeAmount!;
       log("Coffee amount set to $tempCoffeeAmount");
     }
-    if (coffeeSettingsData.waterAmount != tempWaterAmount) {
-      coffeeSettingsData.waterAmount = tempWaterAmount!;
+    if (recipeSettingsData.waterAmount != tempWaterAmount) {
+      newCoffeeSettingsData.waterAmount = tempWaterAmount!;
       log("Water amount set to $tempWaterAmount");
     }
-    if (coffeeSettingsData.waterTemp != tempWaterTemp) {
-      coffeeSettingsData.waterTemp = tempWaterTemp!;
+    if (recipeSettingsData.waterTemp != tempWaterTemp) {
+      newCoffeeSettingsData.waterTemp = tempWaterTemp!;
       log("Water temp set to $tempWaterTemp");
     }
-    if (coffeeSettingsData.brewTime != tempBrewTime) {
-      coffeeSettingsData.brewTime = tempBrewTime!;
+    if (recipeSettingsData.brewTime != tempBrewTime) {
+      newCoffeeSettingsData.brewTime = tempBrewTime!;
       log("Brew time set to $tempBrewTime");
     }
-    if (coffeeSettingsData.beanName != tempBeanName) {
-      coffeeSettingsData.beanName = tempBeanName!;
-      log("Bean name set to $tempBeanName");
+    if (recipeSettingsData.beanId != tempBeanId) {
+      newCoffeeSettingsData.beanId = tempBeanId!;
+      log("Bean id set to $tempBeanId");
     }
-    if (coffeeSettingsData.visibility != tempSettingVisibility) {
-      coffeeSettingsData.visibility = tempSettingVisibility!;
+    if (RecipeSettings.stringToSettingVisibility(
+            newCoffeeSettingsData.visibility) !=
+        tempSettingVisibility) {
+      newCoffeeSettingsData.visibility = describeEnum(tempSettingVisibility!);
       log("Visibility set to $tempSettingVisibility");
     }
+    await RecipeSettingsDatabase.instance.update(newCoffeeSettingsData);
     notifyListeners();
   }
 }

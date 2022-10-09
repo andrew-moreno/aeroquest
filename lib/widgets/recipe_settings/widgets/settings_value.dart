@@ -3,7 +3,7 @@ import 'package:aeroquest/constraints.dart';
 
 // defines the template for displaying recipe information values
 // eg. grind: 17
-class SettingsValue extends StatefulWidget {
+class SettingsValue extends StatelessWidget {
   const SettingsValue({
     Key? key,
     required this.settingValue,
@@ -14,26 +14,21 @@ class SettingsValue extends StatefulWidget {
   final dynamic settingValue;
   final SettingType settingType;
 
-  @override
-  State<SettingsValue> createState() => _SettingsValueState();
-}
-
-class _SettingsValueState extends State<SettingsValue> {
   /// defines default values and whether grams is added to the end or not
   String _settingValue(SettingType settingType) {
     switch (settingType) {
       case SettingType.grindSetting: // double
-        return widget.settingValue.toString();
+        return settingValue.toString();
       case SettingType.coffeeAmount: // double
-        return (widget.settingValue).toString() + "g";
+        return (settingValue).toString() + "g";
       case SettingType.waterAmount: // int
-        return (widget.settingValue).toString() + "g";
+        return (settingValue).toString() + "g";
       case SettingType.waterTemp: // int
-        return widget.settingValue.toString();
+        return settingValue.toString();
       case SettingType.brewTime: // int
-        return (widget.settingValue ~/ 6).toString() +
+        return (settingValue ~/ 6).toString() +
             ":" +
-            (widget.settingValue % 6).toString() +
+            (settingValue % 6).toString() +
             "0";
       case SettingType.none:
         throw Exception("SettingType.none passed incorrectly");
@@ -63,7 +58,7 @@ class _SettingsValueState extends State<SettingsValue> {
     return Column(
       children: [
         Text(
-          _settingValue(widget.settingType),
+          _settingValue(settingType),
           style: const TextStyle(
             color: kAccent,
             fontFamily: "Poppins",
@@ -72,7 +67,7 @@ class _SettingsValueState extends State<SettingsValue> {
           ),
         ),
         Text(
-          _settingType(widget.settingType),
+          _settingType(settingType),
           style: Theme.of(context)
               .textTheme
               .subtitle1!

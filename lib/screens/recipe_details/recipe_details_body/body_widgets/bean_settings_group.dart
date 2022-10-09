@@ -1,81 +1,105 @@
-import 'dart:core';
 import 'package:provider/provider.dart';
+import 'dart:core';
+
 import 'package:flutter/material.dart';
 
-import 'package:aeroquest/models/recipe_entry.dart';
 import 'package:aeroquest/constraints.dart';
-import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/bean_settings_group_widgets/custom_settings_modal_sheet.dart';
+import 'package:aeroquest/models/recipe_settings.dart';
+import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/widgets/recipe_settings/widgets/bean_settings.dart';
+import 'package:aeroquest/models/recipe.dart';
 
-class BeanSettingsGroup extends StatelessWidget {
+class BeanSettingsGroup extends StatefulWidget {
   const BeanSettingsGroup({
     Key? key,
     required this.recipeData,
+    required this.recipeSettingsData,
   }) : super(key: key);
 
-  final RecipeEntry recipeData;
+  final Recipe recipeData;
+  final List<RecipeSettings> recipeSettingsData;
 
   @override
+  State<BeanSettingsGroup> createState() => _BeanSettingsGroupState();
+}
+
+class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
+  @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: recipeData.coffeeSettings.length,
-      shrinkWrap: true,
-      itemBuilder: (BuildContext buildContext, int index) {
-        return Consumer<RecipesProvider>(builder: (_, recipes, child) {
+    return Consumer<RecipesProvider>(builder: (_, recipesProvider, ___) {
+      return ListView.separated(
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: widget.recipeSettingsData.length,
+        shrinkWrap: true,
+        itemBuilder: (_, int index) {
           return GestureDetector(
             onTap: () {
-              if (recipes.editMode == EditMode.enabled) {
+              if (recipesProvider.editMode == EditMode.enabled) {
                 showCustomModalSheet(
                     submitAction: () {
-                      Provider.of<RecipesProvider>(context, listen: false)
-                          .editSetting(recipeData.coffeeSettings[index]);
+                      recipesProvider
+                          .editSetting(widget.recipeSettingsData[index]);
                       Navigator.of(context).pop();
                     },
-                    deleteAction: recipeData.coffeeSettings.length > 1
+                    deleteAction: widget.recipeSettingsData.length > 1
                         ? () {
-                            Provider.of<RecipesProvider>(context, listen: false)
-                                .deleteSetting(recipeData.id,
-                                    recipeData.coffeeSettings[index].id);
+                            recipesProvider.deleteSetting(
+                                widget.recipeSettingsData[index].id!);
                             Navigator.of(context).pop();
                           }
                         : null,
-                    coffeeSettingsData: recipeData.coffeeSettings[index],
-                    context: buildContext);
+                    recipeSettingsData: widget.recipeSettingsData[index],
+                    context: _);
               }
             },
-            child: Container(
-              padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: kDarkSecondary,
-                borderRadius: BorderRadius.circular(kCornerRadius),
-                boxShadow: (recipes.editMode == EditMode.enabled)
-                    ? [kSettingsBoxShadow]
-                    : [],
-              ),
-              child: BeanSettings(
-                coffeeSetting: recipeData.coffeeSettings[index],
+            child: Visibility(
+              visible: (recipesProvider.editMode == EditMode.disabled &&
+                      RecipeSettings.stringToSettingVisibility(
+                              widget.recipeSettingsData[index].visibility) ==
+                          SettingVisibility.hidden)
+                  ? false
+                  : true,
+              child: Opacity(
+                opacity: (recipesProvider.editMode == EditMode.enabled &&
+                        RecipeSettings.stringToSettingVisibility(
+                                widget.recipeSettingsData[index].visibility) ==
+                            SettingVisibility.hidden)
+                    ? 0.5
+                    : 1,
+                child: Container(
+                  padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: kDarkSecondary,
+                    borderRadius: BorderRadius.circular(kCornerRadius),
+                    boxShadow: (recipesProvider.editMode == EditMode.enabled)
+                        ? [kSettingsBoxShadow]
+                        : [],
+                  ),
+                  child: BeanSettings(
+                    recipeSetting: widget.recipeSettingsData[index],
+                  ),
+                ),
               ),
             ),
           );
-        });
-      },
-      separatorBuilder: (context, index) {
-        return const Divider(
-          color: Color(0x00000000),
-          height: 10,
-        );
-      },
-    );
+        },
+        separatorBuilder: (context, index) {
+          return const Divider(
+            color: Color(0x00000000),
+            height: 10,
+          );
+        },
+      );
+    });
   }
 }
 
 void showCustomModalSheet({
   required BuildContext context,
   required Function() submitAction,
-  required CoffeeSettings coffeeSettingsData,
+  required RecipeSettings recipeSettingsData,
   Function()? deleteAction,
 }) {
   showModalBottomSheet(
@@ -90,7 +114,7 @@ void showCustomModalSheet({
       return CustomSettingsModalSheet(
         submitAction: submitAction,
         deleteAction: deleteAction,
-        coffeeSettingsData: coffeeSettingsData,
+        recipeSettingsData: recipeSettingsData,
       );
     },
   );

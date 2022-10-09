@@ -5,7 +5,7 @@ import 'package:vertical_weight_slider/vertical_weight_slider.dart';
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/widgets/recipe_settings/widgets/settings_value.dart';
-import 'package:aeroquest/models/coffee_settings.dart';
+import 'package:aeroquest/models/recipe_settings.dart';
 
 class SettingsValueSlider extends StatefulWidget {
   const SettingsValueSlider({
@@ -15,7 +15,7 @@ class SettingsValueSlider extends StatefulWidget {
   }) : super(key: key);
 
   final double maxWidth;
-  final CoffeeSettings? coffeeSettingsData;
+  final RecipeSettings? coffeeSettingsData;
 
   @override
   State<SettingsValueSlider> createState() => _SettingsValueSliderState();

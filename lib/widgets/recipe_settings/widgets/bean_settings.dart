@@ -1,13 +1,16 @@
-import 'package:aeroquest/models/recipe_entry.dart';
-import 'package:aeroquest/widgets/recipe_settings/widgets/settings_value.dart';
+import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:flutter/material.dart';
+
+import 'package:aeroquest/models/recipe_settings.dart';
+import 'package:aeroquest/widgets/recipe_settings/widgets/settings_value.dart';
 import 'package:aeroquest/constraints.dart';
+import 'package:provider/provider.dart';
 
 // template for the settings of a single coffee bean
 class BeanSettings extends StatelessWidget {
-  const BeanSettings({Key? key, required this.coffeeSetting}) : super(key: key);
+  const BeanSettings({Key? key, required this.recipeSetting}) : super(key: key);
 
-  final CoffeeSettings coffeeSetting;
+  final RecipeSettings recipeSetting;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +22,11 @@ class BeanSettings extends StatelessWidget {
             vertical: 0,
           ),
           child: Text(
-            coffeeSetting.beanName,
+            Provider.of<RecipesProvider>(context, listen: true)
+                .coffeeBeans
+                .firstWhere(
+                    (coffeeBean) => coffeeBean.id == recipeSetting.beanId)
+                .beanName,
             style: Theme.of(context)
                 .textTheme
                 .subtitle1!
@@ -36,23 +43,23 @@ class BeanSettings extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               SettingsValue(
-                settingValue: coffeeSetting.grindSetting,
+                settingValue: recipeSetting.grindSetting,
                 settingType: SettingType.grindSetting,
               ),
               SettingsValue(
-                settingValue: coffeeSetting.coffeeAmount,
+                settingValue: recipeSetting.coffeeAmount,
                 settingType: SettingType.coffeeAmount,
               ),
               SettingsValue(
-                settingValue: coffeeSetting.waterAmount,
+                settingValue: recipeSetting.waterAmount,
                 settingType: SettingType.waterAmount,
               ),
               SettingsValue(
-                settingValue: coffeeSetting.waterTemp,
+                settingValue: recipeSetting.waterTemp,
                 settingType: SettingType.waterTemp,
               ),
               SettingsValue(
-                settingValue: coffeeSetting.brewTime,
+                settingValue: recipeSetting.brewTime,
                 settingType: SettingType.brewTime,
               ),
             ],
