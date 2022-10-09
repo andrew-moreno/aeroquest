@@ -65,7 +65,7 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
                   return ListView.separated(
                     padding: const EdgeInsets.all(20),
                     itemCount: coffeeBeanProvider.coffeeBeans.length,
-                    itemBuilder: (BuildContext listViewContext, int index) {
+                    itemBuilder: (_, int index) {
                       return BeansContainer(
                         formKey: _formKey,
                         beanName:

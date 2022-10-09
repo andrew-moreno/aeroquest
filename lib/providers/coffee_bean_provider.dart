@@ -18,13 +18,13 @@ class CoffeeBeanProvider extends ChangeNotifier {
 
   Future<void> addBean(String beanName, String? description) async {
     //TODO: prevent duplicate beans from being added
-    final newCoffeeBean = CoffeeBean(
+    final newCoffeeBean = await CoffeeBeansDatabase.instance.create(CoffeeBean(
       beanName: beanName,
       description: description,
-    );
-    _coffeeBeans.add(await CoffeeBeansDatabase.instance.create(newCoffeeBean));
+    ));
+    _coffeeBeans.add(newCoffeeBean);
     notifyListeners();
-    log("Beans added");
+    log("Beans added with id: ${newCoffeeBean.id}, name: ${newCoffeeBean.beanName}, description: ${newCoffeeBean.description}");
   }
 
   Future<void> deleteBean(int id) async {
