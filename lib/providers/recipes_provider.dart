@@ -125,12 +125,14 @@ class RecipesProvider extends ChangeNotifier {
     _tempRecipeSettings.clear();
   }
 
+  // initialize tempRecipeSettings
   void setTempRecipeSettings(int recipeEntryId) {
     _tempRecipeSettings = _recipeSettings
         .where((recipeSetting) => recipeSetting.recipeEntryId == recipeEntryId)
         .toList();
   }
 
+  // check if settings have been updated since details page load
   bool areSettingsChanged(int recipeEntryId) {
     return const DeepCollectionEquality().equals(
         _tempRecipeSettings,
@@ -140,7 +142,8 @@ class RecipesProvider extends ChangeNotifier {
             .toList());
   }
 
-  Future<void> addSetting(int recipeEntryId) async {
+  // adds new setting to tempRecipeSettings
+  Future<void> tempAddSetting(int recipeEntryId) async {
     RecipeSettings newRecipeSettings =
         await RecipeSettingsDatabase.instance.create(RecipeSettings(
       recipeEntryId: recipeEntryId,
@@ -157,7 +160,8 @@ class RecipesProvider extends ChangeNotifier {
     log("Recipe setting added with id: ${newRecipeSettings.id}");
   }
 
-  Future<void> deleteSetting(int settingId) async {
+  // deletes setting from tempRecipeSettings
+  Future<void> tempDeleteSetting(int settingId) async {
     _tempRecipeSettings
         .removeWhere((recipeSetting) => recipeSetting.id == settingId);
     log("Recipe settings of setting id $settingId deleted");
@@ -214,20 +218,27 @@ class RecipesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // on saving changes to recipe details page
+  // stores tempRecipeSettings in database and cache
   Future<void> saveEditedRecipeSettings(int recipeEntryId) async {
+    // TODO: could be more efficient but idk how :)
+
     _recipeSettings.removeWhere((recipeSetting) =>
         recipeSetting.recipeEntryId == recipeEntryId &&
         !_tempRecipeSettings.contains(recipeSetting));
+
+    _recipeSettings.addAll(_tempRecipeSettings.where(
+        (tempRecipeSetting) => !_recipeSettings.contains(tempRecipeSetting)));
+
     for (var tempRecipeSetting in _tempRecipeSettings) {
       int index = _recipeSettings.indexWhere(
           (recipeSetting) => recipeSetting.id == tempRecipeSetting.id);
       if (index == -1) {
-        _recipeSettings.add(tempRecipeSetting);
+        await RecipeSettingsDatabase.instance.create(tempRecipeSetting);
       } else {
         _recipeSettings[index] = tempRecipeSetting;
+        await RecipeSettingsDatabase.instance.update(tempRecipeSetting);
       }
-
-      await RecipeSettingsDatabase.instance.update(tempRecipeSetting);
     }
     notifyListeners();
   }

@@ -45,7 +45,7 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
                             Navigator.of(context).pop();
                           },
                           deleteAction: () {
-                            recipesProvider.deleteSetting(
+                            recipesProvider.tempDeleteSetting(
                                 recipesProvider.tempRecipeSettings[index].id!);
                             Navigator.of(context).pop();
                           },
@@ -109,7 +109,7 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
                       onTap: () {
                         showCustomModalSheet(
                             submitAction: () {
-                              recipesProvider.addSetting(widget
+                              recipesProvider.tempAddSetting(widget
                                   .recipeEntryId); // index doesn't matter for recipe entry id
                               Navigator.of(context).pop();
                             },
