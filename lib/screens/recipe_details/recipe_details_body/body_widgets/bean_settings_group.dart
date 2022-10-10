@@ -1,4 +1,5 @@
 import 'package:aeroquest/widgets/custom_button.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'dart:core';
 
@@ -25,20 +26,13 @@ class BeanSettingsGroup extends StatefulWidget {
 class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
   @override
   Widget build(BuildContext context) {
-    List<RecipeSettings> recipeSettings =
-        Provider.of<RecipesProvider>(context, listen: true)
-            .recipeSettings
-            .where((recipeSetting) =>
-                recipeSetting.recipeEntryId == widget.recipeEntryId)
-            .toList();
-
     return Consumer<RecipesProvider>(
       builder: (_, recipesProvider, ___) {
         return Column(
           children: [
             ListView.separated(
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: recipeSettings.length,
+              itemCount: recipesProvider.tempRecipeSettings.length,
               shrinkWrap: true,
               itemBuilder: (_, int index) {
                 return GestureDetector(
@@ -46,36 +40,33 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
                     if (recipesProvider.editMode == EditMode.enabled) {
                       showCustomModalSheet(
                           submitAction: () {
-                            recipesProvider.editSetting(recipeSettings[index]);
+                            recipesProvider.editSetting(
+                                recipesProvider.tempRecipeSettings[index]);
                             Navigator.of(context).pop();
                           },
-                          deleteAction: recipesProvider.recipeSettings
-                                      .where((recipeSetting) =>
-                                          recipeSetting.recipeEntryId ==
-                                          widget.recipeEntryId)
-                                      .length >
-                                  1
-                              ? () {
-                                  recipesProvider
-                                      .deleteSetting(recipeSettings[index].id!);
-                                  Navigator.of(context).pop();
-                                }
-                              : null,
-                          recipeSettingsData: recipeSettings[index],
+                          deleteAction: () {
+                            recipesProvider.deleteSetting(
+                                recipesProvider.tempRecipeSettings[index].id!);
+                            Navigator.of(context).pop();
+                          },
+                          recipeSettingsData:
+                              recipesProvider.tempRecipeSettings[index],
                           context: _);
                     }
                   },
                   child: Visibility(
                     visible: (recipesProvider.editMode == EditMode.disabled &&
                             RecipeSettings.stringToSettingVisibility(
-                                    recipeSettings[index].visibility) ==
+                                    recipesProvider.tempRecipeSettings[index]
+                                        .visibility) ==
                                 SettingVisibility.hidden)
                         ? false
                         : true,
                     child: Opacity(
                       opacity: (recipesProvider.editMode == EditMode.enabled &&
                               RecipeSettings.stringToSettingVisibility(
-                                      recipeSettings[index].visibility) ==
+                                      recipesProvider.tempRecipeSettings[index]
+                                          .visibility) ==
                                   SettingVisibility.hidden)
                           ? 0.5
                           : 1,
@@ -92,7 +83,8 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
                                   : [],
                         ),
                         child: BeanSettings(
-                          recipeSetting: recipesProvider.recipeSettings[index],
+                          recipeSetting:
+                              recipesProvider.tempRecipeSettings[index],
                         ),
                       ),
                     ),

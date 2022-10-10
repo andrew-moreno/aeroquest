@@ -27,12 +27,13 @@ class RecipeCard extends StatelessWidget {
         .toList();
     return GestureDetector(
       onTap: () {
+        Provider.of<RecipesProvider>(context, listen: false)
+            .setTempRecipeSettings(recipeData.id!);
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (_) => RecipeDetails(
               recipeData: recipeData,
-              recipeSettingsData: recipeSettings,
             ),
           ),
         );

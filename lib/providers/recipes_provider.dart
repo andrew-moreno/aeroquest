@@ -4,6 +4,7 @@ import 'package:aeroquest/databases/coffee_beans_database.dart';
 import 'package:aeroquest/models/coffee_bean.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import "package:collection/collection.dart";
 
 import 'package:aeroquest/widgets/recipe_settings/widgets/settings_value.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -64,7 +65,7 @@ class RecipesProvider extends ChangeNotifier {
   Future<void> editRecipe(Recipe recipeData) async {
     _recipes[_recipes.indexWhere((recipe) => recipe.id == recipeData.id)] =
         recipeData;
-
+    saveEditedRecipeSettings(recipeData.id!);
     await RecipesDatabase.instance.update(recipeData);
     notifyListeners();
   }
@@ -78,6 +79,10 @@ class RecipesProvider extends ChangeNotifier {
   int? tempWaterAmount;
   int? tempWaterTemp;
   int? tempBrewTime;
+  late List<RecipeSettings> _tempRecipeSettings;
+  UnmodifiableListView<RecipeSettings> get tempRecipeSettings {
+    return UnmodifiableListView(_tempRecipeSettings);
+  }
 
   // currently active setting to adjust when editing/adding
   late SettingType activeSetting;
@@ -116,6 +121,25 @@ class RecipesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void clearTempRecipeSettings() {
+    _tempRecipeSettings.clear();
+  }
+
+  void setTempRecipeSettings(int recipeEntryId) {
+    _tempRecipeSettings = _recipeSettings
+        .where((recipeSetting) => recipeSetting.recipeEntryId == recipeEntryId)
+        .toList();
+  }
+
+  bool areSettingsChanged(int recipeEntryId) {
+    return const DeepCollectionEquality().equals(
+        _tempRecipeSettings,
+        _recipeSettings
+            .where(
+                (recipeSetting) => recipeSetting.recipeEntryId == recipeEntryId)
+            .toList());
+  }
+
   Future<void> addSetting(int recipeEntryId) async {
     RecipeSettings newRecipeSettings =
         await RecipeSettingsDatabase.instance.create(RecipeSettings(
@@ -128,22 +152,32 @@ class RecipesProvider extends ChangeNotifier {
       brewTime: tempBrewTime!,
       visibility: describeEnum(tempSettingVisibility!),
     ));
-    _recipeSettings.add(newRecipeSettings);
+    _tempRecipeSettings.add(newRecipeSettings);
     notifyListeners();
     log("Recipe setting added with id: ${newRecipeSettings.id}");
   }
 
   Future<void> deleteSetting(int settingId) async {
-    _recipeSettings
+    _tempRecipeSettings
         .removeWhere((recipeSetting) => recipeSetting.id == settingId);
-    await RecipeSettingsDatabase.instance.delete(settingId);
     log("Recipe settings of setting id $settingId deleted");
     notifyListeners();
   }
 
   // when save button pressed
+  // saves to temp recipe settings
   Future<void> editSetting(RecipeSettings recipeSettingsData) async {
-    RecipeSettings newCoffeeSettingsData = recipeSettingsData;
+    RecipeSettings newCoffeeSettingsData = RecipeSettings(
+      id: recipeSettingsData.id,
+      recipeEntryId: recipeSettingsData.recipeEntryId,
+      beanId: recipeSettingsData.beanId,
+      grindSetting: recipeSettingsData.grindSetting,
+      coffeeAmount: recipeSettingsData.coffeeAmount,
+      waterAmount: recipeSettingsData.waterAmount,
+      waterTemp: recipeSettingsData.waterTemp,
+      brewTime: recipeSettingsData.brewTime,
+      visibility: recipeSettingsData.visibility,
+    );
     if (recipeSettingsData.grindSetting != tempGrindSetting) {
       newCoffeeSettingsData.grindSetting = tempGrindSetting!;
       log("Grind setting set to $tempGrindSetting");
@@ -174,10 +208,27 @@ class RecipesProvider extends ChangeNotifier {
       newCoffeeSettingsData.visibility = describeEnum(tempSettingVisibility!);
       log("Visibility set to $tempSettingVisibility");
     }
-    _recipeSettings[_recipeSettings.indexWhere(
+    _tempRecipeSettings[_tempRecipeSettings.indexWhere(
             (recipeSetting) => recipeSetting.id == recipeSettingsData.id)] =
         newCoffeeSettingsData;
-    await RecipeSettingsDatabase.instance.update(newCoffeeSettingsData);
+    notifyListeners();
+  }
+
+  Future<void> saveEditedRecipeSettings(int recipeEntryId) async {
+    _recipeSettings.removeWhere((recipeSetting) =>
+        recipeSetting.recipeEntryId == recipeEntryId &&
+        !_tempRecipeSettings.contains(recipeSetting));
+    for (var tempRecipeSetting in _tempRecipeSettings) {
+      int index = _recipeSettings.indexWhere(
+          (recipeSetting) => recipeSetting.id == tempRecipeSetting.id);
+      if (index == -1) {
+        _recipeSettings.add(tempRecipeSetting);
+      } else {
+        _recipeSettings[index] = tempRecipeSetting;
+      }
+
+      await RecipeSettingsDatabase.instance.update(tempRecipeSetting);
+    }
     notifyListeners();
   }
 }

@@ -16,11 +16,9 @@ class RecipeDetails extends StatelessWidget {
   RecipeDetails({
     Key? key,
     required this.recipeData,
-    required this.recipeSettingsData,
   }) : super(key: key);
 
   final Recipe recipeData;
-  final List<RecipeSettings> recipeSettingsData;
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -38,6 +36,8 @@ class RecipeDetails extends StatelessWidget {
                 .formKey
                 .currentState!
                 .reset();
+            Provider.of<RecipesProvider>(context, listen: false)
+                .setTempRecipeSettings(recipeData.id!);
             Navigator.of(context).pop(true);
           },
         ),
@@ -125,179 +125,143 @@ class RecipeDetails extends StatelessWidget {
         child: SafeArea(
           child: StretchingOverscrollIndicator(
             axisDirection: AxisDirection.down,
-            child: FutureBuilder(
-              future: RecipeSettingsDatabase.instance
-                  .readAllRecipeSettingsForRecipe(recipeData.id!),
-              builder: (context, AsyncSnapshot<List<RecipeSettings>> snapshot) {
-                return CustomScrollView(
-                  controller: _scrollController,
-                  slivers: [
-                    SliverAppBar(
-                      backgroundColor: kPrimary,
-                      leading: AppBarLeading(
-                        function: LeadingFunction.back,
-                        onPressed: () {
-                          if (Provider.of<RecipesProvider>(context,
-                                      listen: false)
-                                  .editMode ==
-                              EditMode.enabled) {
-                            if (Provider.of<RecipesProvider>(context,
-                                            listen: false)
-                                        .formKey
-                                        .currentState!
-                                        .fields["recipeTitle"]!
-                                        .value !=
-                                    recipeData.title ||
-                                Provider.of<RecipesProvider>(context,
-                                            listen: false)
-                                        .formKey
-                                        .currentState!
-                                        .fields["recipeDescription"]
-                                        ?.value !=
-                                    recipeData.description) {
-                              _showDiscardChangesPopup();
-                            } else {
-                              Provider.of<RecipesProvider>(context,
-                                      listen: false)
-                                  .changeEditMode();
-                              Navigator.of(context).pop();
-                            }
-                          } else {
-                            Navigator.of(context).pop();
-                          }
-                        },
-                      ),
-                      actions: [
-                        AppBarButton(
-                          onTap: () {
-                            // exiting edit mode
-                            // checks if any changes made before showing popup
-                            if (!Provider.of<RecipesProvider>(context,
+            child: CustomScrollView(
+              controller: _scrollController,
+              slivers: [
+                SliverAppBar(
+                  backgroundColor: kPrimary,
+                  leading: AppBarLeading(
+                    function: LeadingFunction.back,
+                    onPressed: () {
+                      if (Provider.of<RecipesProvider>(context, listen: false)
+                              .editMode ==
+                          EditMode.enabled) {
+                        if (Provider.of<RecipesProvider>(context, listen: false)
+                                    .formKey
+                                    .currentState!
+                                    .fields["recipeTitle"]!
+                                    .value !=
+                                recipeData.title ||
+                            Provider.of<RecipesProvider>(context, listen: false)
+                                    .formKey
+                                    .currentState!
+                                    .fields["recipeDescription"]
+                                    ?.value !=
+                                recipeData.description ||
+                            !Provider.of<RecipesProvider>(context,
+                                    listen: false)
+                                .areSettingsChanged(recipeData.id!)) {
+                          _showDiscardChangesPopup();
+                        } else {
+                          Provider.of<RecipesProvider>(context, listen: false)
+                              .changeEditMode();
+                          Provider.of<RecipesProvider>(context, listen: false)
+                              .clearTempRecipeSettings();
+                          Navigator.of(context).pop();
+                        }
+                      } else {
+                        Provider.of<RecipesProvider>(context, listen: false)
+                            .clearTempRecipeSettings();
+                        Navigator.of(context).pop();
+                      }
+                    },
+                  ),
+                  actions: [
+                    AppBarButton(
+                      onTap: () {
+                        // exiting edit mode
+                        // checks if any changes made before showing popup
+                        if (!Provider.of<RecipesProvider>(context,
+                                listen: false)
+                            .formKey
+                            .currentState!
+                            .validate()) {
+                          return;
+                        }
+                        if (Provider.of<RecipesProvider>(context, listen: false)
+                                .editMode ==
+                            EditMode.enabled) {
+                          Recipe updatedRecipe = Recipe(
+                            id: recipeData.id!,
+                            title: Provider.of<RecipesProvider>(context,
                                     listen: false)
                                 .formKey
                                 .currentState!
-                                .validate()) {
-                              return;
-                            }
-                            if (Provider.of<RecipesProvider>(context,
-                                        listen: false)
-                                    .editMode ==
-                                EditMode.enabled) {
-                              /// checking if at least one settings value is shown before proceeding
-                              if (snapshot.data!.any((coffeeSetting) =>
-                                  RecipeSettings.stringToSettingVisibility(
-                                      coffeeSetting.visibility) ==
-                                  SettingVisibility.shown)) {
-                                Recipe updatedRecipe = Recipe(
-                                  id: recipeData.id!,
-                                  title: Provider.of<RecipesProvider>(context,
-                                          listen: false)
-                                      .formKey
-                                      .currentState!
-                                      .fields["recipeTitle"]!
-                                      .value,
-                                  description: Provider.of<RecipesProvider>(
-                                          context,
-                                          listen: false)
-                                      .formKey
-                                      .currentState!
-                                      .fields["recipeDescription"]
-                                      ?.value,
-                                  pushPressure: recipeData.pushPressure,
-                                  brewMethod: recipeData.brewMethod,
-                                );
+                                .fields["recipeTitle"]!
+                                .value,
+                            description: Provider.of<RecipesProvider>(context,
+                                    listen: false)
+                                .formKey
+                                .currentState!
+                                .fields["recipeDescription"]
+                                ?.value,
+                            pushPressure: recipeData.pushPressure,
+                            brewMethod: recipeData.brewMethod,
+                          );
 
-                                Provider.of<RecipesProvider>(context,
-                                        listen: false)
-                                    .editRecipe(updatedRecipe);
-                                Provider.of<RecipesProvider>(context,
-                                        listen: false)
-                                    .changeEditMode();
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: const Text(
-                                      "At least one settings bar must be shown",
-                                      style: TextStyle(
-                                        color: kAccent,
-                                        fontFamily: "Poppins",
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    backgroundColor: kDarkSecondary,
-                                    margin: const EdgeInsets.all(10),
-                                    elevation: 100,
-                                    behavior: SnackBarBehavior.floating,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(kCornerRadius),
-                                    ),
-                                  ),
-                                );
-                              }
-                            } else {
-                              // entering edit mode
-                              Provider.of<RecipesProvider>(context,
-                                      listen: false)
-                                  .changeEditMode();
-                            }
-                          },
-                          icon:
-                              (Provider.of<RecipesProvider>(context).editMode ==
-                                      EditMode.enabled)
-                                  ? Icons.check
-                                  : Icons.edit,
-                        ),
-                        AppBarButton(
-                          onTap: () {
-                            _showConfirmDeletePopup();
-                          },
-                          icon: Icons.delete,
-                        )
-                      ],
+                          Provider.of<RecipesProvider>(context, listen: false)
+                              .editRecipe(updatedRecipe);
+                          Provider.of<RecipesProvider>(context, listen: false)
+                              .changeEditMode();
+                        } else {
+                          // entering edit mode
+                          Provider.of<RecipesProvider>(context, listen: false)
+                              .changeEditMode();
+                        }
+                      },
+                      icon: (Provider.of<RecipesProvider>(context).editMode ==
+                              EditMode.enabled)
+                          ? Icons.check
+                          : Icons.edit,
                     ),
-                    SliverList(
-                      delegate: SliverChildListDelegate(
-                        [
-                          const Divider(
-                            height: 5,
-                            color: Color(0x00000000),
-                          ),
-                          RecipeDetailsHeader(
-                            titleValue: recipeData.title,
-                            descriptionValue: recipeData.description,
-                          ),
-                          const Divider(
-                            height: 20,
-                            color: Color(0x00000000),
-                          ),
-                          RecipeDetailsBody(
-                            recipeData: recipeData,
-                          ),
-                        ],
-                      ),
-                    ),
-                    // fills remaining space if content doesn't expand to height of screen
-                    SliverFillRemaining(
-                      hasScrollBody: false,
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: kDarkSecondary,
-                          // necessary to fix 1 pixel gap bug in slivers
-                          boxShadow: [
-                            BoxShadow(
-                              color: kDarkSecondary,
-                              blurRadius: 0.0,
-                              spreadRadius: 0.0,
-                              offset: Offset(0, -2),
-                            ),
-                          ],
-                        ),
-                      ),
+                    AppBarButton(
+                      onTap: () {
+                        _showConfirmDeletePopup();
+                      },
+                      icon: Icons.delete,
                     )
                   ],
-                );
-              },
+                ),
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      const Divider(
+                        height: 5,
+                        color: Color(0x00000000),
+                      ),
+                      RecipeDetailsHeader(
+                        titleValue: recipeData.title,
+                        descriptionValue: recipeData.description,
+                      ),
+                      const Divider(
+                        height: 20,
+                        color: Color(0x00000000),
+                      ),
+                      RecipeDetailsBody(
+                        recipeData: recipeData,
+                      ),
+                    ],
+                  ),
+                ),
+                // fills remaining space if content doesn't expand to height of screen
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: kDarkSecondary,
+                      // necessary to fix 1 pixel gap bug in slivers
+                      boxShadow: [
+                        BoxShadow(
+                          color: kDarkSecondary,
+                          blurRadius: 0.0,
+                          spreadRadius: 0.0,
+                          offset: Offset(0, -2),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              ],
             ),
           ),
         ),
