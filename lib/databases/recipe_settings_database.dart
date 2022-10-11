@@ -45,11 +45,11 @@ class RecipeSettingsDatabase {
     ''');
   }
 
-  Future<RecipeSettings> create(RecipeSettings recipeSetting) async {
+  Future<int> create(RecipeSettings recipeSetting) async {
     final db = await instance.database;
 
     final id = await db.insert(tableRecipeSettings, recipeSetting.toJson());
-    return recipeSetting.copy(id: id);
+    return id;
   }
 
   Future<RecipeSettings> readRecipeSetting(int id) async {
@@ -81,12 +81,24 @@ class RecipeSettingsDatabase {
     return result.map((json) => RecipeSettings.fromJson(json)).toList();
   }
 
-  Future<List<RecipeSettings>> readAllRecipeSettings() async {
+  Future<Map<int, List<RecipeSettings>>> readAllRecipeSettings() async {
     final db = await instance.database;
 
     final result = await db.query(tableRecipeSettings);
 
-    return result.map((json) => RecipeSettings.fromJson(json)).toList();
+    final recipeSettingsList =
+        result.map((json) => RecipeSettings.fromJson(json)).toList();
+
+    final map = <int, List<RecipeSettings>>{};
+    for (var recipeSetting in recipeSettingsList) {
+      if (map.containsKey(recipeSetting.recipeEntryId)) {
+        map[recipeSetting.recipeEntryId]!.add(recipeSetting);
+      } else {
+        map[recipeSetting.recipeEntryId] = [recipeSetting];
+      }
+    }
+
+    return map;
   }
 
   Future<int> update(RecipeSettings recipeSetting) async {

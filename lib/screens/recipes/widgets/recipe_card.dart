@@ -19,12 +19,9 @@ class RecipeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<RecipeSettings> recipeSettings = Provider.of<RecipesProvider>(
-            context,
-            listen: false)
-        .recipeSettings
-        .where((recipeSetting) => recipeSetting.recipeEntryId == recipeData.id)
-        .toList();
+    final List<RecipeSettings> recipeSettings =
+        Provider.of<RecipesProvider>(context, listen: false)
+            .recipeSettings[recipeData.id]!;
     return GestureDetector(
       onTap: () {
         Provider.of<RecipesProvider>(context, listen: false)
