@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:aeroquest/constraints.dart';
 
 class AppBarLeading extends StatelessWidget {
-  const AppBarLeading({Key? key, required this.function, this.onPressed})
-      : super(key: key);
+  const AppBarLeading({
+    Key? key,
+    required this.function,
+    this.onPressed,
+  }) : super(key: key);
 
   final LeadingFunction function;
   final Function()? onPressed;

@@ -34,19 +34,22 @@ class ExitDialog extends StatelessWidget {
       actionsAlignment: MainAxisAlignment.spaceAround,
       actions: [
         CustomButton(
-            onTap: leftAction,
-            buttonType: ButtonType.positive,
-            text: leftText,
-            width: 100.0),
+          onTap: leftAction,
+          buttonType: ButtonType.positive,
+          text: leftText,
+          width: 100.0,
+        ),
         CustomButton(
-            onTap: rightAction,
-            buttonType: ButtonType.negative,
-            text: rightText,
-            width: 100.0)
+          onTap: rightAction,
+          buttonType: ButtonType.negative,
+          text: rightText,
+          width: 100.0,
+        )
       ],
       backgroundColor: kDarkSecondary,
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(kCornerRadius)),
+        borderRadius: BorderRadius.circular(kCornerRadius),
+      ),
     );
   }
 }

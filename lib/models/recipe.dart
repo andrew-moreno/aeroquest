@@ -35,10 +35,8 @@ class Recipe {
     int? id,
     String? title,
     String? description,
-    int? coffeeSettingsId,
     String? pushPressure,
     String? brewMethod,
-    int? notesId,
   }) =>
       Recipe(
         id: id ?? this.id,

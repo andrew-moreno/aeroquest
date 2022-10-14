@@ -8,7 +8,10 @@ import 'package:provider/provider.dart';
 
 // template for the settings of a single coffee bean
 class BeanSettings extends StatelessWidget {
-  const BeanSettings({Key? key, required this.recipeSetting}) : super(key: key);
+  const BeanSettings({
+    Key? key,
+    required this.recipeSetting,
+  }) : super(key: key);
 
   final RecipeSettings recipeSetting;
 
