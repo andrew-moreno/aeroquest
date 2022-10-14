@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:math' as math;
 import 'package:aeroquest/databases/coffee_beans_database.dart';
 import 'package:aeroquest/models/coffee_bean.dart';
 import 'package:flutter/foundation.dart';
@@ -15,19 +14,48 @@ import '../models/recipe_settings.dart';
 
 class RecipesProvider extends ChangeNotifier {
   late List<Recipe> _recipes;
-  late Map<int, List<RecipeSettings>> _recipeSettings;
+
   late List<CoffeeBean> _coffeeBeans;
+  late Map<int, List<RecipeSettings>> _recipeSettings;
+  late List<RecipeSettings> _tempRecipeSettings;
+
+  EditMode editMode = EditMode.disabled;
+
+  // form key for title and description
+  GlobalKey<FormBuilderState> recipePropertiesFormKey =
+      GlobalKey<FormBuilderState>();
+
+  // form key for selecting a bean in the settings modal
+  GlobalKey<FormBuilderState> settingsBeanFormKey =
+      GlobalKey<FormBuilderState>();
+
+  // currently active setting to adjust when editing/adding
+  late SettingType activeSetting;
+
+  // methods and variables for editing/adding settings to a recipe
+  // contain values for the currently edited/added setting
+  SettingVisibility? tempSettingVisibility;
+  int? tempBeanId;
+  double? tempGrindSetting;
+  double? tempCoffeeAmount;
+  int? tempWaterAmount;
+  int? tempWaterTemp;
+  int? tempBrewTime;
 
   UnmodifiableListView<Recipe> get recipes {
     return UnmodifiableListView(_recipes);
+  }
+
+  UnmodifiableListView<CoffeeBean> get coffeeBeans {
+    return UnmodifiableListView(_coffeeBeans);
   }
 
   UnmodifiableMapView<int, List<RecipeSettings>> get recipeSettings {
     return UnmodifiableMapView(_recipeSettings);
   }
 
-  UnmodifiableListView<CoffeeBean> get coffeeBeans {
-    return UnmodifiableListView(_coffeeBeans);
+  UnmodifiableListView<RecipeSettings> get tempRecipeSettings {
+    return UnmodifiableListView(_tempRecipeSettings);
   }
 
   cacheRecipesAndSettings() async {
@@ -36,10 +64,6 @@ class RecipesProvider extends ChangeNotifier {
         await RecipeSettingsDatabase.instance.readAllRecipeSettings();
     _coffeeBeans = await CoffeeBeansDatabase.instance.readAllCoffeeBeans();
   }
-
-  EditMode editMode = EditMode.disabled;
-
-  GlobalKey<FormBuilderState> formKey = GlobalKey<FormBuilderState>();
 
   void changeEditMode() {
     if (editMode == EditMode.disabled) {
@@ -52,6 +76,19 @@ class RecipesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<Recipe> tempAddRecipe() async {
+    int id = await RecipesDatabase.instance.getUnusedId();
+    Recipe newRecipe = Recipe(
+        id: id,
+        title: "",
+        description: "",
+        pushPressure: "light",
+        brewMethod: "regular");
+    setTempRecipeSettings(null);
+    changeEditMode();
+    return newRecipe;
+  }
+
   void deleteRecipe(int recipeId) async {
     _recipes.removeWhere((recipe) => recipe.id == recipeId);
     _recipeSettings.remove(recipeId);
@@ -61,30 +98,42 @@ class RecipesProvider extends ChangeNotifier {
     log("Recipe of id $recipeId deleted");
   }
 
-  Future<void> editRecipe(Recipe recipeData) async {
-    _recipes[_recipes.indexWhere((recipe) => recipe.id == recipeData.id)] =
-        recipeData;
+  Future<void> saveRecipe(Recipe recipeData) async {
+    if (_recipes.isEmpty) {
+      _recipes = [];
+      _recipeSettings = {recipeData.id!: []};
+      _recipes.add(recipeData);
+      await RecipesDatabase.instance.create(recipeData);
+    } else {
+      int index = _recipes.indexWhere((recipe) => recipe.id == recipeData.id);
+      if (index == -1) {
+        _recipes.add(recipeData);
+        await RecipesDatabase.instance.create(recipeData);
+      } else {
+        _recipes[index] = recipeData;
+        await RecipesDatabase.instance.update(recipeData);
+      }
+    }
     saveEditedRecipeSettings(recipeData.id!);
-    await RecipesDatabase.instance.update(recipeData);
     notifyListeners();
   }
 
-  /// methods and variables for editing/adding settings to a recipe
-  /// contain values for the currently edited/added setting
-  SettingVisibility? tempSettingVisibility;
-  int? tempBeanId;
-  double? tempGrindSetting;
-  double? tempCoffeeAmount;
-  int? tempWaterAmount;
-  int? tempWaterTemp;
-  int? tempBrewTime;
-  late List<RecipeSettings> _tempRecipeSettings;
-  UnmodifiableListView<RecipeSettings> get tempRecipeSettings {
-    return UnmodifiableListView(_tempRecipeSettings);
-  }
+  bool isRecipeChanged({
+    required String originalTitle,
+    required String? originalDescription,
+    required int recipeId,
+  }) {
+    bool areRecipePropertiesChanged =
+        (recipePropertiesFormKey.currentState!.fields["recipeTitle"]!.value !=
+                originalTitle ||
+            recipePropertiesFormKey
+                    .currentState!.fields["recipeDescription"]?.value !=
+                originalDescription);
+    bool areRecipeSettingsChanged =
+        (_tempRecipeSettings.isNotEmpty) ? areSettingsChanged(recipeId) : true;
 
-  // currently active setting to adjust when editing/adding
-  late SettingType activeSetting;
+    return (areRecipePropertiesChanged && areRecipeSettingsChanged);
+  }
 
   /// used to activate/deactive editing of a setting for a recipe
   void selectSetting(SettingType settingType) {
@@ -125,8 +174,8 @@ class RecipesProvider extends ChangeNotifier {
   }
 
   // initialize tempRecipeSettings
-  void setTempRecipeSettings(int recipeEntryId) {
-    _tempRecipeSettings = List.from(_recipeSettings[recipeEntryId]!);
+  void setTempRecipeSettings(int? recipeEntryId) {
+    _tempRecipeSettings = List.from(_recipeSettings[recipeEntryId] ?? []);
   }
 
   // check if settings have been updated since details page load
@@ -137,6 +186,7 @@ class RecipesProvider extends ChangeNotifier {
 
   // adds new setting to tempRecipeSettings
   Future<void> tempAddSetting(int recipeEntryId) async {
+    // temp id set as cannot be pulled from database because unknown how many ids needed
     int tempId;
     if (_tempRecipeSettings.isNotEmpty) {
       _tempRecipeSettings.sort((a, b) => a.id!.compareTo(b.id!));
@@ -212,6 +262,9 @@ class RecipesProvider extends ChangeNotifier {
   // on saving changes to recipe details page
   // stores tempRecipeSettings in database and cache
   Future<void> saveEditedRecipeSettings(int recipeEntryId) async {
+    if (_recipeSettings[recipeEntryId] == null) {
+      _recipeSettings[recipeEntryId] = [];
+    }
     for (var recipeSetting in _recipeSettings[recipeEntryId]!) {
       if (!tempRecipeSettings.contains(recipeSetting)) {
         await RecipeSettingsDatabase.instance.delete(recipeSetting.id!);

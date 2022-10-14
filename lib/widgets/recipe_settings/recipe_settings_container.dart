@@ -15,7 +15,7 @@ class RecipeSettingsContainer extends StatelessWidget {
   }) : super(key: key);
 
   final List<RecipeSettings> recipeSettings;
-  final _controller = PageController();
+  final _controller = PageController(viewportFraction: 1.02);
 
   @override
   Widget build(BuildContext context) {
@@ -28,15 +28,24 @@ class RecipeSettingsContainer extends StatelessWidget {
             color: kDarkSecondary,
             borderRadius: BorderRadius.circular(kCornerRadius),
           ),
-          child: ExpandablePageView(
-            // handles scrolling
-            controller: _controller,
-            children: List.generate(
-              recipeSettings.length,
-              (index) => BeanSettings(
-                recipeSetting: recipeSettings[index],
-              ),
-            ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: (recipeSettings.length > 1)
+                ? ExpandablePageView(
+                    controller: _controller,
+                    children: List.generate(
+                      recipeSettings.length,
+                      (index) => FractionallySizedBox(
+                        widthFactor: 1 / _controller.viewportFraction,
+                        child: BeanSettings(
+                          recipeSetting: recipeSettings[index],
+                        ),
+                      ),
+                    ),
+                  )
+                : BeanSettings(
+                    recipeSetting: recipeSettings[0],
+                  ),
           ),
         ),
         const Divider(

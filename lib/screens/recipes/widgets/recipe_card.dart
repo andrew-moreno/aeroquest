@@ -21,7 +21,8 @@ class RecipeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<RecipeSettings> recipeSettings =
         Provider.of<RecipesProvider>(context, listen: false)
-            .recipeSettings[recipeData.id]!;
+                .recipeSettings[recipeData.id] ??
+            [];
     return GestureDetector(
       onTap: () {
         Provider.of<RecipesProvider>(context, listen: false)
@@ -31,6 +32,7 @@ class RecipeCard extends StatelessWidget {
           MaterialPageRoute(
             builder: (_) => RecipeDetails(
               recipeData: recipeData,
+              showDeleteButton: true,
             ),
           ),
         );
@@ -59,14 +61,19 @@ class RecipeCard extends StatelessWidget {
                     color: Color(0x00000000),
                     height: 10,
                   ),
-                  RecipeSettingsContainer(
-                    recipeSettings: recipeSettings
-                        .where((recipeSetting) =>
-                            RecipeSettings.stringToSettingVisibility(
-                                recipeSetting.visibility) ==
-                            SettingVisibility.shown)
-                        .toList(),
-                  ),
+                  (recipeSettings.any((recipeSetting) =>
+                          RecipeSettings.stringToSettingVisibility(
+                              recipeSetting.visibility) ==
+                          SettingVisibility.shown))
+                      ? RecipeSettingsContainer(
+                          recipeSettings: recipeSettings
+                              .where((recipeSetting) =>
+                                  RecipeSettings.stringToSettingVisibility(
+                                      recipeSetting.visibility) ==
+                                  SettingVisibility.shown)
+                              .toList(),
+                        )
+                      : Container(),
                 ],
               ),
             ),

@@ -39,6 +39,16 @@ class RecipesDatabase {
     ''');
   }
 
+  Future<int> getUnusedId() async {
+    final db = await instance.database;
+
+    final List<Map<String, Object?>> result = await db.rawQuery('''
+      SELECT MAX($tableRecipes.${RecipeFields.id}) FROM $tableRecipes''');
+
+    return ((result[0]["MAX($tableRecipes.${RecipeFields.id})"] ?? 0) as int) +
+        1;
+  }
+
   Future<Recipe> create(Recipe recipe) async {
     final db = await instance.database;
 

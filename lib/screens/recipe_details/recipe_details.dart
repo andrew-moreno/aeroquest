@@ -1,4 +1,3 @@
-import 'package:aeroquest/databases/recipe_settings_database.dart';
 import 'package:aeroquest/widgets/appbar/appbar_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,16 +8,17 @@ import 'package:aeroquest/screens/recipe_details/recipe_details_header.dart';
 import 'package:aeroquest/widgets/appbar/appbar_leading.dart';
 import 'package:aeroquest/widgets/exit_dialog.dart';
 import 'package:aeroquest/constraints.dart';
-import 'package:aeroquest/models/recipe_settings.dart';
 import 'package:aeroquest/models/recipe.dart';
 
 class RecipeDetails extends StatelessWidget {
   RecipeDetails({
     Key? key,
     required this.recipeData,
+    required this.showDeleteButton,
   }) : super(key: key);
 
   final Recipe recipeData;
+  final bool showDeleteButton;
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -33,42 +33,17 @@ class RecipeDetails extends StatelessWidget {
             Provider.of<RecipesProvider>(context, listen: false)
                 .changeEditMode();
             Provider.of<RecipesProvider>(context, listen: false)
-                .formKey
+                .recipePropertiesFormKey
                 .currentState!
                 .reset();
             Provider.of<RecipesProvider>(context, listen: false)
                 .setTempRecipeSettings(recipeData.id!);
             Navigator.of(context).pop(true);
+            Navigator.of(context).pop(true);
           },
         ),
       );
     }
-
-    // Future<bool> _showConfirmSavePopup() async {
-    //   return await showDialog(
-    //     context: context,
-    //     builder: (context) => ExitDialog(
-    //       titleText: "Confirm changes",
-    //       leftAction: () {
-    //         String _title = _formKey.currentState!.fields["recipeTitle"]!.value;
-    //         String? _description =
-    //             _formKey.currentState!.fields["recipeDescription"]?.value;
-    //         Provider.of<RecipesProvider>(context, listen: false)
-    //             .editRecipe(_title, _description, widget._recipeData.id);
-    //         Provider.of<RecipesProvider>(context, listen: false)
-    //             .changeEditMode();
-    //         Navigator.of(context).pop();
-    //       },
-    //       rightAction: () {
-    //         Provider.of<RecipesProvider>(context, listen: false)
-    //             .changeEditMode();
-    //         Navigator.of(context).pop();
-    //       },
-    //       leftText: "Save",
-    //       rightText: "Discard",
-    //     ),
-    //   );
-    // }
 
     Future<bool> _showConfirmDeletePopup() async {
       return await showDialog(
@@ -76,6 +51,9 @@ class RecipeDetails extends StatelessWidget {
         builder: (context) => ExitDialog(
           titleText: "Confirm delete",
           leftAction: () {
+            Navigator.of(context).pop(false);
+          },
+          rightAction: () {
             Provider.of<RecipesProvider>(context, listen: false)
                 .deleteRecipe(recipeData.id!);
             Navigator.of(context).pop(false);
@@ -86,11 +64,8 @@ class RecipeDetails extends StatelessWidget {
                   .changeEditMode();
             }
           },
-          rightAction: () {
-            Navigator.of(context).pop(false);
-          },
-          leftText: "Delete",
-          rightText: "Cancel",
+          leftText: "Cancel",
+          rightText: "Delete",
         ),
       );
     }
@@ -99,17 +74,10 @@ class RecipeDetails extends StatelessWidget {
       if (Provider.of<RecipesProvider>(context, listen: false).editMode ==
           EditMode.enabled) {
         if (Provider.of<RecipesProvider>(context, listen: false)
-                    .formKey
-                    .currentState!
-                    .fields["recipeTitle"]!
-                    .value !=
-                recipeData.title ||
-            Provider.of<RecipesProvider>(context, listen: false)
-                    .formKey
-                    .currentState!
-                    .fields["recipeDescription"]
-                    ?.value !=
-                recipeData.description) {
+            .isRecipeChanged(
+                originalTitle: recipeData.title,
+                originalDescription: recipeData.description,
+                recipeId: recipeData.id!)) {
           _showDiscardChangesPopup();
         } else {
           Provider.of<RecipesProvider>(context, listen: false).changeEditMode();
@@ -137,20 +105,10 @@ class RecipeDetails extends StatelessWidget {
                               .editMode ==
                           EditMode.enabled) {
                         if (Provider.of<RecipesProvider>(context, listen: false)
-                                    .formKey
-                                    .currentState!
-                                    .fields["recipeTitle"]!
-                                    .value !=
-                                recipeData.title ||
-                            Provider.of<RecipesProvider>(context, listen: false)
-                                    .formKey
-                                    .currentState!
-                                    .fields["recipeDescription"]
-                                    ?.value !=
-                                recipeData.description ||
-                            !Provider.of<RecipesProvider>(context,
-                                    listen: false)
-                                .areSettingsChanged(recipeData.id!)) {
+                            .isRecipeChanged(
+                                originalTitle: recipeData.title,
+                                originalDescription: recipeData.description,
+                                recipeId: recipeData.id!)) {
                           _showDiscardChangesPopup();
                         } else {
                           Provider.of<RecipesProvider>(context, listen: false)
@@ -173,7 +131,7 @@ class RecipeDetails extends StatelessWidget {
                         // checks if any changes made before showing popup
                         if (!Provider.of<RecipesProvider>(context,
                                 listen: false)
-                            .formKey
+                            .recipePropertiesFormKey
                             .currentState!
                             .validate()) {
                           return;
@@ -181,26 +139,21 @@ class RecipeDetails extends StatelessWidget {
                         if (Provider.of<RecipesProvider>(context, listen: false)
                                 .editMode ==
                             EditMode.enabled) {
-                          Recipe updatedRecipe = Recipe(
-                            id: recipeData.id!,
-                            title: Provider.of<RecipesProvider>(context,
-                                    listen: false)
-                                .formKey
-                                .currentState!
-                                .fields["recipeTitle"]!
-                                .value,
-                            description: Provider.of<RecipesProvider>(context,
-                                    listen: false)
-                                .formKey
-                                .currentState!
-                                .fields["recipeDescription"]
-                                ?.value,
-                            pushPressure: recipeData.pushPressure,
-                            brewMethod: recipeData.brewMethod,
-                          );
-
+                          Recipe updatedRecipe = recipeData.copy(
+                              title: Provider.of<RecipesProvider>(context,
+                                      listen: false)
+                                  .recipePropertiesFormKey
+                                  .currentState!
+                                  .fields["recipeTitle"]!
+                                  .value,
+                              description: Provider.of<RecipesProvider>(context,
+                                      listen: false)
+                                  .recipePropertiesFormKey
+                                  .currentState!
+                                  .fields["recipeDescription"]
+                                  ?.value);
                           Provider.of<RecipesProvider>(context, listen: false)
-                              .editRecipe(updatedRecipe);
+                              .saveRecipe(updatedRecipe);
                           Provider.of<RecipesProvider>(context, listen: false)
                               .changeEditMode();
                         } else {
@@ -214,12 +167,14 @@ class RecipeDetails extends StatelessWidget {
                           ? Icons.check
                           : Icons.edit,
                     ),
-                    AppBarButton(
-                      onTap: () {
-                        _showConfirmDeletePopup();
-                      },
-                      icon: Icons.delete,
-                    )
+                    (showDeleteButton)
+                        ? AppBarButton(
+                            onTap: () {
+                              _showConfirmDeletePopup();
+                            },
+                            icon: Icons.delete,
+                          )
+                        : Container(),
                   ],
                 ),
                 SliverList(
@@ -229,9 +184,24 @@ class RecipeDetails extends StatelessWidget {
                         height: 5,
                         color: Color(0x00000000),
                       ),
-                      RecipeDetailsHeader(
-                        titleValue: recipeData.title,
-                        descriptionValue: recipeData.description,
+                      Consumer<RecipesProvider>(
+                        builder: (_, recipesProvider, ___) {
+                          return RecipeDetailsHeader(
+                            titleValue: recipesProvider.recipes
+                                .firstWhere(
+                                  (recipe) => recipe.id == recipeData.id,
+                                  orElse: () => recipeData,
+                                )
+                                .title,
+                            descriptionValue: recipesProvider.recipes
+                                    .firstWhere(
+                                      (recipe) => recipe.id == recipeData.id,
+                                      orElse: () => recipeData,
+                                    )
+                                    .description ??
+                                "",
+                          );
+                        },
                       ),
                       const Divider(
                         height: 20,
