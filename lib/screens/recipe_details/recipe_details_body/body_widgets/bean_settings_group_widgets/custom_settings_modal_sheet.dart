@@ -160,7 +160,8 @@ class _CustomSettingsModalSheetState extends State<CustomSettingsModalSheet> {
                           .validate()) {
                         return;
                       } else {
-                        widget.submitAction;
+                        log("hellp");
+                        widget.submitAction();
                       }
                     },
                     buttonType: ButtonType.positive,
