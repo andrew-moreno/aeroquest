@@ -45,35 +45,6 @@ class VerticalWeightSlider extends StatefulWidget {
 }
 
 class _VerticalWeightSliderState extends State<VerticalWeightSlider> {
-  /// Used to disable scrolling when at certain index so edge of scrolling
-  /// isn't in the middle of the screen
-  // bool disableLeftScroll = false;
-  // bool disableRightScroll = false;
-
-  // void scrollDirectionDisabler(index) {
-  //   log(index.toString());
-  //   double overFlowTicks = (widget.maxWidth / 2 / widget.controller.itemExtent);
-  //   if (index >= (widget.maxWeight - overFlowTicks)) {
-  //     setState(() {
-  //       disableLeftScroll = true;
-  //     });
-  //   } else {
-  //     setState(() {
-  //       disableLeftScroll = false;
-  //     });
-  //   }
-  //   if (index <= 11.75) {
-  //     // TODO: make dynamic
-  //     setState(() {
-  //       disableRightScroll = true;
-  //     });
-  //   } else {
-  //     setState(() {
-  //       disableRightScroll = false;
-  //     });
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -92,35 +63,41 @@ class _VerticalWeightSliderState extends State<VerticalWeightSlider> {
                   : FixedExtentScrollPhysics(),
               perspective: 0.001,
               children: List<Widget>.generate(
-                  [
-                    for (int i = widget.controller.minWeight *
-                            widget.controller.getIntervalToInt();
-                        i <=
-                            widget.maxWeight *
-                                widget.controller.getIntervalToInt();
-                        i++)
-                      i
-                  ].length,
-                  (index) => Center(
-                      child: (index == widget.maxWeight || index == 0)
+                [
+                  for (int i = widget.controller.minWeight *
+                          widget.controller.getIntervalToInt();
+                      i <=
+                          widget.maxWeight *
+                              widget.controller.getIntervalToInt();
+                      i++)
+                    i
+                ].length,
+                (index) => Center(
+                  child: (index == widget.maxWeight || index == 0)
+                      ? WeightPointer(
+                          color: widget.decoration.largeColor,
+                          width: widget.decoration.width + 30,
+                          height: widget.decoration.height,
+                        )
+                      : index % 10 == 0
                           ? WeightPointer(
                               color: widget.decoration.largeColor,
-                              width: widget.decoration.width + 30,
-                              height: widget.decoration.height)
-                          : index % 10 == 0
-                              ? WeightPointer(
-                                  color: widget.decoration.largeColor,
-                                  width: widget.decoration.width,
-                                  height: widget.decoration.height)
-                              : WeightPointer(
-                                  color: widget.decoration.mediumColor,
-                                  width: widget.decoration.width -
-                                      widget.decoration.gap,
-                                  height: widget.decoration.height))),
+                              width: widget.decoration.width,
+                              height: widget.decoration.height,
+                            )
+                          : WeightPointer(
+                              color: widget.decoration.mediumColor,
+                              width: widget.decoration.width -
+                                  widget.decoration.gap,
+                              height: widget.decoration.height,
+                            ),
+                ),
+              ),
               onSelectedItemChanged: (index) {
                 widget.onChanged(
-                    (index / widget.controller.getIntervalToInt()) +
-                        widget.controller.minWeight);
+                  (index / widget.controller.getIntervalToInt()) +
+                      widget.controller.minWeight,
+                );
               },
             ),
             widget.indicator ?? const SizedBox(),
