@@ -2,8 +2,8 @@ import 'package:aeroquest/constraints.dart';
 import 'package:flutter/material.dart';
 
 // only works for 2 positions
-class AnimatedToggle extends StatefulWidget {
-  AnimatedToggle({
+class AnimatedHorizontalToggle extends StatefulWidget {
+  AnimatedHorizontalToggle({
     Key? key,
     required this.values,
     required this.onToggleCallback,
@@ -15,10 +15,11 @@ class AnimatedToggle extends StatefulWidget {
   Position initialPosition;
 
   @override
-  _AnimatedToggleState createState() => _AnimatedToggleState();
+  _AnimatedHorizontalToggleState createState() =>
+      _AnimatedHorizontalToggleState();
 }
 
-class _AnimatedToggleState extends State<AnimatedToggle> {
+class _AnimatedHorizontalToggleState extends State<AnimatedHorizontalToggle> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(

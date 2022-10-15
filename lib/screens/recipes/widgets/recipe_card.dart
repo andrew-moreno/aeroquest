@@ -27,6 +27,8 @@ class RecipeCard extends StatelessWidget {
       onTap: () {
         Provider.of<RecipesProvider>(context, listen: false)
             .setTempRecipeSettings(recipeData.id!);
+        Provider.of<RecipesProvider>(context, listen: false)
+            .setTempRecipe(recipeData.id!);
         Navigator.push(
           context,
           MaterialPageRoute(

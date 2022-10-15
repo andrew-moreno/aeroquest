@@ -50,12 +50,7 @@ class _RecipeDetailsBodyState extends State<RecipeDetailsBody> {
             height: 15,
             color: Color(0x00000000),
           ),
-          RecipeMethod(
-            pushPressure:
-                Recipe.stringToPushPressure(widget.recipeData.pushPressure),
-            brewMethod: Recipe.stringToBrewMethod(widget.recipeData.brewMethod),
-            notes: const [], //TODO: notes implementation; empty lsit for now
-          ),
+          const RecipeMethod(),
         ],
       ),
     );

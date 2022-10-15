@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:aeroquest/databases/coffee_beans_database.dart';
 import 'package:aeroquest/models/coffee_bean.dart';
 import 'package:flutter/foundation.dart';
@@ -14,7 +13,7 @@ import '../models/recipe_settings.dart';
 
 class RecipesProvider extends ChangeNotifier {
   late List<Recipe> _recipes;
-
+  late Recipe _tempRecipe;
   late List<CoffeeBean> _coffeeBeans;
   late Map<int, List<RecipeSettings>> _recipeSettings;
   late List<RecipeSettings> _tempRecipeSettings;
@@ -29,10 +28,13 @@ class RecipesProvider extends ChangeNotifier {
   GlobalKey<FormBuilderState> settingsBeanFormKey =
       GlobalKey<FormBuilderState>();
 
+  late PushPressure tempPushPressure;
+  late BrewMethod tempBrewMethod;
+
   // currently active setting to adjust when editing/adding
   late SettingType activeSetting;
 
-  // methods and variables for editing/adding settings to a recipe
+  // variables for editing/adding settings to a recipe
   // contain values for the currently edited/added setting
   SettingVisibility? tempSettingVisibility;
   int? tempBeanId;
@@ -44,6 +46,10 @@ class RecipesProvider extends ChangeNotifier {
 
   UnmodifiableListView<Recipe> get recipes {
     return UnmodifiableListView(_recipes);
+  }
+
+  Recipe get tempRecipe {
+    return _tempRecipe;
   }
 
   UnmodifiableListView<CoffeeBean> get coffeeBeans {
@@ -68,17 +74,15 @@ class RecipesProvider extends ChangeNotifier {
   void changeEditMode() {
     if (editMode == EditMode.disabled) {
       editMode = EditMode.enabled;
-      log("edit mode enabled");
     } else {
       editMode = EditMode.disabled;
-      log("edit mode disabled");
     }
     notifyListeners();
   }
 
   Future<Recipe> tempAddRecipe() async {
     int id = await RecipesDatabase.instance.getUnusedId();
-    Recipe newRecipe = Recipe(
+    _tempRecipe = Recipe(
         id: id,
         title: "",
         description: "",
@@ -86,7 +90,7 @@ class RecipesProvider extends ChangeNotifier {
         brewMethod: "regular");
     setTempRecipeSettings(null);
     changeEditMode();
-    return newRecipe;
+    return tempRecipe;
   }
 
   void deleteRecipe(int recipeId) async {
@@ -95,26 +99,32 @@ class RecipesProvider extends ChangeNotifier {
     await RecipesDatabase.instance.delete(recipeId);
     await RecipeSettingsDatabase.instance.deleteAllSettingsForRecipe(recipeId);
     notifyListeners();
-    log("Recipe of id $recipeId deleted");
   }
 
-  Future<void> saveRecipe(Recipe recipeData) async {
+  Future<void> saveRecipe() async {
+    Recipe newRecipe = _tempRecipe.copy(
+      title: recipePropertiesFormKey.currentState!.fields["recipeTitle"]!.value,
+      description: recipePropertiesFormKey
+          .currentState!.fields["recipeDescription"]?.value,
+      pushPressure: describeEnum(tempPushPressure),
+      brewMethod: describeEnum(tempBrewMethod),
+    );
     if (_recipes.isEmpty) {
       _recipes = [];
-      _recipeSettings = {recipeData.id!: []};
-      _recipes.add(recipeData);
-      await RecipesDatabase.instance.create(recipeData);
+      _recipeSettings = {newRecipe.id!: []};
+      _recipes.add(newRecipe);
+      await RecipesDatabase.instance.create(newRecipe);
     } else {
-      int index = _recipes.indexWhere((recipe) => recipe.id == recipeData.id);
+      int index = _recipes.indexWhere((recipe) => recipe.id == newRecipe.id);
       if (index == -1) {
-        _recipes.add(recipeData);
-        await RecipesDatabase.instance.create(recipeData);
+        _recipes.add(newRecipe);
+        await RecipesDatabase.instance.create(newRecipe);
       } else {
-        _recipes[index] = recipeData;
-        await RecipesDatabase.instance.update(recipeData);
+        _recipes[index] = newRecipe;
+        await RecipesDatabase.instance.update(newRecipe);
       }
     }
-    saveEditedRecipeSettings(recipeData.id!);
+    saveEditedRecipeSettings(newRecipe.id!);
     notifyListeners();
   }
 
@@ -173,6 +183,12 @@ class RecipesProvider extends ChangeNotifier {
     _tempRecipeSettings.clear();
   }
 
+  void setTempRecipe(int recipeEntryId) {
+    _tempRecipe = _recipes.firstWhere((recipe) => recipe.id == recipeEntryId);
+    tempPushPressure = Recipe.stringToPushPressure(_tempRecipe.pushPressure);
+    tempBrewMethod = Recipe.stringToBrewMethod(_tempRecipe.brewMethod);
+  }
+
   // initialize tempRecipeSettings
   void setTempRecipeSettings(int? recipeEntryId) {
     _tempRecipeSettings = List.from(_recipeSettings[recipeEntryId] ?? []);
@@ -207,14 +223,12 @@ class RecipesProvider extends ChangeNotifier {
     );
     _tempRecipeSettings.add(newRecipeSettings);
     notifyListeners();
-    log("Recipe setting added with id: ${newRecipeSettings.id}");
   }
 
   // deletes setting from tempRecipeSettings
   Future<void> tempDeleteSetting(int settingId) async {
     _tempRecipeSettings
         .removeWhere((recipeSetting) => recipeSetting.id == settingId);
-    log("Recipe settings of setting id $settingId deleted");
     notifyListeners();
   }
 
@@ -225,33 +239,26 @@ class RecipesProvider extends ChangeNotifier {
 
     if (recipeSettingsData.grindSetting != tempGrindSetting) {
       newCoffeeSettingsData.grindSetting = tempGrindSetting!;
-      log("Grind setting set to $tempGrindSetting");
     }
     if (recipeSettingsData.coffeeAmount != tempCoffeeAmount) {
       newCoffeeSettingsData.coffeeAmount = tempCoffeeAmount!;
-      log("Coffee amount set to $tempCoffeeAmount");
     }
     if (recipeSettingsData.waterAmount != tempWaterAmount) {
       newCoffeeSettingsData.waterAmount = tempWaterAmount!;
-      log("Water amount set to $tempWaterAmount");
     }
     if (recipeSettingsData.waterTemp != tempWaterTemp) {
       newCoffeeSettingsData.waterTemp = tempWaterTemp!;
-      log("Water temp set to $tempWaterTemp");
     }
     if (recipeSettingsData.brewTime != tempBrewTime) {
       newCoffeeSettingsData.brewTime = tempBrewTime!;
-      log("Brew time set to $tempBrewTime");
     }
     if (recipeSettingsData.beanId != tempBeanId) {
       newCoffeeSettingsData.beanId = tempBeanId!;
-      log("Bean id set to $tempBeanId");
     }
     if (RecipeSettings.stringToSettingVisibility(
             newCoffeeSettingsData.visibility) !=
         tempSettingVisibility) {
       newCoffeeSettingsData.visibility = describeEnum(tempSettingVisibility!);
-      log("Visibility set to $tempSettingVisibility");
     }
     _tempRecipeSettings[_tempRecipeSettings.indexWhere(
             (recipeSetting) => recipeSetting.id == recipeSettingsData.id)] =
@@ -294,6 +301,9 @@ class RecipesProvider extends ChangeNotifier {
     _recipeSettings[recipeEntryId] = List.from(tempRecipeSettings);
     notifyListeners();
   }
+
+  // Recipe method
+
 }
 
 enum EditMode { enabled, disabled }

@@ -139,21 +139,8 @@ class RecipeDetails extends StatelessWidget {
                         if (Provider.of<RecipesProvider>(context, listen: false)
                                 .editMode ==
                             EditMode.enabled) {
-                          Recipe updatedRecipe = recipeData.copy(
-                              title: Provider.of<RecipesProvider>(context,
-                                      listen: false)
-                                  .recipePropertiesFormKey
-                                  .currentState!
-                                  .fields["recipeTitle"]!
-                                  .value,
-                              description: Provider.of<RecipesProvider>(context,
-                                      listen: false)
-                                  .recipePropertiesFormKey
-                                  .currentState!
-                                  .fields["recipeDescription"]
-                                  ?.value);
                           Provider.of<RecipesProvider>(context, listen: false)
-                              .saveRecipe(updatedRecipe);
+                              .saveRecipe();
                           Provider.of<RecipesProvider>(context, listen: false)
                               .changeEditMode();
                         } else {

@@ -71,10 +71,17 @@ class MyApp extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                   fontSize: 13,
                 ),
+                subtitle2: TextStyle(
+                  fontFamily: "Poppins",
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                ),
               ),
               inputDecorationTheme: InputDecorationTheme(
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 5,
+                  horizontal: kInputDecorationHorizontalPadding,
+                ),
                 hintStyle: const TextStyle(
                   color: kPrimary,
                   fontFamily: "Poppins",

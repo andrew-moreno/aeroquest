@@ -66,8 +66,7 @@ class Recipe {
     switch (action) {
       case "light":
         return PushPressure.light;
-      case "moderate":
-        return PushPressure.moderate;
+
       case "heavy":
         return PushPressure.heavy;
 
@@ -91,7 +90,6 @@ class Recipe {
 
 enum PushPressure {
   light,
-  moderate,
   heavy,
 }
 
