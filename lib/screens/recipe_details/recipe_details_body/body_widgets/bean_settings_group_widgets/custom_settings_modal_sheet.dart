@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -8,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/bean_settings_group_widgets/settings_value_slider.dart';
 import 'package:aeroquest/constraints.dart';
-import 'package:aeroquest/widgets/animated_toggle.dart';
+import 'package:aeroquest/widgets/animated_horizontal_toggle.dart';
 import 'package:aeroquest/widgets/custom_button.dart';
 import 'package:aeroquest/models/recipe_settings.dart';
 import 'package:aeroquest/models/recipe.dart';
@@ -37,6 +35,7 @@ class CustomSettingsModalSheet extends StatefulWidget {
 
 class _CustomSettingsModalSheetState extends State<CustomSettingsModalSheet> {
   final List<String> _animatedToggleValues = const ["Show", "Hide"];
+  bool showValidateErrorText = false;
 
   @override
   void initState() {
@@ -63,7 +62,7 @@ class _CustomSettingsModalSheetState extends State<CustomSettingsModalSheet> {
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              AnimatedToggle(
+              AnimatedHorizontalToggle(
                 values: _animatedToggleValues,
                 onToggleCallback: (index) {
                   index == 0
@@ -71,9 +70,6 @@ class _CustomSettingsModalSheetState extends State<CustomSettingsModalSheet> {
                           .tempSettingVisibility = SettingVisibility.shown
                       : Provider.of<RecipesProvider>(context, listen: false)
                           .tempSettingVisibility = SettingVisibility.hidden;
-                  log(Provider.of<RecipesProvider>(context, listen: false)
-                      .tempSettingVisibility
-                      .toString());
                 },
                 initialPosition:
                     (Provider.of<RecipesProvider>(context, listen: false)
@@ -115,9 +111,13 @@ class _CustomSettingsModalSheetState extends State<CustomSettingsModalSheet> {
                               .firstWhere(
                                   (coffeeBean) => coffeeBean.beanName == value)
                               .id;
+                          setState(() {
+                            showValidateErrorText = false;
+                          });
                         },
                         decoration: const InputDecoration(
                           hintText: "Select a bean",
+                          errorStyle: TextStyle(height: 0),
                         ),
                         dropdownDecoration: const BoxDecoration(
                           borderRadius:
@@ -131,8 +131,12 @@ class _CustomSettingsModalSheetState extends State<CustomSettingsModalSheet> {
                         ),
                         validator: (value) {
                           if (value == null) {
-                            return "Please select a bean";
+                            setState(() {
+                              showValidateErrorText = true;
+                            });
+                            return "";
                           }
+
                           return null;
                         },
                       ),
@@ -140,7 +144,28 @@ class _CustomSettingsModalSheetState extends State<CustomSettingsModalSheet> {
                   },
                 ),
               ),
-              const Divider(height: 20, color: Color(0x00000000)),
+              (showValidateErrorText)
+                  ? Column(
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.only(
+                            left: kInputDecorationHorizontalPadding,
+                            top: 5,
+                          ),
+                          child: Text(
+                            "Please select a bean",
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1!
+                                .copyWith(color: kDeleteRed),
+                            textAlign: TextAlign.left,
+                          ),
+                        ),
+                        const Divider(height: 10, color: Color(0x00000000)),
+                      ],
+                    )
+                  : const Divider(height: 20, color: Color(0x00000000)),
               SettingsValueSlider(
                 maxWidth: constraints.maxWidth,
                 recipeSettingsData: widget.recipeSettingsData,
@@ -152,7 +177,6 @@ class _CustomSettingsModalSheetState extends State<CustomSettingsModalSheet> {
                     : MainAxisAlignment.center,
                 children: [
                   CustomButton(
-                    //TODO: fix button so not submitted when invalid bean
                     onTap: () {
                       if (!Provider.of<RecipesProvider>(context, listen: false)
                           .settingsBeanFormKey
@@ -160,7 +184,6 @@ class _CustomSettingsModalSheetState extends State<CustomSettingsModalSheet> {
                           .validate()) {
                         return;
                       } else {
-                        log("hellp");
                         widget.submitAction();
                       }
                     },
