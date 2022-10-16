@@ -51,7 +51,7 @@ class _RecipesState extends State<Recipes> {
                         MaterialPageRoute(
                           builder: (_) => RecipeDetails(
                             recipeData: recipe,
-                            showDeleteButton: false,
+                            isAdding: true,
                           ),
                         ),
                       ),

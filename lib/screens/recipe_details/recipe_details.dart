@@ -14,11 +14,11 @@ class RecipeDetails extends StatelessWidget {
   RecipeDetails({
     Key? key,
     required this.recipeData,
-    required this.showDeleteButton,
+    required this.isAdding,
   }) : super(key: key);
 
   final Recipe recipeData;
-  final bool showDeleteButton;
+  final bool isAdding;
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -39,7 +39,7 @@ class RecipeDetails extends StatelessWidget {
             Provider.of<RecipesProvider>(context, listen: false)
                 .setTempRecipeSettings(recipeData.id!);
             Navigator.of(context).pop(true);
-            if (!isOsBackPressed) {
+            if (!isOsBackPressed || isAdding) {
               Navigator.of(context).pop(true);
             }
           },
@@ -94,6 +94,9 @@ class RecipeDetails extends StatelessWidget {
           Provider.of<RecipesProvider>(context, listen: false).changeEditMode();
           Provider.of<RecipesProvider>(context, listen: false)
               .clearTempRecipeSettings();
+          if (isAdding) {
+            return Future.value(true);
+          }
           return Future.value(false);
         }
       }
@@ -188,7 +191,7 @@ class RecipeDetails extends StatelessWidget {
                           ? Icons.check
                           : Icons.edit,
                     ),
-                    (showDeleteButton)
+                    (!isAdding)
                         ? AppBarButton(
                             onTap: () {
                               _showConfirmDeletePopup();

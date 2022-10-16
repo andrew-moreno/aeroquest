@@ -34,7 +34,7 @@ class RecipeCard extends StatelessWidget {
           MaterialPageRoute(
             builder: (_) => RecipeDetails(
               recipeData: recipeData,
-              showDeleteButton: true,
+              isAdding: false,
             ),
           ),
         );
