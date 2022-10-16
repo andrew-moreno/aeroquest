@@ -115,9 +115,23 @@ class _CustomSettingsModalSheetState extends State<CustomSettingsModalSheet> {
                             showValidateErrorText = false;
                           });
                         },
+                        hint: const Text(
+                          "Select a bean",
+                          style: TextStyle(
+                            color: kPrimary,
+                            fontFamily: "Poppins",
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        buttonHeight: 45,
+                        isExpanded: true,
+                        buttonPadding: const EdgeInsets.symmetric(
+                            horizontal: kInputDecorationHorizontalPadding),
                         decoration: const InputDecoration(
-                          hintText: "Select a bean",
                           errorStyle: TextStyle(height: 0),
+                          isDense: true,
+                          contentPadding: EdgeInsets.zero,
                         ),
                         dropdownDecoration: const BoxDecoration(
                           borderRadius:
