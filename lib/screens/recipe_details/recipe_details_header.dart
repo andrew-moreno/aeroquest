@@ -1,3 +1,4 @@
+import 'package:aeroquest/models/recipe.dart';
 import 'package:control_style/decorated_input_border.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,12 +8,12 @@ import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/constraints.dart';
 
 class RecipeDetailsHeader extends StatelessWidget {
-  const RecipeDetailsHeader(
-      {Key? key, required this.titleValue, this.descriptionValue})
-      : super(key: key);
+  const RecipeDetailsHeader({
+    Key? key,
+    required this.recipeData,
+  }) : super(key: key);
 
-  final String titleValue;
-  final String? descriptionValue;
+  final Recipe recipeData;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,7 @@ class RecipeDetailsHeader extends StatelessWidget {
               children: [
                 CustomFormField(
                   name: "recipeTitle",
-                  initialValue: titleValue,
+                  initialValue: recipeData.title,
                   hintText: "Title",
                   textStyle: const TextStyle(
                       color: kLightSecondary,
@@ -40,11 +41,12 @@ class RecipeDetailsHeader extends StatelessWidget {
                   height: 10,
                   color: Color(0x00000000),
                 ),
-                ((descriptionValue != null && descriptionValue != "") ||
+                ((recipeData.description != null &&
+                            recipeData.description != "") ||
                         recipesProvider.editMode == EditMode.enabled)
                     ? CustomFormField(
                         name: "recipeDescription",
-                        initialValue: descriptionValue,
+                        initialValue: recipeData.description ?? "",
                         hintText: "Description",
                         textStyle: const TextStyle(
                           color: kLightSecondary,

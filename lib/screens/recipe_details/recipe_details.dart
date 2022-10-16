@@ -23,7 +23,9 @@ class RecipeDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future<bool> _showDiscardChangesPopup() async {
+    Future<void> _showDiscardChangesPopup(bool isOsBackPressed) async {
+      // os back refers to operating system back button
+      // as opposed to back button in app
       return await showDialog(
         context: context,
         builder: (context) => ExitDialog(
@@ -33,13 +35,13 @@ class RecipeDetails extends StatelessWidget {
             Provider.of<RecipesProvider>(context, listen: false)
                 .changeEditMode();
             Provider.of<RecipesProvider>(context, listen: false)
-                .recipePropertiesFormKey
-                .currentState!
-                .reset();
+                .setTempRecipe(recipeData.id!);
             Provider.of<RecipesProvider>(context, listen: false)
                 .setTempRecipeSettings(recipeData.id!);
             Navigator.of(context).pop(true);
-            Navigator.of(context).pop(true);
+            if (!isOsBackPressed) {
+              Navigator.of(context).pop(true);
+            }
           },
         ),
       );
@@ -70,21 +72,93 @@ class RecipeDetails extends StatelessWidget {
       );
     }
 
+    bool _isRecipeChanged() {
+      return Provider.of<RecipesProvider>(context, listen: false)
+          .isRecipeChanged(
+              originalTitle: recipeData.title,
+              originalDescription: recipeData.description,
+              originalPushPressure:
+                  Recipe.stringToPushPressure(recipeData.pushPressure),
+              originalBrewMethod:
+                  Recipe.stringToBrewMethod(recipeData.brewMethod),
+              recipeId: recipeData.id!);
+    }
+
+    // same as exitDetailsPage - all edits should be in both
     Future<bool> _onWillPop() async {
       if (Provider.of<RecipesProvider>(context, listen: false).editMode ==
           EditMode.enabled) {
-        if (Provider.of<RecipesProvider>(context, listen: false)
-            .isRecipeChanged(
-                originalTitle: recipeData.title,
-                originalDescription: recipeData.description,
-                recipeId: recipeData.id!)) {
-          _showDiscardChangesPopup();
+        if (_isRecipeChanged()) {
+          _showDiscardChangesPopup(true);
         } else {
           Provider.of<RecipesProvider>(context, listen: false).changeEditMode();
+          Provider.of<RecipesProvider>(context, listen: false)
+              .clearTempRecipeSettings();
           return Future.value(false);
         }
       }
+      Provider.of<RecipesProvider>(context, listen: false)
+          .clearTempRecipeSettings();
       return Future.value(true);
+    }
+
+    // same as _onWillPop - all edits should be in both
+    void _exitDetailsPage() {
+      if (Provider.of<RecipesProvider>(context, listen: false).editMode ==
+          EditMode.enabled) {
+        if (_isRecipeChanged()) {
+          _showDiscardChangesPopup(false);
+        } else {
+          Provider.of<RecipesProvider>(context, listen: false).changeEditMode();
+          Provider.of<RecipesProvider>(context, listen: false)
+              .clearTempRecipeSettings();
+          Navigator.of(context).pop();
+        }
+      } else {
+        Provider.of<RecipesProvider>(context, listen: false)
+            .clearTempRecipeSettings();
+        Navigator.of(context).pop();
+      }
+    }
+
+    // how tf do i make this work
+
+    // Tuple2<Future<bool> Function()?, void> _onWillPop2() {
+    //   if (Provider.of<RecipesProvider>(context, listen: false).editMode ==
+    //       EditMode.enabled) {
+    //     if (_isRecipeChanged()) {
+    //       _showDiscardChangesPopup();
+    //     } else {
+    //       Provider.of<RecipesProvider>(context, listen: false).changeEditMode();
+    //       Provider.of<RecipesProvider>(context, listen: false)
+    //           .clearTempRecipeSettings();
+    //       return Tuple2<Future<bool> Function()?, void>(
+    //           () => Future.value(false), Navigator.of(context).pop());
+    //     }
+    //   }
+    //   Provider.of<RecipesProvider>(context, listen: false)
+    //       .clearTempRecipeSettings();
+    //   return Tuple2<Future<bool> Function()?, void>(
+    //       () => Future.value(true), Navigator.of(context).pop());
+    // }
+
+    void _saveRecipe() {
+      // exiting edit mode
+      // checks if any changes made before showing popup
+      if (!Provider.of<RecipesProvider>(context, listen: false)
+          .recipePropertiesFormKey
+          .currentState!
+          .validate()) {
+        return;
+      }
+      if (Provider.of<RecipesProvider>(context, listen: false).editMode ==
+          EditMode.enabled) {
+        Provider.of<RecipesProvider>(context, listen: false).saveRecipe();
+        Provider.of<RecipesProvider>(context, listen: false).changeEditMode();
+      } else {
+        // entering edit mode
+        Provider.of<RecipesProvider>(context, listen: false).changeEditMode();
+      }
     }
 
     return Scaffold(
@@ -101,53 +175,13 @@ class RecipeDetails extends StatelessWidget {
                   leading: AppBarLeading(
                     function: LeadingFunction.back,
                     onPressed: () {
-                      if (Provider.of<RecipesProvider>(context, listen: false)
-                              .editMode ==
-                          EditMode.enabled) {
-                        if (Provider.of<RecipesProvider>(context, listen: false)
-                            .isRecipeChanged(
-                                originalTitle: recipeData.title,
-                                originalDescription: recipeData.description,
-                                recipeId: recipeData.id!)) {
-                          _showDiscardChangesPopup();
-                        } else {
-                          Provider.of<RecipesProvider>(context, listen: false)
-                              .changeEditMode();
-                          Provider.of<RecipesProvider>(context, listen: false)
-                              .clearTempRecipeSettings();
-                          Navigator.of(context).pop();
-                        }
-                      } else {
-                        Provider.of<RecipesProvider>(context, listen: false)
-                            .clearTempRecipeSettings();
-                        Navigator.of(context).pop();
-                      }
+                      _exitDetailsPage();
                     },
                   ),
                   actions: [
                     AppBarButton(
                       onTap: () {
-                        // exiting edit mode
-                        // checks if any changes made before showing popup
-                        if (!Provider.of<RecipesProvider>(context,
-                                listen: false)
-                            .recipePropertiesFormKey
-                            .currentState!
-                            .validate()) {
-                          return;
-                        }
-                        if (Provider.of<RecipesProvider>(context, listen: false)
-                                .editMode ==
-                            EditMode.enabled) {
-                          Provider.of<RecipesProvider>(context, listen: false)
-                              .saveRecipe();
-                          Provider.of<RecipesProvider>(context, listen: false)
-                              .changeEditMode();
-                        } else {
-                          // entering edit mode
-                          Provider.of<RecipesProvider>(context, listen: false)
-                              .changeEditMode();
-                        }
+                        _saveRecipe();
                       },
                       icon: (Provider.of<RecipesProvider>(context).editMode ==
                               EditMode.enabled)
@@ -174,19 +208,7 @@ class RecipeDetails extends StatelessWidget {
                       Consumer<RecipesProvider>(
                         builder: (_, recipesProvider, ___) {
                           return RecipeDetailsHeader(
-                            titleValue: recipesProvider.recipes
-                                .firstWhere(
-                                  (recipe) => recipe.id == recipeData.id,
-                                  orElse: () => recipeData,
-                                )
-                                .title,
-                            descriptionValue: recipesProvider.recipes
-                                    .firstWhere(
-                                      (recipe) => recipe.id == recipeData.id,
-                                      orElse: () => recipeData,
-                                    )
-                                    .description ??
-                                "",
+                            recipeData: recipeData,
                           );
                         },
                       ),
@@ -195,7 +217,7 @@ class RecipeDetails extends StatelessWidget {
                         color: Color(0x00000000),
                       ),
                       RecipeDetailsBody(
-                        recipeData: recipeData,
+                        recipeId: recipeData.id!,
                       ),
                     ],
                   ),

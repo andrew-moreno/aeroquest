@@ -3,15 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/bean_settings_group.dart';
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/recipe_method.dart';
-import 'package:aeroquest/models/recipe.dart';
 
 class RecipeDetailsBody extends StatefulWidget {
   const RecipeDetailsBody({
     Key? key,
-    required this.recipeData,
+    required this.recipeId,
   }) : super(key: key);
 
-  final Recipe recipeData;
+  final int recipeId;
 
   @override
   State<RecipeDetailsBody> createState() => _RecipeDetailsBodyState();
@@ -35,7 +34,7 @@ class _RecipeDetailsBodyState extends State<RecipeDetailsBody> {
             color: Color(0x00000000),
           ),
           BeanSettingsGroup(
-            recipeEntryId: widget.recipeData.id!,
+            recipeEntryId: widget.recipeId,
           ),
           const Divider(
             height: 30,

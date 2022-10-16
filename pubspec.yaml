@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -43,6 +43,7 @@ dependencies:
     path: ./packages/modified_vertical_weight_slider
   horizontal_blocked_scroll_physics: ^4.0.1
   sqflite: ^2.0.2+1
+  tuple: ^2.0.1
 
 dev_dependencies:
   flutter_test:
@@ -60,7 +61,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -92,7 +92,7 @@ flutter:
         - asset: assets/fonts/poppins/Poppins-SemiBold.ttf
           weight: 600
     - family: Spectral
-      fonts: 
+      fonts:
         - asset: assets/fonts/spectral/Spectral-ExtraLight.ttf
           weight: 200
         - asset: assets/fonts/spectral/Spectral-Light.ttf
@@ -107,4 +107,3 @@ flutter:
           weight: 700
         - asset: assets/fonts/spectral/Spectral-ExtraBold.ttf
           weight: 800
-  

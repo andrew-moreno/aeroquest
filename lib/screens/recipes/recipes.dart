@@ -1,4 +1,3 @@
-import 'package:aeroquest/models/recipe_settings.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +8,6 @@ import 'package:aeroquest/widgets/appbar/appbar_text.dart';
 import 'package:aeroquest/screens/recipes/widgets/recipe_card.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/widgets/custom_drawer.dart';
-import 'package:aeroquest/models/recipe.dart';
 import 'package:aeroquest/widgets/exit_dialog.dart';
 
 class Recipes extends StatefulWidget {
@@ -47,15 +45,17 @@ class _RecipesState extends State<Recipes> {
               onTap: () {
                 Provider.of<RecipesProvider>(context, listen: false)
                     .tempAddRecipe()
-                    .then((recipe) => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => RecipeDetails(
-                              recipeData: recipe,
-                              showDeleteButton: false,
-                            ),
+                    .then(
+                      (recipe) => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => RecipeDetails(
+                            recipeData: recipe,
+                            showDeleteButton: false,
                           ),
-                        ));
+                        ),
+                      ),
+                    );
               },
               icon: Icons.add,
             )

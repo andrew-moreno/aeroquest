@@ -81,16 +81,26 @@ class RecipesProvider extends ChangeNotifier {
   }
 
   Future<Recipe> tempAddRecipe() async {
-    int id = await RecipesDatabase.instance.getUnusedId();
-    _tempRecipe = Recipe(
-        id: id,
-        title: "",
-        description: "",
-        pushPressure: "light",
-        brewMethod: "regular");
+    await setTempRecipe(null);
     setTempRecipeSettings(null);
     changeEditMode();
     return tempRecipe;
+  }
+
+  Future<void> setTempRecipe(int? recipeEntryId) async {
+    if (recipeEntryId == null) {
+      int id = await RecipesDatabase.instance.getUnusedId();
+      _tempRecipe = Recipe(
+          id: id,
+          title: "",
+          description: "",
+          pushPressure: "light",
+          brewMethod: "regular");
+    } else {
+      _tempRecipe = _recipes.firstWhere((recipe) => recipe.id == recipeEntryId);
+    }
+    tempPushPressure = Recipe.stringToPushPressure(_tempRecipe.pushPressure);
+    tempBrewMethod = Recipe.stringToBrewMethod(_tempRecipe.brewMethod);
   }
 
   void deleteRecipe(int recipeId) async {
@@ -131,6 +141,8 @@ class RecipesProvider extends ChangeNotifier {
   bool isRecipeChanged({
     required String originalTitle,
     required String? originalDescription,
+    required PushPressure originalPushPressure,
+    required BrewMethod originalBrewMethod,
     required int recipeId,
   }) {
     bool areRecipePropertiesChanged =
@@ -138,11 +150,16 @@ class RecipesProvider extends ChangeNotifier {
                 originalTitle ||
             recipePropertiesFormKey
                     .currentState!.fields["recipeDescription"]?.value !=
-                originalDescription);
-    bool areRecipeSettingsChanged =
-        (_tempRecipeSettings.isNotEmpty) ? areSettingsChanged(recipeId) : true;
+                originalDescription ||
+            originalPushPressure != tempPushPressure ||
+            originalBrewMethod != tempBrewMethod);
 
-    return (areRecipePropertiesChanged && areRecipeSettingsChanged);
+    bool areRecipeSettingsChanged = false;
+    if (_tempRecipeSettings.isNotEmpty) {
+      areRecipeSettingsChanged = areSettingsChanged(recipeId);
+    }
+
+    return (areRecipePropertiesChanged || areRecipeSettingsChanged);
   }
 
   /// used to activate/deactive editing of a setting for a recipe
@@ -183,12 +200,6 @@ class RecipesProvider extends ChangeNotifier {
     _tempRecipeSettings.clear();
   }
 
-  void setTempRecipe(int recipeEntryId) {
-    _tempRecipe = _recipes.firstWhere((recipe) => recipe.id == recipeEntryId);
-    tempPushPressure = Recipe.stringToPushPressure(_tempRecipe.pushPressure);
-    tempBrewMethod = Recipe.stringToBrewMethod(_tempRecipe.brewMethod);
-  }
-
   // initialize tempRecipeSettings
   void setTempRecipeSettings(int? recipeEntryId) {
     _tempRecipeSettings = List.from(_recipeSettings[recipeEntryId] ?? []);
@@ -196,8 +207,8 @@ class RecipesProvider extends ChangeNotifier {
 
   // check if settings have been updated since details page load
   bool areSettingsChanged(int recipeEntryId) {
-    return const DeepCollectionEquality()
-        .equals(_tempRecipeSettings, _recipeSettings[recipeEntryId]!);
+    return !(const DeepCollectionEquality()
+        .equals(_tempRecipeSettings, _recipeSettings[recipeEntryId]!));
   }
 
   // adds new setting to tempRecipeSettings
