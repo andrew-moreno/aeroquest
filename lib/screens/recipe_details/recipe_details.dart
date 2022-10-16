@@ -208,7 +208,19 @@ class RecipeDetails extends StatelessWidget {
                       Consumer<RecipesProvider>(
                         builder: (_, recipesProvider, ___) {
                           return RecipeDetailsHeader(
-                            recipeData: recipeData,
+                            titleValue: recipesProvider.recipes
+                                .firstWhere(
+                                  (recipe) => recipe.id == recipeData.id,
+                                  orElse: () => recipeData,
+                                )
+                                .title,
+                            descriptionValue: recipesProvider.recipes
+                                    .firstWhere(
+                                      (recipe) => recipe.id == recipeData.id,
+                                      orElse: () => recipeData,
+                                    )
+                                    .description ??
+                                "",
                           );
                         },
                       ),
