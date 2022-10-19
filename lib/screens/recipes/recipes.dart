@@ -8,7 +8,7 @@ import 'package:aeroquest/widgets/appbar/appbar_text.dart';
 import 'package:aeroquest/screens/recipes/widgets/recipe_card.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/widgets/custom_drawer.dart';
-import 'package:aeroquest/widgets/exit_dialog.dart';
+import 'package:aeroquest/widgets/custom_dialog.dart';
 
 class Recipes extends StatefulWidget {
   const Recipes({Key? key}) : super(key: key);
@@ -25,7 +25,7 @@ class _RecipesState extends State<Recipes> {
     Future<bool> showExitPopup() async {
       return await showDialog(
             context: context,
-            builder: (context) => ExitDialog(
+            builder: (context) => CustomDialog(
               titleText: "Exit app?",
               leftAction: () => Navigator.of(context).pop(false),
               rightAction: () => Navigator.of(context).pop(true),

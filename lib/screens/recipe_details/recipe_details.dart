@@ -6,7 +6,7 @@ import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/recipe_details_body.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_header.dart';
 import 'package:aeroquest/widgets/appbar/appbar_leading.dart';
-import 'package:aeroquest/widgets/exit_dialog.dart';
+import 'package:aeroquest/widgets/custom_dialog.dart';
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/models/recipe.dart';
 
@@ -28,7 +28,7 @@ class RecipeDetails extends StatelessWidget {
       // as opposed to back button in app
       return await showDialog(
         context: context,
-        builder: (context) => ExitDialog(
+        builder: (context) => CustomDialog(
           titleText: "Discard changes?",
           leftAction: () => Navigator.of(context).pop(false),
           rightAction: () {
@@ -50,7 +50,7 @@ class RecipeDetails extends StatelessWidget {
     Future<bool> _showConfirmDeletePopup() async {
       return await showDialog(
         context: context,
-        builder: (context) => ExitDialog(
+        builder: (context) => CustomDialog(
           titleText: "Confirm delete",
           leftAction: () {
             Navigator.of(context).pop(false);

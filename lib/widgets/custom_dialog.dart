@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/widgets/custom_button.dart';
 
-class ExitDialog extends StatelessWidget {
-  const ExitDialog(
+class CustomDialog extends StatelessWidget {
+  const CustomDialog(
       {Key? key,
       required this.titleText,
+      this.description,
       required this.leftAction,
       required this.rightAction,
       this.leftText = "No",
@@ -14,6 +15,7 @@ class ExitDialog extends StatelessWidget {
       : super(key: key);
 
   final String titleText;
+  final String? description;
   final Function() leftAction;
   final Function() rightAction;
   final String leftText;
@@ -31,6 +33,17 @@ class ExitDialog extends StatelessWidget {
           fontSize: 20,
         ),
       ),
+      content: (description != null)
+          ? Text(
+              description!,
+              style: const TextStyle(
+                color: kPrimary,
+                fontFamily: "Poppins",
+                fontWeight: FontWeight.w400,
+                fontSize: 15,
+              ),
+            )
+          : Container(),
       actionsAlignment: MainAxisAlignment.spaceAround,
       actions: [
         CustomButton(
