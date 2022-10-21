@@ -122,6 +122,16 @@ class RecipeSettingsDatabase {
     );
   }
 
+  Future<int> deleteSettingsOfBeanId(int beanId) async {
+    final db = await instance.database;
+
+    return await db.delete(
+      tableRecipeSettings,
+      where: "${RecipeSettingsFields.beanId} = ?",
+      whereArgs: [beanId],
+    );
+  }
+
   Future<int> deleteAllSettingsForRecipe(int recipeEntryId) async {
     final db = await instance.database;
 

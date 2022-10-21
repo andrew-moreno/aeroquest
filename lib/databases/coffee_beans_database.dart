@@ -27,12 +27,14 @@ class CoffeeBeansDatabase {
     const idType = "INTEGER PRIMARY KEY AUTOINCREMENT";
     const textType = "TEXT NOT NULL";
     const nullableTextType = "TEXT";
+    const intType = "INTEGER NOT NULL";
 
     await db.execute('''
       CREATE TABLE $tableCoffeeBeans (
         ${CoffeeBeanFields.id} $idType,
         ${CoffeeBeanFields.beanName} $textType,
-        ${CoffeeBeanFields.description} $nullableTextType
+        ${CoffeeBeanFields.description} $nullableTextType,
+        ${CoffeeBeanFields.associatedSettingsCount} $intType
       ) 
     ''');
   }
@@ -65,7 +67,6 @@ class CoffeeBeansDatabase {
     final db = await instance.database;
 
     final result = await db.query(tableCoffeeBeans);
-
     return result.map((json) => CoffeeBean.fromJson(json)).toList();
   }
 

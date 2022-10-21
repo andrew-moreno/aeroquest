@@ -68,11 +68,7 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
                     itemBuilder: (_, int index) {
                       return BeansContainer(
                         formKey: _formKey,
-                        beanName:
-                            coffeeBeanProvider.coffeeBeans[index].beanName,
-                        description:
-                            coffeeBeanProvider.coffeeBeans[index].description,
-                        id: coffeeBeanProvider.coffeeBeans[index].id!,
+                        beanData: coffeeBeanProvider.coffeeBeans[index],
                       );
                     },
                     separatorBuilder: (_, __) {
@@ -103,7 +99,6 @@ void showCustomModalSheet({
   Function()? deleteAction,
   String? beanName,
   String? description,
-  int? id,
 }) {
   showModalBottomSheet(
     context: context,

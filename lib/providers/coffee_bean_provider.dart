@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:developer';
 import 'package:aeroquest/databases/coffee_beans_database.dart';
+import 'package:aeroquest/databases/recipe_settings_database.dart';
 import 'package:flutter/material.dart';
 
 import 'package:aeroquest/models/coffee_bean.dart';
@@ -17,33 +18,47 @@ class CoffeeBeanProvider extends ChangeNotifier {
   }
 
   Future<void> addBean(String beanName, String? description) async {
-    //TODO: prevent duplicate beans from being added
-    final newCoffeeBean = await CoffeeBeansDatabase.instance.create(CoffeeBean(
-      beanName: beanName,
-      description: description,
-    ));
+    final newCoffeeBean = await CoffeeBeansDatabase.instance.create(
+      CoffeeBean(
+        beanName: beanName,
+        description: description,
+        associatedSettingsCount: 0,
+      ),
+    );
     _coffeeBeans.add(newCoffeeBean);
     notifyListeners();
-    log("Beans added with id: ${newCoffeeBean.id}, name: ${newCoffeeBean.beanName}, description: ${newCoffeeBean.description}");
   }
 
-  Future<void> deleteBean(int id) async {
+  Future<void> deleteBean(
+      {required int id, deleteAssociatedSettings = false}) async {
+    if (deleteAssociatedSettings) {
+      await RecipeSettingsDatabase.instance.deleteSettingsOfBeanId(id);
+    }
     _coffeeBeans.removeWhere((coffeeBean) => coffeeBean.id == id);
     await CoffeeBeansDatabase.instance.delete(id);
     log("beans removed with id: " + id.toString());
     notifyListeners();
   }
 
-  Future<void> editBean(int id, String beanName, String? description) async {
+  Future<void> editBean(
+    int id,
+    String beanName,
+    String? description,
+    int associatedSettingsCount,
+  ) async {
     final coffeeBean = CoffeeBean(
       id: id,
       beanName: beanName,
       description: description,
+      associatedSettingsCount: associatedSettingsCount,
     );
     _coffeeBeans.firstWhere((coffeeBean) => coffeeBean.id == id).beanName =
         beanName;
     _coffeeBeans.firstWhere((coffeeBean) => coffeeBean.id == id).description =
         description;
+    _coffeeBeans
+        .firstWhere((coffeeBean) => coffeeBean.id == id)
+        .associatedSettingsCount = associatedSettingsCount;
     await CoffeeBeansDatabase.instance.update(coffeeBean);
     log("beans updated with id: " + id.toString());
     notifyListeners();

@@ -1,5 +1,7 @@
+import 'package:aeroquest/models/coffee_bean.dart';
 import 'package:aeroquest/providers/coffee_bean_provider.dart';
 import 'package:aeroquest/widgets/card_header.dart';
+import 'package:aeroquest/widgets/custom_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:aeroquest/constraints.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -13,18 +15,33 @@ class BeansContainer extends StatelessWidget {
   const BeansContainer({
     Key? key,
     required this.formKey,
-    required this.beanName,
-    this.description,
-    required this.id,
+    required this.beanData,
   }) : super(key: key);
 
   final GlobalKey<FormBuilderState> formKey;
-  final String beanName;
-  final String? description;
-  final int id;
+  final CoffeeBean beanData;
 
   @override
   Widget build(BuildContext context) {
+    Future<void> _showDeleteDialog() async {
+      return await showDialog(
+        context: context,
+        builder: (context) => CustomDialog(
+          titleText: "Delete Associated Settings?",
+          description:
+              "This bean is associated with recipe settings. Do you want to delete these settings as well?",
+          leftAction: () => Navigator.of(context).pop(false),
+          rightAction: () {
+            Provider.of<CoffeeBeanProvider>(context, listen: false).deleteBean(
+              id: beanData.id!,
+              deleteAssociatedSettings: true,
+            );
+            Navigator.of(context).pop();
+          },
+        ),
+      );
+    }
+
     return LayoutBuilder(
       builder: (_, __) => GestureDetector(
         child: Container(
@@ -38,8 +55,8 @@ class BeansContainer extends StatelessWidget {
             boxShadow: [kBoxShadow],
           ),
           child: CardHeader(
-            title: beanName,
-            description: description,
+            title: beanData.beanName,
+            description: beanData.description,
           ),
         ),
         onTap: () {
@@ -51,20 +68,27 @@ class BeansContainer extends StatelessWidget {
               String beanName = formKey.currentState!.fields["beanName"]!.value;
               String? description =
                   formKey.currentState!.fields["description"]?.value;
-              Provider.of<CoffeeBeanProvider>(context, listen: false)
-                  .editBean(id, beanName, description);
+              Provider.of<CoffeeBeanProvider>(context, listen: false).editBean(
+                beanData.id!,
+                beanName,
+                description,
+                beanData.associatedSettingsCount,
+              );
               Navigator.of(context).pop();
             },
             deleteAction: () {
-              Provider.of<CoffeeBeanProvider>(context, listen: false)
-                  .deleteBean(id);
               Navigator.of(context).pop();
+              if (beanData.associatedSettingsCount > 0) {
+                _showDeleteDialog();
+              } else {
+                Provider.of<CoffeeBeanProvider>(context, listen: false)
+                    .deleteBean(id: beanData.id!);
+              }
             },
             context: context,
             formKey: formKey,
-            beanName: beanName,
-            description: description,
-            id: id,
+            beanName: beanData.beanName,
+            description: beanData.description,
           );
         },
       ),
