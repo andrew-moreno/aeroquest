@@ -43,7 +43,7 @@ class CustomDialog extends StatelessWidget {
                 fontSize: 15,
               ),
             )
-          : Container(),
+          : null,
       actionsAlignment: MainAxisAlignment.spaceAround,
       actions: [
         CustomButton(
