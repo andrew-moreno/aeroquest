@@ -1,5 +1,3 @@
-import 'package:aeroquest/widgets/custom_button.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'dart:core';
 
@@ -105,19 +103,54 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
             (recipesProvider.editMode == EditMode.enabled)
                 ? Material(
                     color: Colors.transparent,
-                    child: CustomButton(
+                    child: InkWell(
                       onTap: () {
-                        showCustomModalSheet(
-                            submitAction: () {
-                              recipesProvider.tempAddSetting(widget
-                                  .recipeEntryId); // index doesn't matter for recipe entry id
-                              Navigator.of(context).pop();
-                            },
-                            context: _);
+                        if (recipesProvider.coffeeBeans.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: const Text(
+                                "Add a coffee bean first!",
+                                style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontWeight: FontWeight.w500,
+                                  color: kAccent,
+                                ),
+                              ),
+                              backgroundColor: kLightSecondary,
+                              elevation: 10,
+                              action: SnackBarAction(
+                                  label: "Add", onPressed: () {}),
+                            ),
+                          );
+                        } else {
+                          showCustomModalSheet(
+                              submitAction: () {
+                                recipesProvider.tempAddSetting(widget
+                                    .recipeEntryId); // index doesn't matter for recipe entry id
+                                Navigator.of(context).pop();
+                              },
+                              context: _);
+                        }
                       },
-                      buttonType: ButtonType.positive,
-                      text: "Add Setting",
-                      width: 200,
+                      borderRadius: BorderRadius.circular(7),
+                      child: Ink(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        decoration: BoxDecoration(
+                          color: kLightSecondary,
+                          borderRadius: BorderRadius.circular(kCornerRadius),
+                          boxShadow: [kBoxShadow],
+                        ),
+                        width: 150,
+                        child: const Text(
+                          "Add Setting",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: kPrimary,
+                              fontFamily: "Poppins",
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),
                     ),
                   )
                 : Container(),

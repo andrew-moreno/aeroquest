@@ -116,7 +116,7 @@ class _CustomSettingsModalSheetState extends State<CustomSettingsModalSheet> {
                           });
                         },
                         hint: const Text(
-                          "Select a bean",
+                          "Select coffee beans",
                           style: TextStyle(
                             color: kPrimary,
                             fontFamily: "Poppins",
@@ -168,7 +168,7 @@ class _CustomSettingsModalSheetState extends State<CustomSettingsModalSheet> {
                             top: 5,
                           ),
                           child: Text(
-                            "Please select a bean",
+                            "Please select coffee beans",
                             style: Theme.of(context)
                                 .textTheme
                                 .subtitle1!
