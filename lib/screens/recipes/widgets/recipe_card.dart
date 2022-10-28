@@ -28,6 +28,8 @@ class RecipeCard extends StatelessWidget {
         Provider.of<RecipesProvider>(context, listen: false)
             .setTempRecipeSettings(recipeData.id!);
         Provider.of<RecipesProvider>(context, listen: false)
+            .setTempNotes(recipeData.id!);
+        Provider.of<RecipesProvider>(context, listen: false)
             .setTempRecipe(recipeData.id!);
         Navigator.push(
           context,

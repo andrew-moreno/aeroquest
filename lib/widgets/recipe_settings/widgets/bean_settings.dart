@@ -2,7 +2,7 @@ import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:aeroquest/models/recipe_settings.dart';
-import 'package:aeroquest/widgets/recipe_settings/widgets/settings_value.dart';
+import 'package:aeroquest/widgets/recipe_parameters_value.dart';
 import 'package:aeroquest/constraints.dart';
 import 'package:provider/provider.dart';
 
@@ -45,25 +45,25 @@ class BeanSettings extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              SettingsValue(
-                settingValue: recipeSetting.grindSetting,
-                settingType: SettingType.grindSetting,
+              RecipeParameterValue(
+                parameterValue: recipeSetting.grindSetting,
+                parameterType: ParameterType.grindSetting,
               ),
-              SettingsValue(
-                settingValue: recipeSetting.coffeeAmount,
-                settingType: SettingType.coffeeAmount,
+              RecipeParameterValue(
+                parameterValue: recipeSetting.coffeeAmount,
+                parameterType: ParameterType.coffeeAmount,
               ),
-              SettingsValue(
-                settingValue: recipeSetting.waterAmount,
-                settingType: SettingType.waterAmount,
+              RecipeParameterValue(
+                parameterValue: recipeSetting.waterAmount,
+                parameterType: ParameterType.waterAmount,
               ),
-              SettingsValue(
-                settingValue: recipeSetting.waterTemp,
-                settingType: SettingType.waterTemp,
+              RecipeParameterValue(
+                parameterValue: recipeSetting.waterTemp,
+                parameterType: ParameterType.waterTemp,
               ),
-              SettingsValue(
-                settingValue: recipeSetting.brewTime,
-                settingType: SettingType.brewTime,
+              RecipeParameterValue(
+                parameterValue: recipeSetting.brewTime,
+                parameterType: ParameterType.brewTime,
               ),
             ],
           ),

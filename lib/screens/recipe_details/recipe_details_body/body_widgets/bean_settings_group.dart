@@ -1,10 +1,12 @@
+import 'package:aeroquest/screens/recipe_details/recipe_details_body/recipe_details_body.dart';
+import 'package:aeroquest/widgets/add_to_recipe_button.dart';
+import 'package:aeroquest/widgets/custom_modal_sheet/value_slider_group_template.dart';
 import 'package:provider/provider.dart';
 import 'dart:core';
 
 import 'package:flutter/material.dart';
 
 import 'package:aeroquest/constraints.dart';
-import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/bean_settings_group_widgets/custom_settings_modal_sheet.dart';
 import 'package:aeroquest/models/recipe_settings.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/widgets/recipe_settings/widgets/bean_settings.dart';
@@ -37,6 +39,7 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
                   onTap: () {
                     if (recipesProvider.editMode == EditMode.enabled) {
                       showCustomModalSheet(
+                          modalType: ModalType.settings,
                           submitAction: () {
                             recipesProvider.editSetting(
                                 recipesProvider.tempRecipeSettings[index]);
@@ -101,57 +104,44 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
               height: 20,
             ),
             (recipesProvider.editMode == EditMode.enabled)
-                ? Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () {
-                        if (recipesProvider.coffeeBeans.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: const Text(
-                                "Add a coffee bean first!",
-                                style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontWeight: FontWeight.w500,
-                                  color: kAccent,
-                                ),
+                ? AddToRecipeButton(
+                    buttonText: "Add Setting",
+                    onTap: () {
+                      if (recipesProvider.coffeeBeans.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Text(
+                              "Add a coffee bean first!",
+                              style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontWeight: FontWeight.w500,
+                                color: kAccent,
                               ),
-                              backgroundColor: kLightSecondary,
-                              elevation: 10,
-                              action: SnackBarAction(
-                                  label: "Add", onPressed: () {}),
                             ),
-                          );
-                        } else {
-                          showCustomModalSheet(
-                              submitAction: () {
-                                recipesProvider.tempAddSetting(widget
-                                    .recipeEntryId); // index doesn't matter for recipe entry id
-                                Navigator.of(context).pop();
-                              },
-                              context: _);
-                        }
-                      },
-                      borderRadius: BorderRadius.circular(7),
-                      child: Ink(
-                        padding: const EdgeInsets.symmetric(vertical: 5),
-                        decoration: BoxDecoration(
-                          color: kLightSecondary,
-                          borderRadius: BorderRadius.circular(kCornerRadius),
-                          boxShadow: [kBoxShadow],
-                        ),
-                        width: 150,
-                        child: const Text(
-                          "Add Setting",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: kPrimary,
-                              fontFamily: "Poppins",
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                    ),
+                            backgroundColor: kLightSecondary,
+                            elevation: 10,
+                            action:
+                                SnackBarAction(label: "Add", onPressed: () {}),
+                          ),
+                        );
+                      } else {
+                        showCustomModalSheet(
+                            modalType: ModalType.settings,
+                            submitAction: () {
+                              if (!Provider.of<RecipesProvider>(context,
+                                      listen: false)
+                                  .settingsBeanFormKey
+                                  .currentState!
+                                  .validate()) {
+                                return;
+                              }
+                              recipesProvider.tempAddSetting(widget
+                                  .recipeEntryId); // index doesn't matter for recipe entry id
+                              Navigator.of(context).pop();
+                            },
+                            context: _);
+                      }
+                    },
                   )
                 : Container(),
           ],
@@ -159,28 +149,4 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
       },
     );
   }
-}
-
-void showCustomModalSheet({
-  required BuildContext context,
-  required Function() submitAction,
-  RecipeSettings? recipeSettingsData,
-  Function()? deleteAction,
-}) {
-  showModalBottomSheet(
-    context: context,
-    shape: const RoundedRectangleBorder(
-      borderRadius:
-          BorderRadius.vertical(top: Radius.circular(kModalCornerRadius)),
-    ),
-    backgroundColor: kDarkSecondary,
-    isScrollControlled: true,
-    builder: (_) {
-      return CustomSettingsModalSheet(
-        submitAction: submitAction,
-        deleteAction: deleteAction,
-        recipeSettingsData: recipeSettingsData,
-      );
-    },
-  );
 }

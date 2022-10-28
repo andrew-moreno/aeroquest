@@ -4,12 +4,11 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 
 import 'package:aeroquest/providers/recipes_provider.dart';
-import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/bean_settings_group_widgets/settings_value_slider.dart';
+import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/bean_settings_group_widgets/settings_value_slider_group.dart';
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/widgets/animated_horizontal_toggle.dart';
 import 'package:aeroquest/widgets/custom_button.dart';
 import 'package:aeroquest/models/recipe_settings.dart';
-import 'package:aeroquest/models/recipe.dart';
 
 class CustomSettingsModalSheet extends StatefulWidget {
   const CustomSettingsModalSheet({
@@ -17,16 +16,11 @@ class CustomSettingsModalSheet extends StatefulWidget {
     required this.submitAction,
     this.deleteAction,
     this.recipeSettingsData,
-    this.recipeData,
   }) : super(key: key);
 
   final Function() submitAction;
   final Function()? deleteAction;
   final RecipeSettings? recipeSettingsData;
-
-  /// used to pass information about the recipe that the settings belong to
-  /// used for determining whether hiding is not possible
-  final Recipe? recipeData;
 
   @override
   State<CustomSettingsModalSheet> createState() =>
@@ -180,7 +174,7 @@ class _CustomSettingsModalSheetState extends State<CustomSettingsModalSheet> {
                       ],
                     )
                   : const Divider(height: 20, color: Color(0x00000000)),
-              SettingsValueSlider(
+              SettingsValueSliderGroup(
                 maxWidth: constraints.maxWidth,
                 recipeSettingsData: widget.recipeSettingsData,
               ),
@@ -191,16 +185,7 @@ class _CustomSettingsModalSheetState extends State<CustomSettingsModalSheet> {
                     : MainAxisAlignment.center,
                 children: [
                   CustomButton(
-                    onTap: () {
-                      if (!Provider.of<RecipesProvider>(context, listen: false)
-                          .settingsBeanFormKey
-                          .currentState!
-                          .validate()) {
-                        return;
-                      } else {
-                        widget.submitAction();
-                      }
-                    },
+                    onTap: widget.submitAction,
                     buttonType: ButtonType.positive,
                     text: "Save",
                     width: constraints.maxWidth / 2 - 10,

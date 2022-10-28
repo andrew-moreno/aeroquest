@@ -38,6 +38,8 @@ class RecipeDetails extends StatelessWidget {
                 .setTempRecipe(recipeData.id!);
             Provider.of<RecipesProvider>(context, listen: false)
                 .setTempRecipeSettings(recipeData.id!);
+            Provider.of<RecipesProvider>(context, listen: false)
+                .setTempNotes(recipeData.id!);
             Navigator.of(context).pop(true);
             if (!isOsBackPressed || isAdding) {
               Navigator.of(context).pop(true);
@@ -149,7 +151,7 @@ class RecipeDetails extends StatelessWidget {
       // exiting edit mode
       // checks if any changes made before showing popup
       if (!Provider.of<RecipesProvider>(context, listen: false)
-          .recipePropertiesFormKey
+          .recipeIdentifiersFormKey
           .currentState!
           .validate()) {
         return;

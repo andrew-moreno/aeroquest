@@ -1,5 +1,8 @@
 import 'package:aeroquest/providers/recipes_provider.dart';
+import 'package:aeroquest/screens/recipe_details/recipe_details_body/recipe_details_body.dart';
+import 'package:aeroquest/widgets/add_to_recipe_button.dart';
 import 'package:aeroquest/widgets/animated_vertical_toggle.dart';
+import 'package:aeroquest/widgets/custom_modal_sheet/value_slider_group_template.dart';
 import 'package:flutter/material.dart';
 
 import 'package:aeroquest/models/recipe.dart';
@@ -8,8 +11,12 @@ import 'package:aeroquest/constraints.dart';
 import 'package:provider/provider.dart';
 
 class RecipeMethod extends StatefulWidget {
-  const RecipeMethod({Key? key}) : super(key: key);
+  const RecipeMethod({
+    Key? key,
+    required this.recipeEntryId,
+  }) : super(key: key);
 
+  final int recipeEntryId;
   static const double _methodPadding = 15;
 
   @override
@@ -28,7 +35,7 @@ class _RecipeMethodState extends State<RecipeMethod> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  RecipeMethodDescription(
+                  RecipeMethodParameters(
                     description: "Push Pressure",
                     data: recipesProvider.tempPushPressure,
                   ),
@@ -36,30 +43,57 @@ class _RecipeMethodState extends State<RecipeMethod> {
                     color: Color(0x00000000),
                     thickness: 10,
                   ),
-                  RecipeMethodDescription(
+                  RecipeMethodParameters(
                     description: "Brew Method",
                     data: recipesProvider.tempBrewMethod,
                   ),
                 ],
               ),
-              // const Divider(
-              //   color: Color(0x00000000),
-              //   height: RecipeMethod._methodPadding,
-              // ),
-              // ListView.separated(
-              //   physics: const BouncingScrollPhysics(),
-              //   shrinkWrap: true,
-              //   itemCount: widget.notes.length,
-              //   itemBuilder: (BuildContext context, int index) {
-              //     return RecipeMethodNotes(note: widget.notes[index]);
-              //   },
-              //   separatorBuilder: (context, index) {
-              //     return const Divider(
-              //       color: Color(0x00000000),
-              //       height: RecipeMethod._methodPadding,
-              //     );
-              //   },
-              // )
+              const Divider(
+                color: Color(0x00000000),
+                height: RecipeMethod._methodPadding,
+              ),
+              ListView.separated(
+                physics: const BouncingScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: recipesProvider.tempNotes.length,
+                itemBuilder: (BuildContext context, int index) {
+                  int key = recipesProvider.tempNotes.keys.elementAt(index);
+                  return RecipeMethodNotes(
+                      note: recipesProvider.tempNotes[key]!);
+                },
+                separatorBuilder: (context, index) {
+                  return const Divider(
+                    color: Color(0x00000000),
+                    height: RecipeMethod._methodPadding,
+                  );
+                },
+              ),
+              const Divider(
+                color: Color(0x00000000),
+                height: 20,
+              ),
+              (recipesProvider.editMode == EditMode.enabled)
+                  ? AddToRecipeButton(
+                      onTap: () {
+                        showCustomModalSheet(
+                            modalType: ModalType.notes,
+                            submitAction: () {
+                              if (!Provider.of<RecipesProvider>(context,
+                                      listen: false)
+                                  .recipeNotesFormKey
+                                  .currentState!
+                                  .validate()) {
+                                return;
+                              }
+                              recipesProvider.tempAddNote(widget
+                                  .recipeEntryId); // index doesn't matter for recipe entry id
+                              Navigator.of(context).pop();
+                            },
+                            context: _);
+                      },
+                      buttonText: "Add Note")
+                  : Container(),
             ],
           );
         },
@@ -69,8 +103,8 @@ class _RecipeMethodState extends State<RecipeMethod> {
 }
 
 // template for push pressure and brew method text
-class RecipeMethodDescription extends StatelessWidget {
-  const RecipeMethodDescription({
+class RecipeMethodParameters extends StatelessWidget {
+  const RecipeMethodParameters({
     Key? key,
     required this.description,
     required this.data,
@@ -186,7 +220,10 @@ class RecipeMethodNotes extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Text(
-              note.time.toString(),
+              (note.time ~/ 6).toString() +
+                  ":" +
+                  (note.time % 6).toString() +
+                  "0",
               style: const TextStyle(
                 color: kPrimary,
                 fontSize: 17,

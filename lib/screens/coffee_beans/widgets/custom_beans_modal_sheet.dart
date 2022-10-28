@@ -1,8 +1,8 @@
+import 'package:aeroquest/widgets/custom_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import 'package:aeroquest/widgets/custom_button.dart';
-import 'package:aeroquest/constraints.dart';
 
 class CustomBeansModalSheet extends StatelessWidget {
   const CustomBeansModalSheet({
@@ -40,13 +40,12 @@ class CustomBeansModalSheet extends StatelessWidget {
                 autoFocus: true,
                 validate: true,
                 initialValue: beanName,
+                validateText: "Please enter a name for these beans",
               ),
               const Divider(height: 20, color: Color(0x00000000)),
               CustomFormField(
                 formName: "description",
                 hint: "Description",
-                autoFocus: false,
-                validate: false,
                 initialValue: description,
               ),
               const Divider(height: 20, color: Color(0x00000000)),
@@ -75,42 +74,6 @@ class CustomBeansModalSheet extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class CustomFormField extends StatelessWidget {
-  const CustomFormField({
-    Key? key,
-    required this.formName,
-    required this.hint,
-    required this.autoFocus,
-    required this.validate,
-    required this.initialValue,
-  }) : super(key: key);
-
-  final String formName;
-  final String hint;
-  final bool autoFocus;
-  final bool validate;
-  final String? initialValue;
-
-  @override
-  Widget build(BuildContext context) {
-    return FormBuilderTextField(
-      cursorColor: kPrimary,
-      cursorWidth: 1,
-      name: formName,
-      initialValue: initialValue,
-      style: const TextStyle(color: kPrimary, fontSize: 16),
-      autofocus: autoFocus,
-      decoration: InputDecoration(hintText: hint),
-      validator: (value) {
-        if (validate && (value == null || value.isEmpty)) {
-          return "Please enter a name for these beans";
-        }
-        return null;
-      },
     );
   }
 }

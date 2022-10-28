@@ -1,10 +1,14 @@
+import 'dart:collection';
+
 import 'package:aeroquest/databases/coffee_beans_database.dart';
+import 'package:aeroquest/databases/notes_database.dart';
 import 'package:aeroquest/models/coffee_bean.dart';
+import 'package:aeroquest/models/note.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import "package:collection/collection.dart";
 
-import 'package:aeroquest/widgets/recipe_settings/widgets/settings_value.dart';
+import 'package:aeroquest/widgets/recipe_parameters_value.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:aeroquest/databases/recipe_settings_database.dart';
 import 'package:aeroquest/databases/recipes_database.dart';
@@ -17,22 +21,28 @@ class RecipesProvider extends ChangeNotifier {
   late List<CoffeeBean> _coffeeBeans;
   late Map<int, List<RecipeSettings>> _recipeSettings;
   late List<RecipeSettings> _tempRecipeSettings;
+  late SplayTreeMap<int, SplayTreeMap<int, Note>> _notes;
+  late SplayTreeMap<int, Note> _tempNotes;
 
   EditMode editMode = EditMode.disabled;
 
   // form key for title and description
-  GlobalKey<FormBuilderState> recipePropertiesFormKey =
+  GlobalKey<FormBuilderState> recipeIdentifiersFormKey =
       GlobalKey<FormBuilderState>();
 
   // form key for selecting a bean in the settings modal
   GlobalKey<FormBuilderState> settingsBeanFormKey =
       GlobalKey<FormBuilderState>();
 
+  // form key for note text
+  GlobalKey<FormBuilderState> recipeNotesFormKey =
+      GlobalKey<FormBuilderState>();
+
   late PushPressure tempPushPressure;
   late BrewMethod tempBrewMethod;
 
   // currently active setting to adjust when editing/adding
-  late SettingType activeSetting;
+  late ParameterType activeSlider;
 
   // variables for editing/adding settings to a recipe
   // contain values for the currently edited/added setting
@@ -43,6 +53,8 @@ class RecipesProvider extends ChangeNotifier {
   int? tempWaterAmount;
   int? tempWaterTemp;
   int? tempBrewTime;
+
+  int? tempNoteTime;
 
   UnmodifiableListView<Recipe> get recipes {
     return UnmodifiableListView(_recipes);
@@ -64,11 +76,20 @@ class RecipesProvider extends ChangeNotifier {
     return UnmodifiableListView(_tempRecipeSettings);
   }
 
-  Future<void> cacheRecipesAndSettings() async {
+  UnmodifiableMapView<int, Map<int, Note>> get notes {
+    return UnmodifiableMapView(_notes);
+  }
+
+  UnmodifiableMapView<int, Note> get tempNotes {
+    return UnmodifiableMapView(_tempNotes);
+  }
+
+  Future<void> cacheRecipeData() async {
     _recipes = await RecipesDatabase.instance.readAllRecipes();
     _recipeSettings =
         await RecipeSettingsDatabase.instance.readAllRecipeSettings();
     _coffeeBeans = await CoffeeBeansDatabase.instance.readAllCoffeeBeans();
+    _notes = await NotesDatabase.instance.readAllNotes();
   }
 
   void changeEditMode() {
@@ -83,6 +104,7 @@ class RecipesProvider extends ChangeNotifier {
   Future<Recipe> tempAddRecipe() async {
     await setTempRecipe(null);
     setTempRecipeSettings(null);
+    setTempNotes(null);
     changeEditMode();
     return tempRecipe;
   }
@@ -113,8 +135,9 @@ class RecipesProvider extends ChangeNotifier {
 
   Future<void> saveRecipe() async {
     Recipe newRecipe = _tempRecipe.copy(
-      title: recipePropertiesFormKey.currentState!.fields["recipeTitle"]!.value,
-      description: recipePropertiesFormKey
+      title:
+          recipeIdentifiersFormKey.currentState!.fields["recipeTitle"]!.value,
+      description: recipeIdentifiersFormKey
           .currentState!.fields["recipeDescription"]?.value,
       pushPressure: describeEnum(tempPushPressure),
       brewMethod: describeEnum(tempBrewMethod),
@@ -137,6 +160,9 @@ class RecipesProvider extends ChangeNotifier {
     if (areSettingsChanged(newRecipe.id!)) {
       saveEditedRecipeSettings(newRecipe.id!);
     }
+    if (areNotesChanged(newRecipe.id!)) {
+      saveEditedNotes(newRecipe.id!);
+    }
     notifyListeners();
   }
 
@@ -147,52 +173,62 @@ class RecipesProvider extends ChangeNotifier {
     required BrewMethod originalBrewMethod,
     required int recipeId,
   }) {
-    bool areRecipePropertiesChanged =
-        (recipePropertiesFormKey.currentState!.fields["recipeTitle"]!.value !=
+    bool recipePropertiesChangedCheck =
+        (recipeIdentifiersFormKey.currentState!.fields["recipeTitle"]!.value !=
                 originalTitle ||
-            recipePropertiesFormKey
+            recipeIdentifiersFormKey
                     .currentState!.fields["recipeDescription"]?.value !=
                 originalDescription ||
             originalPushPressure != tempPushPressure ||
             originalBrewMethod != tempBrewMethod);
 
-    bool areRecipeSettingsChanged = false;
+    bool recipeSettingsChangedCheck = false;
     if (_tempRecipeSettings.isNotEmpty) {
-      areRecipeSettingsChanged = areSettingsChanged(recipeId);
+      recipeSettingsChangedCheck = areSettingsChanged(recipeId);
     }
 
-    return (areRecipePropertiesChanged || areRecipeSettingsChanged);
+    bool notesChangedCheck = false;
+    if (_tempNotes.isNotEmpty) {
+      notesChangedCheck = areNotesChanged(recipeId);
+    }
+
+    return (recipePropertiesChangedCheck ||
+        recipeSettingsChangedCheck ||
+        notesChangedCheck);
   }
 
   /// used to activate/deactive editing of a setting for a recipe
-  void selectSetting(SettingType settingType) {
-    if (activeSetting == settingType) {
-      activeSetting = SettingType.none;
+  void selectSliderType(ParameterType parameterType) {
+    if (activeSlider == parameterType) {
+      activeSlider = ParameterType.none;
     } else {
-      activeSetting = settingType;
+      activeSlider = parameterType;
     }
     notifyListeners();
   }
 
   /// defines which value is getting changed when sliding the slider
-  void sliderOnChanged(double value, SettingType settingType) {
-    switch (settingType) {
-      case SettingType.grindSetting:
+  void sliderOnChanged(double value, ParameterType parameterType) {
+    switch (parameterType) {
+      case ParameterType.grindSetting:
         tempGrindSetting = value;
         break;
-      case SettingType.coffeeAmount:
+      case ParameterType.coffeeAmount:
         tempCoffeeAmount = value;
         break;
-      case SettingType.waterAmount:
+      case ParameterType.waterAmount:
         tempWaterAmount = value.toInt();
         break;
-      case SettingType.waterTemp:
+      case ParameterType.waterTemp:
         tempWaterTemp = value.toInt();
         break;
-      case SettingType.brewTime:
+      case ParameterType.brewTime:
         tempBrewTime = value.toInt();
         break;
-      case SettingType.none:
+      case ParameterType.noteTime:
+        tempNoteTime = value.toInt();
+        break;
+      case ParameterType.none:
         break;
     }
     notifyListeners();
@@ -353,7 +389,82 @@ class RecipesProvider extends ChangeNotifier {
   }
 
   // Recipe method
+  Future<void> tempAddNote(int recipeEntryId) async {
+    if (notes[recipeEntryId] == null) {
+      _notes[recipeEntryId] = SplayTreeMap();
+    }
+    // setting tempId to a unique number for this recipe
+    int tempId;
+    if (tempNotes.isEmpty) {
+      if (notes[recipeEntryId]!.isEmpty) {
+        tempId = 0;
+      } else {
+        tempId = _notes[recipeEntryId]!.lastKey()! + 1;
+      }
+    } else {
+      tempId = _tempNotes.lastKey()! + 1;
+    }
+    Note newNote = Note(
+      id: tempId,
+      recipeEntryId: recipeEntryId,
+      time: tempNoteTime!,
+      text: recipeNotesFormKey.currentState!.fields["noteText"]!.value,
+    );
+    _tempNotes.addAll({tempId: newNote});
+    notifyListeners();
+  }
 
+  Future<void> tempDeleteNote(int settingId) async {
+    _tempNotes.remove(settingId);
+    notifyListeners();
+  }
+
+  // initialize tempNotes
+  void setTempNotes(int? recipeEntryId) {
+    _tempNotes = SplayTreeMap<int, Note>.from(
+        _notes[recipeEntryId] ?? SplayTreeMap<int, Note>());
+  }
+
+  // check if settings have been updated since details page load
+  bool areNotesChanged(int recipeEntryId) {
+    return !(const DeepCollectionEquality()
+        .equals(_tempNotes, _notes[recipeEntryId]!));
+  }
+
+  // on saving changes to recipe details page
+  // stores tempRecipeSettings in database and cache
+  Future<void> saveEditedNotes(int recipeEntryId) async {
+    // for deleting
+    for (var key in notes[recipeEntryId]!.keys) {
+      if (!tempNotes.containsKey(key)) {
+        await RecipeSettingsDatabase.instance.delete(key);
+      }
+    }
+
+    for (var key in tempNotes.keys) {
+      // new id -> add
+      if (!notes[recipeEntryId]!.containsKey(key)) {
+        // for clearing tempId
+        Note newNote = Note(
+            recipeEntryId: tempNotes[key]!.recipeEntryId,
+            time: tempNotes[key]!.time,
+            text: tempNotes[key]!.text);
+        _tempNotes[key] = _tempNotes[key]!
+            .copy(id: await NotesDatabase.instance.create(newNote));
+      }
+      // id exists in recipe settings -> update or don't do anything if settings are the same
+      else {
+        // update because entries of same id
+        if (notes[recipeEntryId]![key] != tempNotes[key]) {
+          await NotesDatabase.instance.update(tempNotes[key]!);
+        }
+        // else do nothing
+      }
+    }
+
+    _notes[recipeEntryId] = SplayTreeMap.from(tempNotes);
+    notifyListeners();
+  }
 }
 
 enum EditMode { enabled, disabled }

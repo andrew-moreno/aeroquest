@@ -67,7 +67,7 @@ class _RecipesState extends State<Recipes> {
         body: SafeArea(
           child: FutureBuilder(
             future: Provider.of<RecipesProvider>(context, listen: false)
-                .cacheRecipesAndSettings(),
+                .cacheRecipeData(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 return Consumer<RecipesProvider>(

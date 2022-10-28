@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:aeroquest/models/note.dart';
@@ -38,28 +40,31 @@ class NotesDatabase {
     ''');
   }
 
-  Future<Note> create(Note note) async {
+  Future<int> create(Note note) async {
     final db = await instance.database;
 
     final id = await db.insert(tableNotes, note.toJson());
-    return note.copy(id: id);
+    return id;
   }
 
-  Future<Note> readNote(int id) async {
+  // { recipeEntryId : { noteId : note } }
+  Future<SplayTreeMap<int, SplayTreeMap<int, Note>>> readAllNotes() async {
     final db = await instance.database;
 
-    final maps = await db.query(
-      tableNotes,
-      columns: NoteFields.values,
-      where: "${NoteFields.id} = ?", // ? prevents sql injection attacks
-      whereArgs: [id],
-    );
+    final result = await db.query(tableNotes);
 
-    if (maps.isNotEmpty) {
-      return Note.fromJson(maps.first);
-    } else {
-      throw Exception("ID $id not found");
+    final notesList = result.map((json) => Note.fromJson(json)).toList();
+    final notesMap = SplayTreeMap<int, SplayTreeMap<int, Note>>();
+    for (var note in notesList) {
+      if (notesMap.containsKey(note.recipeEntryId)) {
+        notesMap[note.recipeEntryId]!.addAll({note.id!: note});
+      } else {
+        notesMap.addAll({note.recipeEntryId: SplayTreeMap<int, Note>()});
+        notesMap[note.recipeEntryId]!.addAll({note.id!: note});
+      }
     }
+
+    return notesMap;
   }
 
   Future<List<Note>> readAllNotesFromRecipe(int recipeEntryId) async {
