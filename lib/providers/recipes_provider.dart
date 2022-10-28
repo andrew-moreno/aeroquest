@@ -55,6 +55,7 @@ class RecipesProvider extends ChangeNotifier {
   int? tempBrewTime;
 
   int? tempNoteTime;
+  String? tempNoteText;
 
   UnmodifiableListView<Recipe> get recipes {
     return UnmodifiableListView(_recipes);
@@ -463,6 +464,23 @@ class RecipesProvider extends ChangeNotifier {
     }
 
     _notes[recipeEntryId] = SplayTreeMap.from(tempNotes);
+    notifyListeners();
+  }
+
+  // when save button pressed
+  // saves to tempNotes
+  Future<void> editNote(Note noteData) async {
+    Note newNoteData = noteData.copy();
+
+    if (noteData.time != tempNoteTime) {
+      newNoteData.time = tempNoteTime!;
+    }
+    if (noteData.text !=
+        recipeNotesFormKey.currentState!.fields["noteText"]!.value) {
+      newNoteData.text =
+          recipeNotesFormKey.currentState!.fields["noteText"]!.value;
+    }
+    _tempNotes[noteData.id!] = newNoteData;
     notifyListeners();
   }
 }

@@ -206,47 +206,67 @@ class RecipeMethodNotes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        vertical: 10,
-        horizontal: 20,
-      ),
-      decoration: BoxDecoration(
-        color: kLightSecondary,
-        borderRadius: BorderRadius.circular(kCornerRadius),
-      ),
-      child: IntrinsicHeight(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Text(
-              (note.time ~/ 6).toString() +
-                  ":" +
-                  (note.time % 6).toString() +
-                  "0",
-              style: const TextStyle(
-                color: kPrimary,
-                fontSize: 17,
-                fontFamily: "Poppins",
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const VerticalDivider(
-              width: 20,
-              color: Color(0x00000000),
-            ),
-            Expanded(
-              child: Text(
-                note.text,
+    return GestureDetector(
+      onTap: () {
+        var recipesProvider =
+            Provider.of<RecipesProvider>(context, listen: false);
+        if (recipesProvider.editMode == EditMode.enabled) {
+          showCustomModalSheet(
+              modalType: ModalType.notes,
+              submitAction: () {
+                recipesProvider.editNote(note);
+                Navigator.of(context).pop();
+              },
+              deleteAction: () {
+                recipesProvider.tempDeleteSetting(note.id!);
+                Navigator.of(context).pop();
+              },
+              notesData: note,
+              context: context);
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          vertical: 10,
+          horizontal: 20,
+        ),
+        decoration: BoxDecoration(
+          color: kLightSecondary,
+          borderRadius: BorderRadius.circular(kCornerRadius),
+        ),
+        child: IntrinsicHeight(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text(
+                (note.time ~/ 6).toString() +
+                    ":" +
+                    (note.time % 6).toString() +
+                    "0",
                 style: const TextStyle(
                   color: kPrimary,
-                  fontSize: 13,
+                  fontSize: 17,
                   fontFamily: "Poppins",
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-            ),
-          ],
+              const VerticalDivider(
+                width: 20,
+                color: Color(0x00000000),
+              ),
+              Expanded(
+                child: Text(
+                  note.text,
+                  style: const TextStyle(
+                    color: kPrimary,
+                    fontSize: 13,
+                    fontFamily: "Poppins",
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

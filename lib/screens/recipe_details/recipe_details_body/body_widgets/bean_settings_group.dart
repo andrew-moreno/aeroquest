@@ -27,7 +27,7 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
   @override
   Widget build(BuildContext context) {
     return Consumer<RecipesProvider>(
-      builder: (_, recipesProvider, ___) {
+      builder: (context, recipesProvider, ___) {
         return Column(
           children: [
             ListView.separated(
@@ -139,7 +139,7 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
                                   .recipeEntryId); // index doesn't matter for recipe entry id
                               Navigator.of(context).pop();
                             },
-                            context: _);
+                            context: context);
                       }
                     },
                   )
