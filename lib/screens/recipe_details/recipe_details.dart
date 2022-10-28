@@ -95,7 +95,7 @@ class RecipeDetails extends StatelessWidget {
         } else {
           Provider.of<RecipesProvider>(context, listen: false).changeEditMode();
           Provider.of<RecipesProvider>(context, listen: false)
-              .clearTempRecipeSettings();
+              .clearTempNotesAndRecipeSettings();
           if (isAdding) {
             return Future.value(true);
           }
@@ -103,7 +103,7 @@ class RecipeDetails extends StatelessWidget {
         }
       }
       Provider.of<RecipesProvider>(context, listen: false)
-          .clearTempRecipeSettings();
+          .clearTempNotesAndRecipeSettings();
       return Future.value(true);
     }
 
@@ -116,12 +116,12 @@ class RecipeDetails extends StatelessWidget {
         } else {
           Provider.of<RecipesProvider>(context, listen: false).changeEditMode();
           Provider.of<RecipesProvider>(context, listen: false)
-              .clearTempRecipeSettings();
+              .clearTempNotesAndRecipeSettings();
           Navigator.of(context).pop();
         }
       } else {
         Provider.of<RecipesProvider>(context, listen: false)
-            .clearTempRecipeSettings();
+            .clearTempNotesAndRecipeSettings();
         Navigator.of(context).pop();
       }
     }

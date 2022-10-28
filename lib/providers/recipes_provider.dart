@@ -132,8 +132,10 @@ class RecipesProvider extends ChangeNotifier {
   void deleteRecipe(int recipeId) async {
     _recipes.removeWhere((recipe) => recipe.id == recipeId);
     _recipeSettings.remove(recipeId);
+    _notes.remove(recipeId);
     await RecipesDatabase.instance.delete(recipeId);
     await RecipeSettingsDatabase.instance.deleteAllSettingsForRecipe(recipeId);
+    await NotesDatabase.instance.deleteAllNotesForRecipe(recipeId);
     notifyListeners();
   }
 
@@ -239,8 +241,9 @@ class RecipesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void clearTempRecipeSettings() {
+  void clearTempNotesAndRecipeSettings() {
     _tempRecipeSettings.clear();
+    _tempNotes.clear();
   }
 
   // initialize tempRecipeSettings

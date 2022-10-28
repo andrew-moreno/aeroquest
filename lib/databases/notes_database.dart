@@ -98,6 +98,13 @@ class NotesDatabase {
     );
   }
 
+  Future<int> deleteAllNotesForRecipe(int recipeEntryId) async {
+    final db = await instance.database;
+
+    return await db.delete(tableNotes,
+        where: "${NoteFields.recipeEntryId} = ?", whereArgs: [recipeEntryId]);
+  }
+
   Future close() async {
     final db = await instance.database;
     db.close();
