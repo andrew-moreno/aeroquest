@@ -27,14 +27,17 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
   @override
   Widget build(BuildContext context) {
     return Consumer<RecipesProvider>(
-      builder: (context, recipesProvider, ___) {
+      builder: (_, recipesProvider, ___) {
         return Column(
           children: [
             ListView.separated(
               physics: const NeverScrollableScrollPhysics(),
               itemCount: recipesProvider.tempRecipeSettings.length,
               shrinkWrap: true,
-              itemBuilder: (_, int index) {
+              itemBuilder: (context, int index) {
+                int key =
+                    recipesProvider.tempRecipeSettings.keys.elementAt(index);
+
                 return GestureDetector(
                   onTap: () {
                     if (recipesProvider.editMode == EditMode.enabled) {
@@ -42,31 +45,30 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
                           modalType: ModalType.settings,
                           submitAction: () {
                             recipesProvider.editSetting(
-                                recipesProvider.tempRecipeSettings[index]);
+                                recipesProvider.tempRecipeSettings[key]!, key);
                             Navigator.of(context).pop();
                           },
                           deleteAction: () {
-                            recipesProvider.tempDeleteSetting(
-                                recipesProvider.tempRecipeSettings[index].id!);
+                            recipesProvider.tempDeleteSetting(key);
                             Navigator.of(context).pop();
                           },
                           recipeSettingsData:
-                              recipesProvider.tempRecipeSettings[index],
-                          context: _);
+                              recipesProvider.tempRecipeSettings[key],
+                          context: context);
                     }
                   },
                   child: Visibility(
                     visible: (recipesProvider.editMode == EditMode.disabled &&
                             RecipeSettings.stringToSettingVisibility(
-                                    recipesProvider.tempRecipeSettings[index]
-                                        .visibility) ==
+                                    recipesProvider
+                                        .tempRecipeSettings[key]!.visibility) ==
                                 SettingVisibility.hidden)
                         ? false
                         : true,
                     child: Opacity(
                       opacity: (recipesProvider.editMode == EditMode.enabled &&
                               RecipeSettings.stringToSettingVisibility(
-                                      recipesProvider.tempRecipeSettings[index]
+                                      recipesProvider.tempRecipeSettings[key]!
                                           .visibility) ==
                                   SettingVisibility.hidden)
                           ? 0.5
@@ -85,7 +87,7 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
                         ),
                         child: BeanSettings(
                           recipeSetting:
-                              recipesProvider.tempRecipeSettings[index],
+                              recipesProvider.tempRecipeSettings[key]!,
                         ),
                       ),
                     ),

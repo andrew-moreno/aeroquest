@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:developer';
 
 import 'package:aeroquest/databases/coffee_beans_database.dart';
 import 'package:aeroquest/databases/notes_database.dart';
@@ -18,9 +19,9 @@ import '../models/recipe_settings.dart';
 class RecipesProvider extends ChangeNotifier {
   late List<Recipe> _recipes;
   late Recipe _tempRecipe;
-  late List<CoffeeBean> _coffeeBeans;
-  late Map<int, List<RecipeSettings>> _recipeSettings;
-  late List<RecipeSettings> _tempRecipeSettings;
+  late Map<int, CoffeeBean> _coffeeBeans;
+  late SplayTreeMap<int, SplayTreeMap<int, RecipeSettings>> _recipeSettings;
+  late SplayTreeMap<int, RecipeSettings> _tempRecipeSettings;
   late SplayTreeMap<int, SplayTreeMap<int, Note>> _notes;
   late SplayTreeMap<int, Note> _tempNotes;
 
@@ -65,16 +66,16 @@ class RecipesProvider extends ChangeNotifier {
     return _tempRecipe;
   }
 
-  UnmodifiableListView<CoffeeBean> get coffeeBeans {
-    return UnmodifiableListView(_coffeeBeans);
+  UnmodifiableMapView<int, CoffeeBean> get coffeeBeans {
+    return UnmodifiableMapView(_coffeeBeans);
   }
 
-  UnmodifiableMapView<int, List<RecipeSettings>> get recipeSettings {
+  UnmodifiableMapView<int, Map<int, RecipeSettings>> get recipeSettings {
     return UnmodifiableMapView(_recipeSettings);
   }
 
-  UnmodifiableListView<RecipeSettings> get tempRecipeSettings {
-    return UnmodifiableListView(_tempRecipeSettings);
+  UnmodifiableMapView<int, RecipeSettings> get tempRecipeSettings {
+    return UnmodifiableMapView(_tempRecipeSettings);
   }
 
   UnmodifiableMapView<int, Map<int, Note>> get notes {
@@ -119,9 +120,11 @@ class RecipesProvider extends ChangeNotifier {
           description: "",
           pushPressure: "light",
           brewMethod: "regular");
-    } else {
+    } else if (_recipes.any((recipe) => recipe.id == recipeEntryId)) {
       _tempRecipe = _recipes.firstWhere((recipe) => recipe.id == recipeEntryId);
     }
+    // setting temp recipe not required when recipe doesn't exist
+    // for case where exiting recipe details page
     tempPushPressure = Recipe.stringToPushPressure(_tempRecipe.pushPressure);
     tempBrewMethod = Recipe.stringToBrewMethod(_tempRecipe.brewMethod);
   }
@@ -145,7 +148,8 @@ class RecipesProvider extends ChangeNotifier {
     );
     if (_recipes.isEmpty) {
       _recipes = [];
-      _recipeSettings = {newRecipe.id!: []};
+      _recipeSettings[newRecipe.id!] = SplayTreeMap();
+      _notes[newRecipe.id!] = SplayTreeMap();
       _recipes.add(newRecipe);
       await RecipesDatabase.instance.create(newRecipe);
     } else {
@@ -241,19 +245,20 @@ class RecipesProvider extends ChangeNotifier {
 
   // initialize tempRecipeSettings
   void setTempRecipeSettings(int? recipeEntryId) {
-    _tempRecipeSettings = List.from(_recipeSettings[recipeEntryId] ?? []);
+    _tempRecipeSettings = SplayTreeMap<int, RecipeSettings>.from(
+        _recipeSettings[recipeEntryId] ?? SplayTreeMap<int, RecipeSettings>());
   }
 
   // check if settings have been updated since details page load
   bool areSettingsChanged(int recipeEntryId) {
-    return !(const DeepCollectionEquality()
-        .equals(_tempRecipeSettings, _recipeSettings[recipeEntryId]!));
+    return !(const DeepCollectionEquality().equals(
+        _tempRecipeSettings, _recipeSettings[recipeEntryId] ?? SplayTreeMap()));
   }
 
   // adds new setting to tempRecipeSettings
   Future<void> tempAddSetting(int recipeEntryId) async {
     if (recipeSettings[recipeEntryId] == null) {
-      _recipeSettings[recipeEntryId] = [];
+      _recipeSettings[recipeEntryId] = SplayTreeMap<int, RecipeSettings>();
     }
     // setting tempId to a unique number for this recipe
     int tempId;
@@ -261,21 +266,10 @@ class RecipesProvider extends ChangeNotifier {
       if (_recipeSettings[recipeEntryId]!.isEmpty) {
         tempId = 0;
       } else {
-        if (!_recipeSettings[recipeEntryId]!
-            .isSorted((a, b) => a.id!.compareTo(b.id!))) {
-          _recipeSettings[recipeEntryId]!
-              .sort((a, b) => a.id!.compareTo(b.id!));
-        }
-        tempId = recipeSettings[recipeEntryId]![
-                    recipeSettings[recipeEntryId]!.length - 1]
-                .id! +
-            1;
+        tempId = _recipeSettings[recipeEntryId]!.lastKey()! + 1;
       }
     } else {
-      if (!tempRecipeSettings.isSorted((a, b) => a.id!.compareTo(b.id!))) {
-        tempRecipeSettings.sort((a, b) => a.id!.compareTo(b.id!));
-      }
-      tempId = tempRecipeSettings.last.id! + 1;
+      tempId = _tempRecipeSettings.lastKey()! + 1;
     }
     RecipeSettings newRecipeSettings = RecipeSettings(
       id: tempId,
@@ -288,20 +282,20 @@ class RecipesProvider extends ChangeNotifier {
       brewTime: tempBrewTime!,
       visibility: describeEnum(tempSettingVisibility!),
     );
-    _tempRecipeSettings.add(newRecipeSettings);
+    _tempRecipeSettings.addAll({tempId: newRecipeSettings});
     notifyListeners();
   }
 
   // deletes setting from tempRecipeSettings
   Future<void> tempDeleteSetting(int settingId) async {
-    _tempRecipeSettings
-        .removeWhere((recipeSetting) => recipeSetting.id == settingId);
+    _tempRecipeSettings.remove(settingId);
     notifyListeners();
   }
 
   // when save button pressed
   // saves to temp recipe settings
-  Future<void> editSetting(RecipeSettings recipeSettingsData) async {
+  Future<void> editSetting(RecipeSettings recipeSettingsData, key) async {
+    log(key.toString());
     RecipeSettings newCoffeeSettingsData = recipeSettingsData.copy();
 
     if (recipeSettingsData.grindSetting != tempGrindSetting) {
@@ -327,72 +321,64 @@ class RecipesProvider extends ChangeNotifier {
         tempSettingVisibility) {
       newCoffeeSettingsData.visibility = describeEnum(tempSettingVisibility!);
     }
-    _tempRecipeSettings[_tempRecipeSettings.indexWhere(
-            (recipeSetting) => recipeSetting.id == recipeSettingsData.id)] =
-        newCoffeeSettingsData;
+    _tempRecipeSettings[recipeSettingsData.id!] = newCoffeeSettingsData;
     notifyListeners();
   }
 
   // on saving changes to recipe details page
   // stores tempRecipeSettings in database and cache
   Future<void> saveEditedRecipeSettings(int recipeEntryId) async {
-    Set idsInRecipeSettings = {};
-    for (var recipeSetting in recipeSettings[recipeEntryId]!) {
-      // used in update/add for loop
-      idsInRecipeSettings.add(recipeSetting.id);
+    // for deleting
+    for (var id in recipeSettings[recipeEntryId]!.keys) {
+      if (!tempRecipeSettings.containsKey(id)) {
+        CoffeeBean coffeeBean =
+            _coffeeBeans[recipeSettings[recipeEntryId]![id]!.beanId]!;
 
-      // for deleting
-      if (!tempRecipeSettings.contains(recipeSetting)) {
-        CoffeeBean coffeeBean = _coffeeBeans
-            .firstWhere((coffeeBean) => coffeeBean.id == recipeSetting.beanId);
         coffeeBean.associatedSettingsCount--;
         await CoffeeBeansDatabase.instance.update(coffeeBean);
-        await RecipeSettingsDatabase.instance.delete(recipeSetting.id!);
+        await RecipeSettingsDatabase.instance.delete(id);
       }
     }
 
-    for (int i = 0; i < _tempRecipeSettings.length; i++) {
+    List<int> keys = tempRecipeSettings.keys.toList();
+    for (var id in keys) {
       // new id -> add
-      if (!idsInRecipeSettings.contains(tempRecipeSettings[i].id)) {
+      if (!recipeSettings[recipeEntryId]!.containsKey(id)) {
         // for clearing tempId
         RecipeSettings newCoffeeSettingsData = RecipeSettings(
-          recipeEntryId: tempRecipeSettings[i].recipeEntryId,
-          beanId: tempRecipeSettings[i].beanId,
-          grindSetting: tempRecipeSettings[i].grindSetting,
-          coffeeAmount: tempRecipeSettings[i].coffeeAmount,
-          waterAmount: tempRecipeSettings[i].waterAmount,
-          waterTemp: tempRecipeSettings[i].waterTemp,
-          brewTime: tempRecipeSettings[i].brewTime,
-          visibility: tempRecipeSettings[i].visibility,
+          recipeEntryId: tempRecipeSettings[id]!.recipeEntryId,
+          beanId: tempRecipeSettings[id]!.beanId,
+          grindSetting: tempRecipeSettings[id]!.grindSetting,
+          coffeeAmount: tempRecipeSettings[id]!.coffeeAmount,
+          waterAmount: tempRecipeSettings[id]!.waterAmount,
+          waterTemp: tempRecipeSettings[id]!.waterTemp,
+          brewTime: tempRecipeSettings[id]!.brewTime,
+          visibility: tempRecipeSettings[id]!.visibility,
         );
-        CoffeeBean coffeeBean = coffeeBeans.firstWhere(
-            (coffeeBean) => coffeeBean.id == newCoffeeSettingsData.beanId);
+        CoffeeBean coffeeBean = _coffeeBeans[newCoffeeSettingsData.beanId]!;
         coffeeBean.associatedSettingsCount++;
         await CoffeeBeansDatabase.instance.update(coffeeBean);
-        _tempRecipeSettings[i] = _tempRecipeSettings[i].copy(
-            id: await RecipeSettingsDatabase.instance
-                .create(newCoffeeSettingsData));
+        int newId =
+            await RecipeSettingsDatabase.instance.create(newCoffeeSettingsData);
+        _tempRecipeSettings[newId] = _tempRecipeSettings[id]!.copy(id: newId);
+        _tempRecipeSettings.remove(id);
       }
       // id exists in recipe settings -> update or don't do anything if settings are the same
-      else {
+      else if (recipeSettings[recipeEntryId]![id] != tempRecipeSettings[id]) {
         // update because entries of same id
-        if (recipeSettings[recipeEntryId]!.firstWhere((recipeSetting) =>
-                recipeSetting.id == tempRecipeSettings[i].id) !=
-            tempRecipeSettings[i]) {
-          await RecipeSettingsDatabase.instance.update(tempRecipeSettings[i]);
-        }
-        // else do nothing
+        await RecipeSettingsDatabase.instance.update(tempRecipeSettings[id]!);
       }
+      // else do nothing
     }
 
-    _recipeSettings[recipeEntryId] = List.from(tempRecipeSettings);
+    _recipeSettings[recipeEntryId] = SplayTreeMap.from(_tempRecipeSettings);
     notifyListeners();
   }
 
   // Recipe method
   Future<void> tempAddNote(int recipeEntryId) async {
     if (notes[recipeEntryId] == null) {
-      _notes[recipeEntryId] = SplayTreeMap();
+      _notes[recipeEntryId] = SplayTreeMap<int, Note>();
     }
     // setting tempId to a unique number for this recipe
     int tempId;
@@ -429,38 +415,37 @@ class RecipesProvider extends ChangeNotifier {
   // check if settings have been updated since details page load
   bool areNotesChanged(int recipeEntryId) {
     return !(const DeepCollectionEquality()
-        .equals(_tempNotes, _notes[recipeEntryId]!));
+        .equals(_tempNotes, _notes[recipeEntryId] ?? SplayTreeMap()));
   }
 
   // on saving changes to recipe details page
   // stores tempRecipeSettings in database and cache
   Future<void> saveEditedNotes(int recipeEntryId) async {
     // for deleting
-    for (var key in notes[recipeEntryId]!.keys) {
-      if (!tempNotes.containsKey(key)) {
-        await RecipeSettingsDatabase.instance.delete(key);
+    for (var id in notes[recipeEntryId]!.keys) {
+      if (!tempNotes.containsKey(id)) {
+        await RecipeSettingsDatabase.instance.delete(id);
       }
     }
-
-    for (var key in tempNotes.keys) {
+    List<int> keys = tempNotes.keys.toList();
+    for (var id in keys) {
       // new id -> add
-      if (!notes[recipeEntryId]!.containsKey(key)) {
+      if (!notes[recipeEntryId]!.containsKey(id)) {
         // for clearing tempId
         Note newNote = Note(
-            recipeEntryId: tempNotes[key]!.recipeEntryId,
-            time: tempNotes[key]!.time,
-            text: tempNotes[key]!.text);
-        _tempNotes[key] = _tempNotes[key]!
-            .copy(id: await NotesDatabase.instance.create(newNote));
+            recipeEntryId: tempNotes[id]!.recipeEntryId,
+            time: tempNotes[id]!.time,
+            text: tempNotes[id]!.text);
+        int newId = await NotesDatabase.instance.create(newNote);
+        _tempNotes[newId] = _tempNotes[id]!.copy(id: newId);
+        _tempNotes.remove(id);
       }
       // id exists in recipe settings -> update or don't do anything if settings are the same
-      else {
+      else if (notes[recipeEntryId]![id] != tempNotes[id]) {
         // update because entries of same id
-        if (notes[recipeEntryId]![key] != tempNotes[key]) {
-          await NotesDatabase.instance.update(tempNotes[key]!);
-        }
-        // else do nothing
+        await NotesDatabase.instance.update(tempNotes[id]!);
       }
+      // else do nothing
     }
 
     _notes[recipeEntryId] = SplayTreeMap.from(tempNotes);

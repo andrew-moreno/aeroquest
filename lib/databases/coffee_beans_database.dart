@@ -63,11 +63,19 @@ class CoffeeBeansDatabase {
     }
   }
 
-  Future<List<CoffeeBean>> readAllCoffeeBeans() async {
+  Future<Map<int, CoffeeBean>> readAllCoffeeBeans() async {
     final db = await instance.database;
 
     final result = await db.query(tableCoffeeBeans);
-    return result.map((json) => CoffeeBean.fromJson(json)).toList();
+    final coffeeBeansList =
+        result.map((json) => CoffeeBean.fromJson(json)).toList();
+
+    final coffeeBeansMap = <int, CoffeeBean>{};
+    for (var coffeeBean in coffeeBeansList) {
+      coffeeBeansMap.addAll({coffeeBean.id!: coffeeBean});
+    }
+
+    return coffeeBeansMap;
   }
 
   Future<int> update(CoffeeBean coffeeBean) async {

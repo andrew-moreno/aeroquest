@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:aeroquest/models/recipe_settings.dart';
@@ -81,7 +83,8 @@ class RecipeSettingsDatabase {
     return result.map((json) => RecipeSettings.fromJson(json)).toList();
   }
 
-  Future<Map<int, List<RecipeSettings>>> readAllRecipeSettings() async {
+  Future<SplayTreeMap<int, SplayTreeMap<int, RecipeSettings>>>
+      readAllRecipeSettings() async {
     final db = await instance.database;
 
     final result = await db.query(tableRecipeSettings);
@@ -89,16 +92,20 @@ class RecipeSettingsDatabase {
     final recipeSettingsList =
         result.map((json) => RecipeSettings.fromJson(json)).toList();
 
-    final map = <int, List<RecipeSettings>>{};
+    final settingsMap = SplayTreeMap<int, SplayTreeMap<int, RecipeSettings>>();
     for (var recipeSetting in recipeSettingsList) {
-      if (map.containsKey(recipeSetting.recipeEntryId)) {
-        map[recipeSetting.recipeEntryId]!.add(recipeSetting);
+      if (settingsMap.containsKey(recipeSetting.recipeEntryId)) {
+        settingsMap[recipeSetting.recipeEntryId]!
+            .addAll({recipeSetting.id!: recipeSetting});
       } else {
-        map[recipeSetting.recipeEntryId] = [recipeSetting];
+        settingsMap.addAll(
+            {recipeSetting.recipeEntryId: SplayTreeMap<int, RecipeSettings>()});
+        settingsMap[recipeSetting.recipeEntryId]!
+            .addAll({recipeSetting.id!: recipeSetting});
       }
     }
 
-    return map;
+    return settingsMap;
   }
 
   Future<int> update(RecipeSettings recipeSetting) async {

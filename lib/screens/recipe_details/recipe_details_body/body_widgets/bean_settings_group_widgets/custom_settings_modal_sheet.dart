@@ -81,27 +81,29 @@ class _CustomSettingsModalSheetState extends State<CustomSettingsModalSheet> {
                       child: DropdownButtonFormField2(
                         items: List.generate(
                           recipesProvider.coffeeBeans.length,
-                          (index) => DropdownMenuItem(
-                            child: Text(
-                              recipesProvider.coffeeBeans[index].beanName,
-                              style: const TextStyle(
-                                color: kPrimary,
-                                fontSize: 16,
+                          (index) {
+                            int key = recipesProvider.coffeeBeans.keys
+                                .elementAt(index);
+                            return DropdownMenuItem(
+                              child: Text(
+                                recipesProvider.coffeeBeans[key]!.beanName,
+                                style: const TextStyle(
+                                  color: kPrimary,
+                                  fontSize: 16,
+                                ),
                               ),
-                            ),
-                            value: recipesProvider.coffeeBeans[index].beanName,
-                          ),
+                              value: recipesProvider.coffeeBeans[key]!.beanName,
+                            );
+                          },
                         ),
                         value: (widget.recipeSettingsData != null)
-                            ? recipesProvider.coffeeBeans
-                                .firstWhere((coffeeBean) =>
-                                    coffeeBean.id ==
-                                    widget.recipeSettingsData!.beanId)
+                            ? recipesProvider
+                                .coffeeBeans[widget.recipeSettingsData!.beanId]!
                                 .beanName
                             : null,
                         onChanged: (String? value) {
                           recipesProvider.tempBeanId = recipesProvider
-                              .coffeeBeans
+                              .coffeeBeans.values
                               .firstWhere(
                                   (coffeeBean) => coffeeBean.beanName == value)
                               .id;

@@ -26,9 +26,7 @@ class BeanSettings extends StatelessWidget {
           ),
           child: Text(
             Provider.of<RecipesProvider>(context, listen: true)
-                .coffeeBeans
-                .firstWhere(
-                    (coffeeBean) => coffeeBean.id == recipeSetting.beanId)
+                .coffeeBeans[recipeSetting.beanId]!
                 .beanName,
             style: Theme.of(context)
                 .textTheme

@@ -19,10 +19,10 @@ class RecipeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<RecipeSettings> recipeSettings =
+    final Map<int, RecipeSettings> recipeSettings =
         Provider.of<RecipesProvider>(context, listen: false)
                 .recipeSettings[recipeData.id] ??
-            [];
+            {};
     return GestureDetector(
       onTap: () {
         Provider.of<RecipesProvider>(context, listen: false)
@@ -65,12 +65,12 @@ class RecipeCard extends StatelessWidget {
                     color: Color(0x00000000),
                     height: 10,
                   ),
-                  (recipeSettings.any((recipeSetting) =>
+                  (recipeSettings.values.any((recipeSetting) =>
                           RecipeSettings.stringToSettingVisibility(
                               recipeSetting.visibility) ==
                           SettingVisibility.shown))
                       ? RecipeSettingsContainer(
-                          recipeSettings: recipeSettings
+                          recipeSettings: recipeSettings.values
                               .where((recipeSetting) =>
                                   RecipeSettings.stringToSettingVisibility(
                                       recipeSetting.visibility) ==

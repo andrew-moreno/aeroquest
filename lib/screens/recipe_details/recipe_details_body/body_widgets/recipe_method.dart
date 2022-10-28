@@ -218,7 +218,7 @@ class RecipeMethodNotes extends StatelessWidget {
                 Navigator.of(context).pop();
               },
               deleteAction: () {
-                recipesProvider.tempDeleteSetting(note.id!);
+                recipesProvider.tempDeleteNote(note.id!);
                 Navigator.of(context).pop();
               },
               notesData: note,
