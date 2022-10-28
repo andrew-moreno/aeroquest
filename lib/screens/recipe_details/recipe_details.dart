@@ -169,95 +169,98 @@ class RecipeDetails extends StatelessWidget {
     return Scaffold(
       body: WillPopScope(
         onWillPop: _onWillPop,
-        child: SafeArea(
-          child: StretchingOverscrollIndicator(
-            axisDirection: AxisDirection.down,
-            child: CustomScrollView(
-              controller: _scrollController,
-              slivers: [
-                SliverAppBar(
-                  backgroundColor: kPrimary,
-                  leading: AppBarLeading(
-                    function: LeadingFunction.back,
-                    onPressed: () {
-                      _exitDetailsPage();
-                    },
-                  ),
-                  actions: [
-                    AppBarButton(
-                      onTap: () {
-                        _saveRecipe();
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: SafeArea(
+            child: StretchingOverscrollIndicator(
+              axisDirection: AxisDirection.down,
+              child: CustomScrollView(
+                controller: _scrollController,
+                slivers: [
+                  SliverAppBar(
+                    backgroundColor: kPrimary,
+                    leading: AppBarLeading(
+                      function: LeadingFunction.back,
+                      onPressed: () {
+                        _exitDetailsPage();
                       },
-                      icon: (Provider.of<RecipesProvider>(context).editMode ==
-                              EditMode.enabled)
-                          ? Icons.check
-                          : Icons.edit,
                     ),
-                    (!isAdding)
-                        ? AppBarButton(
-                            onTap: () {
-                              _showConfirmDeletePopup();
-                            },
-                            icon: Icons.delete,
-                          )
-                        : Container(),
-                  ],
-                ),
-                SliverList(
-                  delegate: SliverChildListDelegate(
-                    [
-                      const Divider(
-                        height: 5,
-                        color: Color(0x00000000),
-                      ),
-                      Consumer<RecipesProvider>(
-                        builder: (_, recipesProvider, ___) {
-                          return RecipeDetailsHeader(
-                            titleValue: recipesProvider.recipes
-                                .firstWhere(
-                                  (recipe) => recipe.id == recipeData.id,
-                                  orElse: () => recipeData,
-                                )
-                                .title,
-                            descriptionValue: recipesProvider.recipes
-                                    .firstWhere(
-                                      (recipe) => recipe.id == recipeData.id,
-                                      orElse: () => recipeData,
-                                    )
-                                    .description ??
-                                "",
-                          );
+                    actions: [
+                      AppBarButton(
+                        onTap: () {
+                          _saveRecipe();
                         },
+                        icon: (Provider.of<RecipesProvider>(context).editMode ==
+                                EditMode.enabled)
+                            ? Icons.check
+                            : Icons.edit,
                       ),
-                      const Divider(
-                        height: 20,
-                        color: Color(0x00000000),
-                      ),
-                      RecipeDetailsBody(
-                        recipeId: recipeData.id!,
-                      ),
+                      (!isAdding)
+                          ? AppBarButton(
+                              onTap: () {
+                                _showConfirmDeletePopup();
+                              },
+                              icon: Icons.delete,
+                            )
+                          : Container(),
                     ],
                   ),
-                ),
-                // fills remaining space if content doesn't expand to height of screen
-                SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: kDarkSecondary,
-                      // necessary to fix 1 pixel gap bug in slivers
-                      boxShadow: [
-                        BoxShadow(
-                          color: kDarkSecondary,
-                          blurRadius: 0.0,
-                          spreadRadius: 0.0,
-                          offset: Offset(0, -2),
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
+                        const Divider(
+                          height: 5,
+                          color: Color(0x00000000),
+                        ),
+                        Consumer<RecipesProvider>(
+                          builder: (_, recipesProvider, ___) {
+                            return RecipeDetailsHeader(
+                              titleValue: recipesProvider.recipes
+                                  .firstWhere(
+                                    (recipe) => recipe.id == recipeData.id,
+                                    orElse: () => recipeData,
+                                  )
+                                  .title,
+                              descriptionValue: recipesProvider.recipes
+                                      .firstWhere(
+                                        (recipe) => recipe.id == recipeData.id,
+                                        orElse: () => recipeData,
+                                      )
+                                      .description ??
+                                  "",
+                            );
+                          },
+                        ),
+                        const Divider(
+                          height: 20,
+                          color: Color(0x00000000),
+                        ),
+                        RecipeDetailsBody(
+                          recipeId: recipeData.id!,
                         ),
                       ],
                     ),
                   ),
-                )
-              ],
+                  // fills remaining space if content doesn't expand to height of screen
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: kDarkSecondary,
+                        // necessary to fix 1 pixel gap bug in slivers
+                        boxShadow: [
+                          BoxShadow(
+                            color: kDarkSecondary,
+                            blurRadius: 0.0,
+                            spreadRadius: 0.0,
+                            offset: Offset(0, -2),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),
