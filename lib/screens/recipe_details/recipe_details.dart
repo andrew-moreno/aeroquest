@@ -68,7 +68,7 @@ class _RecipeDetailsState extends State<RecipeDetails> {
       );
     }
 
-    Future<bool> _showConfirmDeletePopup() async {
+    Future<void> _showConfirmDeletePopup() async {
       return await showDialog(
         context: context,
         builder: (context) => CustomDialog(
