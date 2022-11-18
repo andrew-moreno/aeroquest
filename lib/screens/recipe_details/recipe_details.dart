@@ -10,8 +10,8 @@ import 'package:aeroquest/widgets/custom_dialog.dart';
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/models/recipe.dart';
 
-class RecipeDetails extends StatelessWidget {
-  RecipeDetails({
+class RecipeDetails extends StatefulWidget {
+  const RecipeDetails({
     Key? key,
     required this.recipeData,
     required this.isAdding,
@@ -19,7 +19,26 @@ class RecipeDetails extends StatelessWidget {
 
   final Recipe recipeData;
   final bool isAdding;
+
+  @override
+  State<RecipeDetails> createState() => _RecipeDetailsState();
+}
+
+class _RecipeDetailsState extends State<RecipeDetails> {
   final ScrollController _scrollController = ScrollController();
+  late RecipesProvider _recipesProvider;
+
+  @override
+  void initState() {
+    _recipesProvider = Provider.of<RecipesProvider>(context, listen: false);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _recipesProvider.clearTempNotesAndRecipeSettings();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,13 +54,13 @@ class RecipeDetails extends StatelessWidget {
             Provider.of<RecipesProvider>(context, listen: false)
                 .changeEditMode();
             Provider.of<RecipesProvider>(context, listen: false)
-                .setTempRecipe(recipeData.id!);
+                .setTempRecipe(widget.recipeData.id!);
             Provider.of<RecipesProvider>(context, listen: false)
-                .setTempRecipeSettings(recipeData.id!);
+                .setTempRecipeSettings(widget.recipeData.id!);
             Provider.of<RecipesProvider>(context, listen: false)
-                .setTempNotes(recipeData.id!);
+                .setTempNotes(widget.recipeData.id!);
             Navigator.of(context).pop(true);
-            if (!isOsBackPressed || isAdding) {
+            if (!isOsBackPressed || widget.isAdding) {
               Navigator.of(context).pop(true);
             }
           },
@@ -59,7 +78,7 @@ class RecipeDetails extends StatelessWidget {
           },
           rightAction: () {
             Provider.of<RecipesProvider>(context, listen: false)
-                .deleteRecipe(recipeData.id!);
+                .deleteRecipe(widget.recipeData.id!);
             Navigator.of(context).pop(false);
             Navigator.of(context).pop(false);
             if (Provider.of<RecipesProvider>(context, listen: false).editMode ==
@@ -77,13 +96,13 @@ class RecipeDetails extends StatelessWidget {
     bool _isRecipeChanged() {
       return Provider.of<RecipesProvider>(context, listen: false)
           .isRecipeChanged(
-              originalTitle: recipeData.title,
-              originalDescription: recipeData.description,
+              originalTitle: widget.recipeData.title,
+              originalDescription: widget.recipeData.description,
               originalPushPressure:
-                  Recipe.stringToPushPressure(recipeData.pushPressure),
+                  Recipe.stringToPushPressure(widget.recipeData.pushPressure),
               originalBrewMethod:
-                  Recipe.stringToBrewMethod(recipeData.brewMethod),
-              recipeId: recipeData.id!);
+                  Recipe.stringToBrewMethod(widget.recipeData.brewMethod),
+              recipeId: widget.recipeData.id!);
     }
 
     // same as exitDetailsPage - all edits should be in both
@@ -94,9 +113,8 @@ class RecipeDetails extends StatelessWidget {
           _showDiscardChangesPopup(true);
         } else {
           Provider.of<RecipesProvider>(context, listen: false).changeEditMode();
-          Provider.of<RecipesProvider>(context, listen: false)
-              .clearTempNotesAndRecipeSettings();
-          if (isAdding) {
+
+          if (widget.isAdding) {
             return Future.value(true);
           }
           return Future.value(false);
@@ -195,7 +213,7 @@ class RecipeDetails extends StatelessWidget {
                             ? Icons.check
                             : Icons.edit,
                       ),
-                      (!isAdding)
+                      (!widget.isAdding)
                           ? AppBarButton(
                               onTap: () {
                                 _showConfirmDeletePopup();
@@ -217,14 +235,16 @@ class RecipeDetails extends StatelessWidget {
                             return RecipeDetailsHeader(
                               titleValue: recipesProvider.recipes
                                   .firstWhere(
-                                    (recipe) => recipe.id == recipeData.id,
-                                    orElse: () => recipeData,
+                                    (recipe) =>
+                                        recipe.id == widget.recipeData.id,
+                                    orElse: () => widget.recipeData,
                                   )
                                   .title,
                               descriptionValue: recipesProvider.recipes
                                       .firstWhere(
-                                        (recipe) => recipe.id == recipeData.id,
-                                        orElse: () => recipeData,
+                                        (recipe) =>
+                                            recipe.id == widget.recipeData.id,
+                                        orElse: () => widget.recipeData,
                                       )
                                       .description ??
                                   "",
@@ -236,7 +256,7 @@ class RecipeDetails extends StatelessWidget {
                           color: Color(0x00000000),
                         ),
                         RecipeDetailsBody(
-                          recipeId: recipeData.id!,
+                          recipeId: widget.recipeData.id!,
                         ),
                       ],
                     ),

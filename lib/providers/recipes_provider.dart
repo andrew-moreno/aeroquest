@@ -130,6 +130,13 @@ class RecipesProvider extends ChangeNotifier {
   }
 
   void deleteRecipe(int recipeId) async {
+    recipeSettings[recipeId]?.forEach((recipeSettingId, value) async {
+      CoffeeBean coffeeBean =
+          _coffeeBeans[recipeSettings[recipeId]![recipeSettingId]!.beanId]!;
+
+      coffeeBean.associatedSettingsCount--;
+      await CoffeeBeansDatabase.instance.update(coffeeBean);
+    });
     _recipes.removeWhere((recipe) => recipe.id == recipeId);
     _recipeSettings.remove(recipeId);
     _notes.remove(recipeId);
