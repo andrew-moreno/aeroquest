@@ -471,6 +471,11 @@ class RecipesProvider extends ChangeNotifier {
     _tempNotes[noteData.id!] = newNoteData;
     notifyListeners();
   }
+
+  Future<void> addBean(CoffeeBean coffeeBean) async {
+    _coffeeBeans.addAll({coffeeBean.id!: coffeeBean});
+    notifyListeners();
+  }
 }
 
 enum EditMode { enabled, disabled }

@@ -32,7 +32,7 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
         actions: [
           AppBarButton(
             onTap: () {
-              showCustomModalSheet(
+              showCustomCoffeeBeanModalSheet(
                 submitAction: () {
                   if (!_formKey.currentState!.validate()) {
                     return;
@@ -95,7 +95,7 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
 
 // template for the modal bottom sheet when editing or adding bean entries
 // if beanName and description are input, they are set as the initial value in the text field
-void showCustomModalSheet({
+void showCustomCoffeeBeanModalSheet({
   required BuildContext context,
   required GlobalKey<FormBuilderState> formKey,
   required Function() submitAction,

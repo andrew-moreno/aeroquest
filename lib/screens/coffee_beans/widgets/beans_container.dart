@@ -60,7 +60,7 @@ class BeansContainer extends StatelessWidget {
           ),
         ),
         onTap: () {
-          showCustomModalSheet(
+          showCustomCoffeeBeanModalSheet(
             submitAction: () {
               if (!formKey.currentState!.validate()) {
                 return;

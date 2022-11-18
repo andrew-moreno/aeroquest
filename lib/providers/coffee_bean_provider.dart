@@ -17,7 +17,7 @@ class CoffeeBeanProvider extends ChangeNotifier {
     _coffeeBeans = await CoffeeBeansDatabase.instance.readAllCoffeeBeans();
   }
 
-  Future<void> addBean(String beanName, String? description) async {
+  Future<CoffeeBean> addBean(String beanName, String? description) async {
     final newCoffeeBean = await CoffeeBeansDatabase.instance.create(
       CoffeeBean(
         beanName: beanName,
@@ -27,6 +27,7 @@ class CoffeeBeanProvider extends ChangeNotifier {
     );
     _coffeeBeans.addAll({newCoffeeBean.id!: newCoffeeBean});
     notifyListeners();
+    return newCoffeeBean;
   }
 
   Future<void> deleteBean(

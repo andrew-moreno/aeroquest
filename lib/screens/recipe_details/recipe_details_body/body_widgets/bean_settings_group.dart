@@ -1,6 +1,10 @@
+import 'package:aeroquest/models/coffee_bean.dart';
+import 'package:aeroquest/providers/coffee_bean_provider.dart';
+import 'package:aeroquest/screens/coffee_beans/coffee_beans.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/recipe_details_body.dart';
 import 'package:aeroquest/widgets/add_to_recipe_button.dart';
 import 'package:aeroquest/widgets/custom_modal_sheet/value_slider_group_template.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 import 'dart:core';
 
@@ -24,6 +28,8 @@ class BeanSettingsGroup extends StatefulWidget {
 }
 
 class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
+  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
+
   @override
   Widget build(BuildContext context) {
     return Consumer<RecipesProvider>(
@@ -117,13 +123,38 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
                               style: TextStyle(
                                 fontFamily: "Poppins",
                                 fontWeight: FontWeight.w500,
-                                color: kAccent,
+                                color: kPrimary,
                               ),
                             ),
                             backgroundColor: kLightSecondary,
                             elevation: 10,
-                            action:
-                                SnackBarAction(label: "Add", onPressed: () {}),
+                            action: SnackBarAction(
+                                label: "Add",
+                                textColor: kAccent,
+                                onPressed: () {
+                                  showCustomCoffeeBeanModalSheet(
+                                    submitAction: () async {
+                                      if (!_formKey.currentState!.validate()) {
+                                        return;
+                                      }
+                                      String beanName = _formKey.currentState!
+                                          .fields["beanName"]!.value;
+                                      String? description = _formKey
+                                          .currentState!
+                                          .fields["description"]
+                                          ?.value;
+                                      CoffeeBean newCoffeeBean =
+                                          await Provider.of<CoffeeBeanProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .addBean(beanName, description);
+                                      recipesProvider.addBean(newCoffeeBean);
+                                      Navigator.of(context).pop();
+                                    },
+                                    context: context,
+                                    formKey: _formKey,
+                                  );
+                                }),
                           ),
                         );
                       } else {
