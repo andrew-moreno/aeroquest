@@ -18,6 +18,8 @@ class CoffeeBean {
   final int? id;
   String beanName;
   String? description;
+
+  /// Recipe settings that use this coffee bean
   int associatedSettingsCount;
 
   CoffeeBean(

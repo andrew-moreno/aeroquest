@@ -9,20 +9,26 @@ import 'package:provider/provider.dart';
 
 import '../coffee_beans.dart';
 
-// template for the each coffee bean entry
-// layout builder required for provider use
 class BeansContainer extends StatelessWidget {
+  /// Container for each coffee bean entry
   const BeansContainer({
     Key? key,
     required this.formKey,
     required this.beanData,
   }) : super(key: key);
 
+  /// Form key passed from [CoffeeBeans] that handles validation
   final GlobalKey<FormBuilderState> formKey;
+
+  /// Coffee bean data associated with this entry
   final CoffeeBean beanData;
 
   @override
   Widget build(BuildContext context) {
+    /// Used to warn the user that this coffee bean is associated with
+    /// recipe settings
+    ///
+    /// Deletes all associated settings if the user confirms
     Future<void> _showDeleteDialog() async {
       return await showDialog(
         context: context,
@@ -42,6 +48,7 @@ class BeansContainer extends StatelessWidget {
       );
     }
 
+    /// Layout builder required for provider use
     return LayoutBuilder(
       builder: (_, __) => GestureDetector(
         child: Container(

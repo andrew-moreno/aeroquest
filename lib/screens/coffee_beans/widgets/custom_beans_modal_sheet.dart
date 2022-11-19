@@ -14,10 +14,23 @@ class CustomBeansModalSheet extends StatelessWidget {
     this.description,
   }) : super(key: key);
 
+  /// Form key passed from [CoffeeBeans] that handles validation
   final GlobalKey<FormBuilderState> formKey;
+
+  /// Function that is executed when the user clicks 'Save'
   final Function() submitAction;
+
+  /// Function that is executed when the user clicks 'Delete'
   final Function()? deleteAction;
+
+  /// Coffee bean name to use as an initial value
+  ///
+  /// If null, the associated text field will remain empty
   final String? beanName;
+
+  /// Coffee bean description to use as an initial value
+  ///
+  /// If null, the associated text field will remain empty
   final String? description;
 
   @override

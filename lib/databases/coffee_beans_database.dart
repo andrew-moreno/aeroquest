@@ -39,6 +39,7 @@ class CoffeeBeansDatabase {
     ''');
   }
 
+  /// Creates a new coffee bean entry in the database
   Future<CoffeeBean> create(CoffeeBean coffeeBean) async {
     final db = await instance.database;
 
@@ -46,6 +47,9 @@ class CoffeeBeansDatabase {
     return coffeeBean.copy(id: id);
   }
 
+  /// Returns the coffee bean associated with [id]
+  ///
+  /// Throws an exception when [id] does not exist in the database
   Future<CoffeeBean> readCoffeeBean(int id) async {
     final db = await instance.database;
 
@@ -63,6 +67,9 @@ class CoffeeBeansDatabase {
     }
   }
 
+  /// Returns all coffee beans in the database
+  ///
+  /// Coffee beans are mapped using their id as the key
   Future<Map<int, CoffeeBean>> readAllCoffeeBeans() async {
     final db = await instance.database;
 
@@ -78,6 +85,7 @@ class CoffeeBeansDatabase {
     return coffeeBeansMap;
   }
 
+  /// Updates a coffee bean in the database
   Future<int> update(CoffeeBean coffeeBean) async {
     final db = await instance.database;
 
@@ -89,6 +97,7 @@ class CoffeeBeansDatabase {
     );
   }
 
+  /// Deletes the coffee bean in the database associated with [id]
   Future<int> delete(int id) async {
     final db = await instance.database;
     return await db.delete(

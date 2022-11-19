@@ -7,16 +7,22 @@ import 'package:flutter/material.dart';
 import 'package:aeroquest/models/coffee_bean.dart';
 
 class CoffeeBeanProvider extends ChangeNotifier {
+  /// Coffee beans mapped by id
   late Map<int, CoffeeBean> _coffeeBeans;
 
+  /// Coffee beans mapped by id
   UnmodifiableMapView<int, CoffeeBean> get coffeeBeans {
     return UnmodifiableMapView(_coffeeBeans);
   }
 
+  /// Populates [_coffeeBeans] with data from the database
   Future<void> cacheCoffeeBeans() async {
     _coffeeBeans = await CoffeeBeansDatabase.instance.readAllCoffeeBeans();
   }
 
+  /// Adds a coffee bean to the database and [_coffeeBeans]
+  ///
+  /// Returns the added coffee bean
   Future<CoffeeBean> addBean(String beanName, String? description) async {
     final newCoffeeBean = await CoffeeBeansDatabase.instance.create(
       CoffeeBean(
@@ -27,20 +33,32 @@ class CoffeeBeanProvider extends ChangeNotifier {
     );
     _coffeeBeans.addAll({newCoffeeBean.id!: newCoffeeBean});
     notifyListeners();
+    log("Coffee beans added with id: " + newCoffeeBean.id.toString());
     return newCoffeeBean;
   }
 
-  Future<void> deleteBean(
-      {required int id, deleteAssociatedSettings = false}) async {
+  /// Deletes a bean from the database and [_coffeeBeans]
+  ///
+  /// If [deleteAssociatedSettings] is true, will also delete recipe settings
+  /// that use this coffee bean
+  Future<void> deleteBean({
+    required int id,
+    deleteAssociatedSettings = false,
+  }) async {
     if (deleteAssociatedSettings) {
       await RecipeSettingsDatabase.instance.deleteSettingsOfBeanId(id);
     }
     _coffeeBeans.remove(id);
     await CoffeeBeansDatabase.instance.delete(id);
-    log("beans removed with id: " + id.toString());
+
+    log("Coffee beans removed with id: " + id.toString());
+    if (deleteAssociatedSettings) {
+      log("Associated recipe settings also deleted");
+    }
     notifyListeners();
   }
 
+  /// Updates a coffee bean
   Future<void> editBean(
     int id,
     String beanName,

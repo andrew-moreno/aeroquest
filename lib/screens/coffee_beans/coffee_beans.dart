@@ -12,6 +12,7 @@ import 'package:aeroquest/providers/coffee_bean_provider.dart';
 import 'package:aeroquest/constraints.dart';
 
 class CoffeeBeans extends StatefulWidget {
+  /// The screen used for displaying all coffee beans
   const CoffeeBeans({Key? key}) : super(key: key);
 
   static const routeName = "/manageBeans";
@@ -21,6 +22,7 @@ class CoffeeBeans extends StatefulWidget {
 }
 
 class _CoffeeBeansState extends State<CoffeeBeans> {
+  /// Form key used for validation of coffee bean names
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
 
   @override
@@ -66,25 +68,24 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
                     padding: const EdgeInsets.all(20),
                     itemCount: coffeeBeanProvider.coffeeBeans.length,
                     itemBuilder: (_, int index) {
-                      int key =
+                      int coffeeBeanId =
                           coffeeBeanProvider.coffeeBeans.keys.elementAt(index);
 
                       return BeansContainer(
                         formKey: _formKey,
-                        beanData: coffeeBeanProvider.coffeeBeans[key]!,
+                        beanData: coffeeBeanProvider.coffeeBeans[coffeeBeanId]!,
                       );
                     },
                     separatorBuilder: (_, __) {
-                      return const Divider(
-                        color: Color(0x00000000),
-                        height: 20,
-                      );
+                      return const SizedBox(height: 20);
                     },
                   );
                 },
               );
             } else {
-              return const CircularProgressIndicator();
+              return const CircularProgressIndicator(
+                color: kAccent,
+              );
             }
           },
         ),
@@ -93,8 +94,10 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
   }
 }
 
-// template for the modal bottom sheet when editing or adding bean entries
-// if beanName and description are input, they are set as the initial value in the text field
+/// Template for the modal bottom sheet when editing or adding bean entries
+///
+/// If [beanName] and [description] are input, they are set as the initial value
+/// in the text fields
 void showCustomCoffeeBeanModalSheet({
   required BuildContext context,
   required GlobalKey<FormBuilderState> formKey,
