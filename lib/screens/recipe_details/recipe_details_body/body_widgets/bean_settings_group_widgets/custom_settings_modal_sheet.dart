@@ -1,3 +1,4 @@
+import 'package:aeroquest/widgets/animated_toggle.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -6,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/bean_settings_group_widgets/settings_value_slider_group.dart';
 import 'package:aeroquest/constraints.dart';
-import 'package:aeroquest/widgets/animated_horizontal_toggle.dart';
 import 'package:aeroquest/widgets/custom_button.dart';
 import 'package:aeroquest/models/recipe_settings.dart';
 
@@ -56,7 +56,7 @@ class _CustomSettingsModalSheetState extends State<CustomSettingsModalSheet> {
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              AnimatedHorizontalToggle(
+              AnimatedToggle(
                 values: _animatedToggleValues,
                 onToggleCallback: (index) {
                   index == 0
@@ -69,8 +69,9 @@ class _CustomSettingsModalSheetState extends State<CustomSettingsModalSheet> {
                     (Provider.of<RecipesProvider>(context, listen: false)
                                 .tempSettingVisibility ==
                             SettingVisibility.shown)
-                        ? Position.left
-                        : Position.right,
+                        ? Position.first
+                        : Position.second,
+                toggleType: ToggleType.horizontal,
               ),
               const Divider(height: 20, color: Color(0x00000000)),
               DropdownButtonHideUnderline(
@@ -188,14 +189,14 @@ class _CustomSettingsModalSheetState extends State<CustomSettingsModalSheet> {
                 children: [
                   CustomButton(
                     onTap: widget.submitAction,
-                    buttonType: ButtonType.positive,
+                    buttonType: ButtonType.vibrant,
                     text: "Save",
                     width: constraints.maxWidth / 2 - 10,
                   ),
                   (widget.deleteAction != null)
                       ? CustomButton(
                           onTap: widget.deleteAction!,
-                          buttonType: ButtonType.negative,
+                          buttonType: ButtonType.normal,
                           text: "Delete",
                           width: constraints.maxWidth / 2 - 10,
                         )

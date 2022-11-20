@@ -1,7 +1,7 @@
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/recipe_details_body.dart';
 import 'package:aeroquest/widgets/add_to_recipe_button.dart';
-import 'package:aeroquest/widgets/animated_vertical_toggle.dart';
+import 'package:aeroquest/widgets/animated_toggle.dart';
 import 'package:aeroquest/widgets/custom_modal_sheet/value_slider_group_template.dart';
 import 'package:flutter/material.dart';
 
@@ -143,7 +143,7 @@ class RecipeMethodParameters extends StatelessWidget {
 
     Widget displayToggle(BuildContext context) {
       if (data.runtimeType == BrewMethod) {
-        return AnimatedVerticalToggle(
+        return AnimatedToggle(
           values: _brewMethodToggleValues,
           onToggleCallback: (index) {
             index == 0
@@ -155,11 +155,12 @@ class RecipeMethodParameters extends StatelessWidget {
           initialPosition: (Provider.of<RecipesProvider>(context, listen: false)
                       .tempBrewMethod ==
                   BrewMethod.regular)
-              ? Position.top
-              : Position.bottom,
+              ? Position.first
+              : Position.second,
+          toggleType: ToggleType.vertical,
         );
       } else {
-        return AnimatedVerticalToggle(
+        return AnimatedToggle(
           values: _pushPressureToggleValues,
           onToggleCallback: (index) {
             index == 0
@@ -171,8 +172,9 @@ class RecipeMethodParameters extends StatelessWidget {
           initialPosition: (Provider.of<RecipesProvider>(context, listen: false)
                       .tempPushPressure ==
                   PushPressure.light)
-              ? Position.top
-              : Position.bottom,
+              ? Position.first
+              : Position.second,
+          toggleType: ToggleType.vertical,
         );
       }
     }

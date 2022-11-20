@@ -69,14 +69,14 @@ class CustomBeansModalSheet extends StatelessWidget {
                 children: [
                   CustomButton(
                     onTap: submitAction,
-                    buttonType: ButtonType.positive,
+                    buttonType: ButtonType.vibrant,
                     text: "Save",
                     width: constraints.maxWidth / 2 - 10,
                   ),
                   (deleteAction != null)
                       ? CustomButton(
                           onTap: deleteAction!,
-                          buttonType: ButtonType.negative,
+                          buttonType: ButtonType.normal,
                           text: "Delete",
                           width: constraints.maxWidth / 2 - 10,
                         )
