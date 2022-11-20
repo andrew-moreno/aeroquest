@@ -39,6 +39,10 @@ class RecipesDatabase {
     ''');
   }
 
+  /// Finds the next highest unused id in the database and returns it
+  ///
+  /// Does not return unused ids that are in between used ids
+  /// eg. if database has 1, 3, 4, will return 5 not 2
   Future<int> getUnusedId() async {
     final db = await instance.database;
 
@@ -49,6 +53,7 @@ class RecipesDatabase {
         1;
   }
 
+  /// Creates a new recipe entry in the database and returns it
   Future<Recipe> create(Recipe recipe) async {
     final db = await instance.database;
 
@@ -56,6 +61,9 @@ class RecipesDatabase {
     return recipe.copy(id: id);
   }
 
+  /// Returns the recipe associated with [id]
+  ///
+  /// Throws an exception if [id] does not exist in the database
   Future<Recipe> readRecipe(int id) async {
     final db = await instance.database;
 
@@ -73,6 +81,7 @@ class RecipesDatabase {
     }
   }
 
+  /// Returns all recipes in the database
   Future<List<Recipe>> readAllRecipes() async {
     final db = await instance.database;
 
@@ -81,6 +90,7 @@ class RecipesDatabase {
     return result.map((json) => Recipe.fromJson(json)).toList();
   }
 
+  /// Updates the recipe in the database that matches the [recipe] id
   Future<int> update(Recipe recipe) async {
     final db = await instance.database;
 
@@ -92,6 +102,7 @@ class RecipesDatabase {
     );
   }
 
+  /// Deletes the recipe in the database associated with [id]
   Future<int> delete(int id) async {
     final db = await instance.database;
 

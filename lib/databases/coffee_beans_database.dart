@@ -39,7 +39,7 @@ class CoffeeBeansDatabase {
     ''');
   }
 
-  /// Creates a new coffee bean entry in the database
+  /// Creates a new coffee bean entry in the database and returns it
   Future<CoffeeBean> create(CoffeeBean coffeeBean) async {
     final db = await instance.database;
 
@@ -49,7 +49,7 @@ class CoffeeBeansDatabase {
 
   /// Returns the coffee bean associated with [id]
   ///
-  /// Throws an exception when [id] does not exist in the database
+  /// Throws an exception if [id] does not exist in the database
   Future<CoffeeBean> readCoffeeBean(int id) async {
     final db = await instance.database;
 
@@ -85,7 +85,7 @@ class CoffeeBeansDatabase {
     return coffeeBeansMap;
   }
 
-  /// Updates a coffee bean in the database
+  /// Updates the coffee bean in the database that matches the [coffeeBean] id
   Future<int> update(CoffeeBean coffeeBean) async {
     final db = await instance.database;
 

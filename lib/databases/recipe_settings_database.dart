@@ -47,6 +47,7 @@ class RecipeSettingsDatabase {
     ''');
   }
 
+  /// Creates a new recipe settings entry in the database and returns its id
   Future<int> create(RecipeSettings recipeSetting) async {
     final db = await instance.database;
 
@@ -54,6 +55,9 @@ class RecipeSettingsDatabase {
     return id;
   }
 
+  /// Returns the recipe associated with [id]
+  ///
+  /// Throws an exception if [id] does not exist in the database
   Future<RecipeSettings> readRecipeSetting(int id) async {
     final db = await instance.database;
 
@@ -72,6 +76,7 @@ class RecipeSettingsDatabase {
     }
   }
 
+  /// Returns a list of all recipes associated with a single recipe id
   Future<List<RecipeSettings>> readAllRecipeSettingsForRecipe(
       int recipeEntryId) async {
     final db = await instance.database;
@@ -83,6 +88,10 @@ class RecipeSettingsDatabase {
     return result.map((json) => RecipeSettings.fromJson(json)).toList();
   }
 
+  /// Returns all recipe settings in the database
+  ///
+  /// Recipe settings are mapped by their associated recipe id first,
+  /// then their recipe setting id
   Future<SplayTreeMap<int, SplayTreeMap<int, RecipeSettings>>>
       readAllRecipeSettings() async {
     final db = await instance.database;
@@ -108,6 +117,8 @@ class RecipeSettingsDatabase {
     return settingsMap;
   }
 
+  /// Updates the recipe setting in the database that matches
+  /// the [recipeSetting] id
   Future<int> update(RecipeSettings recipeSetting) async {
     final db = await instance.database;
 
@@ -119,6 +130,7 @@ class RecipeSettingsDatabase {
     );
   }
 
+  /// Deletes the recipe setting in the database associated with [id]
   Future<int> delete(int id) async {
     final db = await instance.database;
 
@@ -129,6 +141,7 @@ class RecipeSettingsDatabase {
     );
   }
 
+  /// Deletes all recipe settings that use a bean with id [beanId]
   Future<int> deleteSettingsOfBeanId(int beanId) async {
     final db = await instance.database;
 
@@ -139,6 +152,7 @@ class RecipeSettingsDatabase {
     );
   }
 
+  /// Deletes all recipe settings for a particular recipe
   Future<int> deleteAllSettingsForRecipe(int recipeEntryId) async {
     final db = await instance.database;
 

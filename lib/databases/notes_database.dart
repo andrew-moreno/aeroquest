@@ -40,6 +40,7 @@ class NotesDatabase {
     ''');
   }
 
+  /// Creates a new note entry in the database and returns its id
   Future<int> create(Note note) async {
     final db = await instance.database;
 
@@ -47,7 +48,10 @@ class NotesDatabase {
     return id;
   }
 
-  // { recipeEntryId : { noteId : note } }
+  /// Returns all notes in the database
+  ///
+  /// Notes are mapped by their associated recipe id first,
+  /// then their note id
   Future<SplayTreeMap<int, SplayTreeMap<int, Note>>> readAllNotes() async {
     final db = await instance.database;
 
@@ -67,16 +71,7 @@ class NotesDatabase {
     return notesMap;
   }
 
-  Future<List<Note>> readAllNotesFromRecipe(int recipeEntryId) async {
-    final db = await instance.database;
-
-    final result = await db.rawQuery('''
-      SELECT * FROM $tableNotes 
-      WHERE $tableNotes.${NoteFields.recipeEntryId} = $recipeEntryId''');
-
-    return result.map((json) => Note.fromJson(json)).toList();
-  }
-
+  /// Updates the note in the database that matches the [note] id
   Future<int> update(Note note) async {
     final db = await instance.database;
 
@@ -88,6 +83,7 @@ class NotesDatabase {
     );
   }
 
+  /// Deletes the note in the database associated with [id]
   Future<int> delete(int id) async {
     final db = await instance.database;
 
@@ -98,6 +94,7 @@ class NotesDatabase {
     );
   }
 
+  /// Deletes all notes for a particular recipe
   Future<int> deleteAllNotesForRecipe(int recipeEntryId) async {
     final db = await instance.database;
 
