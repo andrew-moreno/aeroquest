@@ -24,16 +24,34 @@ class RecipeSettingsFields {
   static const String visibility = "visibility";
 }
 
-// defines object for the settings for each bean
 class RecipeSettings {
   final int? id;
+
+  /// Id of the recipe that these recipe settings are associated with
   int recipeEntryId;
+
+  /// Id of the coffee beans that are used in this recipe setting
   int beanId;
+
+  /// Grind setting used for this recipe setting
   double grindSetting;
+
+  /// Amount of coffee used for this recipe setting in grams
   double coffeeAmount;
+
+  /// Amount of water used for this recipe setting in grams
   int waterAmount;
+
+  /// Temperature of the water used for this recipe setting in celsius
   int waterTemp;
+
+  /// Time used for brewing for this recipe setting in 10 second intervals
   int brewTime;
+
+  /// Whether to display this recipe setting in the [Recipes] screen or not
+  ///
+  /// Valid entries for [visibility] are "shown" or "hidden", which get
+  /// converted to enums using [stringToSettingVisibility] method
   String visibility;
 
   RecipeSettings({
@@ -41,13 +59,16 @@ class RecipeSettings {
     required this.recipeEntryId,
     required this.beanId,
     required this.grindSetting,
-    required this.coffeeAmount, // in grams
-    required this.waterAmount, // in grams
-    required this.waterTemp, // in celsius
-    required this.brewTime, // in 10 second intervals
+    required this.coffeeAmount,
+    required this.waterAmount,
+    required this.waterTemp,
+    required this.brewTime,
     required this.visibility,
   });
 
+  /// Copies a RecipeSettings object
+  ///
+  /// The copied object will use any parameters passed into this method
   RecipeSettings copy({
     int? id,
     int? recipeEntryId,
@@ -71,6 +92,7 @@ class RecipeSettings {
         visibility: visibility ?? this.visibility,
       );
 
+  /// Converts a CoffeeBean object to JSON format
   Map<String, Object?> toJson() => {
         RecipeSettingsFields.id: id,
         RecipeSettingsFields.recipeEntryId: recipeEntryId,
@@ -83,6 +105,7 @@ class RecipeSettings {
         RecipeSettingsFields.visibility: visibility,
       };
 
+  /// Converts a JSON recipe setting to a RecipeSetting object
   static RecipeSettings fromJson(Map<String, Object?> json) => RecipeSettings(
         id: json[RecipeSettingsFields.id] as int?,
         recipeEntryId: json[RecipeSettingsFields.recipeEntryId] as int,
@@ -95,6 +118,11 @@ class RecipeSettings {
         visibility: json[RecipeSettingsFields.visibility] as String,
       );
 
+  /// Converts the string representation of [visibility] to an enum
+  ///
+  /// Returns either [SettingVisibility.shown] or [SettingVisibility.hidden]
+  ///
+  /// Throws an exception if a string is passed that isn't "shown" or "hidden"
   static SettingVisibility stringToSettingVisibility(String action) {
     switch (action) {
       case "shown":
@@ -108,4 +136,5 @@ class RecipeSettings {
   }
 }
 
+/// Enum for describing recipe setting visibility
 enum SettingVisibility { shown, hidden }

@@ -28,6 +28,9 @@ class CoffeeBean {
       this.description,
       required this.associatedSettingsCount});
 
+  /// Copies a CoffeeBean object
+  ///
+  /// The copied object will use any parameters passed into this method
   CoffeeBean copy({
     int? id,
     String? beanName,
@@ -42,6 +45,7 @@ class CoffeeBean {
             associatedSettingsCount ?? this.associatedSettingsCount,
       );
 
+  /// Converts a CoffeeBean object to JSON format
   Map<String, Object?> toJson() => {
         CoffeeBeanFields.id: id,
         CoffeeBeanFields.beanName: beanName,
@@ -49,6 +53,7 @@ class CoffeeBean {
         CoffeeBeanFields.associatedSettingsCount: associatedSettingsCount,
       };
 
+  /// Converts a JSON coffee bean to a CoffeeBean object
   static CoffeeBean fromJson(Map<String, Object?> json) => CoffeeBean(
         id: json[CoffeeBeanFields.id] as int?,
         beanName: json[CoffeeBeanFields.beanName] as String,

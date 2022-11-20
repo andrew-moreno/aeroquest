@@ -16,17 +16,32 @@ class NoteFields {
 
 class Note {
   final int? id;
+
+  /// Id of the recipe that this note belongs to
   int recipeEntryId;
+
+  /// The time at which this note should be executed
   int time;
+
+  /// Text for the note
   String text;
 
   Note({
     this.id,
+
+    /// Id of the recipe that this note is associated with
     required this.recipeEntryId,
+
+    /// Time at which this note is executed in 10 second intervals
     required this.time,
+
+    /// Text used for this note
     required this.text,
   });
 
+  /// Copies a Note object
+  ///
+  /// The copied object will use any parameters passed into this method
   Note copy({
     int? id,
     int? recipeEntryId,
@@ -40,6 +55,7 @@ class Note {
         text: text ?? this.text,
       );
 
+  /// Converts a Note object to JSON format
   Map<String, Object?> toJson() => {
         NoteFields.id: id,
         NoteFields.recipeEntryId: recipeEntryId,
@@ -47,6 +63,7 @@ class Note {
         NoteFields.text: text,
       };
 
+  /// Converts a JSON note to a Note object
   static Note fromJson(Map<String, Object?> json) => Note(
         id: json[NoteFields.id] as int?,
         recipeEntryId: json[NoteFields.recipeEntryId] as int,
