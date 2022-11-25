@@ -19,11 +19,27 @@ import '../models/recipe_settings.dart';
 class RecipesProvider extends ChangeNotifier {
   late List<Recipe> _recipes;
   late Recipe _tempRecipe;
-  late Map<int, CoffeeBean> _coffeeBeans;
   late SplayTreeMap<int, SplayTreeMap<int, RecipeSettings>> _recipeSettings;
   late SplayTreeMap<int, RecipeSettings> _tempRecipeSettings;
   late SplayTreeMap<int, SplayTreeMap<int, Note>> _notes;
   late SplayTreeMap<int, Note> _tempNotes;
+
+  /// Holds up to date information on the coffee beans in the coffee beans
+  /// database mapped by id
+  ///
+  /// Required for:
+  /// - updating the AssociatedSettingsCount property of coffee
+  ///   beans when adding or deleting recipe settings
+  /// - displaying a list of coffee beans in the drop down menu when editing a
+  ///   recipe setting
+  /// - adding coffee beans using the snack bar that is displayed when adding
+  ///   a recipe setting with no coffee beans in the database
+  late Map<int, CoffeeBean> _coffeeBeans;
+
+  /// Returns an unmodifiable version of [_coffeeBeans]
+  UnmodifiableMapView<int, CoffeeBean> get coffeeBeans {
+    return UnmodifiableMapView(_coffeeBeans);
+  }
 
   EditMode editMode = EditMode.disabled;
 
@@ -66,10 +82,6 @@ class RecipesProvider extends ChangeNotifier {
     return _tempRecipe;
   }
 
-  UnmodifiableMapView<int, CoffeeBean> get coffeeBeans {
-    return UnmodifiableMapView(_coffeeBeans);
-  }
-
   UnmodifiableMapView<int, Map<int, RecipeSettings>> get recipeSettings {
     return UnmodifiableMapView(_recipeSettings);
   }
@@ -86,12 +98,14 @@ class RecipesProvider extends ChangeNotifier {
     return UnmodifiableMapView(_tempNotes);
   }
 
+  /// Populates [_recipes], [_recipeSettings], [_notes], and [_coffeeBeans]
+  /// with data from their respective databases
   Future<void> cacheRecipeData() async {
     _recipes = await RecipesDatabase.instance.readAllRecipes();
     _recipeSettings =
         await RecipeSettingsDatabase.instance.readAllRecipeSettings();
-    _coffeeBeans = await CoffeeBeansDatabase.instance.readAllCoffeeBeans();
     _notes = await NotesDatabase.instance.readAllNotes();
+    _coffeeBeans = await CoffeeBeansDatabase.instance.readAllCoffeeBeans();
   }
 
   void changeEditMode() {
@@ -131,11 +145,10 @@ class RecipesProvider extends ChangeNotifier {
 
   void deleteRecipe(int recipeId) async {
     recipeSettings[recipeId]?.forEach((recipeSettingId, value) async {
-      CoffeeBean coffeeBean =
-          _coffeeBeans[recipeSettings[recipeId]![recipeSettingId]!.beanId]!;
-
-      coffeeBean.associatedSettingsCount--;
-      await CoffeeBeansDatabase.instance.update(coffeeBean);
+      editAssociatedSettingsCount(
+        recipeSettings[recipeId]![recipeSettingId]!.beanId,
+        AssociatedSettingsCountEditType.decrement,
+      );
     });
     _recipes.removeWhere((recipe) => recipe.id == recipeId);
     _recipeSettings.remove(recipeId);
@@ -341,11 +354,10 @@ class RecipesProvider extends ChangeNotifier {
     // for deleting
     for (var id in recipeSettings[recipeEntryId]!.keys) {
       if (!tempRecipeSettings.containsKey(id)) {
-        CoffeeBean coffeeBean =
-            _coffeeBeans[recipeSettings[recipeEntryId]![id]!.beanId]!;
-
-        coffeeBean.associatedSettingsCount--;
-        await CoffeeBeansDatabase.instance.update(coffeeBean);
+        editAssociatedSettingsCount(
+          recipeSettings[recipeEntryId]![id]!.beanId,
+          AssociatedSettingsCountEditType.decrement,
+        );
         await RecipeSettingsDatabase.instance.delete(id);
       }
     }
@@ -365,9 +377,11 @@ class RecipesProvider extends ChangeNotifier {
           brewTime: tempRecipeSettings[id]!.brewTime,
           visibility: tempRecipeSettings[id]!.visibility,
         );
-        CoffeeBean coffeeBean = _coffeeBeans[newCoffeeSettingsData.beanId]!;
-        coffeeBean.associatedSettingsCount++;
-        await CoffeeBeansDatabase.instance.update(coffeeBean);
+        editAssociatedSettingsCount(
+          newCoffeeSettingsData.beanId,
+          AssociatedSettingsCountEditType.increment,
+        );
+
         int newId =
             await RecipeSettingsDatabase.instance.create(newCoffeeSettingsData);
         _tempRecipeSettings[newId] = _tempRecipeSettings[id]!.copy(id: newId);
@@ -479,10 +493,42 @@ class RecipesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addBean(CoffeeBean coffeeBean) async {
-    _coffeeBeans.addAll({coffeeBean.id!: coffeeBean});
-    notifyListeners();
+  /// Adds a coffee bean to the database and [_coffeeBeans]
+  ///
+  /// Used for when adding a bean via the snackbar on the recipe details screen
+  /// that is activated when adding recipe settings with no coffee beans in
+  /// the database
+  Future<void> addBean(String beanName, String? description) async {
+    final newCoffeeBean = await CoffeeBeansDatabase.instance.create(
+      CoffeeBean(
+        beanName: beanName,
+        description: description,
+        associatedSettingsCount: 0,
+      ),
+    );
+    _coffeeBeans.addAll({newCoffeeBean.id!: newCoffeeBean});
+  }
+
+  /// Either increments or decrements the AssociatedSettingsCount property of
+  /// a coffee bean in [_coffeeBeans] and updates the database with that value
+  /// for that coffee bean
+  Future<void> editAssociatedSettingsCount(
+    int beanId,
+    AssociatedSettingsCountEditType editType,
+  ) async {
+    if (editType == AssociatedSettingsCountEditType.increment) {
+      _coffeeBeans[beanId]!.associatedSettingsCount++;
+    } else {
+      _coffeeBeans[beanId]!.associatedSettingsCount--;
+    }
+    await CoffeeBeansDatabase.instance.update(coffeeBeans[beanId]!);
+    log("Associated settings count ${describeEnum(editType)}ed "
+        "for bean with id: ${_coffeeBeans[beanId]!.id.toString()}");
   }
 }
 
 enum EditMode { enabled, disabled }
+
+/// Possible edits that can be made to the AssociatedSettingsCount property
+/// of a coffee bean
+enum AssociatedSettingsCountEditType { increment, decrement }

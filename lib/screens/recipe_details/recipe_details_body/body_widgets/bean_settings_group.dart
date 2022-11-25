@@ -1,5 +1,3 @@
-import 'package:aeroquest/models/coffee_bean.dart';
-import 'package:aeroquest/providers/coffee_bean_provider.dart';
 import 'package:aeroquest/screens/coffee_beans/coffee_beans.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/recipe_details_body.dart';
 import 'package:aeroquest/widgets/add_to_recipe_button.dart';
@@ -136,12 +134,11 @@ class BeanSettingsGroup extends StatelessWidget {
                                           .currentState!
                                           .fields["description"]
                                           ?.value;
-                                      CoffeeBean newCoffeeBean =
-                                          await Provider.of<CoffeeBeanProvider>(
-                                                  context,
-                                                  listen: false)
-                                              .addBean(beanName, description);
-                                      recipesProvider.addBean(newCoffeeBean);
+
+                                      recipesProvider.addBean(
+                                        beanName,
+                                        description,
+                                      );
                                       Navigator.of(context).pop();
                                     },
                                     context: context,

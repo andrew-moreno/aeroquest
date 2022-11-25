@@ -7,10 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:aeroquest/models/coffee_bean.dart';
 
 class CoffeeBeanProvider extends ChangeNotifier {
-  /// Coffee beans mapped by id
+  /// Holds up to date information on the coffee beans in the coffee beans
+  /// database mapped by id
   late Map<int, CoffeeBean> _coffeeBeans;
 
-  /// Coffee beans mapped by id
+  /// Returns an unmodifiable version of [_coffeeBeans]
   UnmodifiableMapView<int, CoffeeBean> get coffeeBeans {
     return UnmodifiableMapView(_coffeeBeans);
   }
@@ -74,7 +75,8 @@ class CoffeeBeanProvider extends ChangeNotifier {
     _coffeeBeans[id]!.beanName = beanName;
     _coffeeBeans[id]?.description = description;
     _coffeeBeans[id]!.associatedSettingsCount = associatedSettingsCount;
-    await CoffeeBeansDatabase.instance.update(coffeeBean);
+    await CoffeeBeansDatabase.instance.update(
+        coffeeBean); // TODO: can use coffeeBeans[id] instead of creating new object
     log("beans updated with id: " + id.toString());
     notifyListeners();
   }

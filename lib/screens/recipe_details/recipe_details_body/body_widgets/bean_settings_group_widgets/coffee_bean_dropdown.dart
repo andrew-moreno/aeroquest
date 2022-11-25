@@ -1,4 +1,5 @@
 import 'package:aeroquest/constraints.dart';
+import 'package:aeroquest/models/coffee_bean.dart';
 import 'package:aeroquest/models/recipe_settings.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -30,39 +31,39 @@ class _CoffeeBeanDropdownState extends State<CoffeeBeanDropdown> {
       mainAxisSize: MainAxisSize.min,
       children: [
         DropdownButtonHideUnderline(
-          child: Consumer<RecipesProvider>(
-            builder: (_, recipesProvider, __) {
+          child: Selector<RecipesProvider, Map<int, CoffeeBean>>(
+            selector: (_, recipesProvider) => recipesProvider.coffeeBeans,
+            builder: (_, coffeeBeans, __) {
               return FormBuilder(
-                key: recipesProvider.settingsBeanFormKey,
+                key: Provider.of<RecipesProvider>(context, listen: false)
+                    .settingsBeanFormKey,
                 child: DropdownButtonFormField2(
                   items: List.generate(
-                    recipesProvider.coffeeBeans.length,
+                    coffeeBeans.length,
                     (index) {
-                      int key =
-                          recipesProvider.coffeeBeans.keys.elementAt(index);
+                      int key = coffeeBeans.keys.elementAt(index);
                       return DropdownMenuItem(
                         child: Text(
-                          recipesProvider.coffeeBeans[key]!.beanName,
+                          coffeeBeans[key]!.beanName,
                           style: const TextStyle(
                             color: kPrimary,
                             fontSize: 16,
                           ),
                         ),
-                        value: recipesProvider.coffeeBeans[key]!.beanName,
+                        value: coffeeBeans[key]!.beanName,
                       );
                     },
                   ),
                   value: (widget.recipeSettingsData != null)
-                      ? recipesProvider
-                          .coffeeBeans[widget.recipeSettingsData!.beanId]!
-                          .beanName
+                      ? coffeeBeans[widget.recipeSettingsData!.beanId]!.beanName
                       : null,
                   onChanged: (String? value) {
-                    recipesProvider.tempBeanId = recipesProvider
-                        .coffeeBeans.values
-                        .firstWhere(
-                            (coffeeBean) => coffeeBean.beanName == value)
-                        .id;
+                    Provider.of<RecipesProvider>(context, listen: false)
+                            .tempBeanId =
+                        coffeeBeans.values
+                            .firstWhere(
+                                (coffeeBean) => coffeeBean.beanName == value)
+                            .id;
                     setState(() {
                       showValidateErrorText = false;
                     });
