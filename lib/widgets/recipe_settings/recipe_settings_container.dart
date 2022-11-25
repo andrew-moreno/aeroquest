@@ -6,15 +6,22 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:aeroquest/widgets/recipe_settings/widgets/bean_settings.dart';
 import 'package:aeroquest/constraints.dart';
 
-// displays bean and recipe settings information
-// grind, coffee and water amount, temp, time
 class RecipeSettingsContainer extends StatelessWidget {
+  /// Defines the widget that contains the recipe settings per coffee bean
   RecipeSettingsContainer({
     Key? key,
     required this.recipeSettings,
   }) : super(key: key);
 
+  /// The list of recipe settings to be displayed
+  ///
+  /// If [recipeSettings.length] > 1, this widget becomes scrollable
   final List<RecipeSettings> recipeSettings;
+
+  /// Controller used to handle page scrolling
+  ///
+  /// Viewport fraction of 1.02 provides adequate spacing between recipe
+  /// settings
   final _controller = PageController(viewportFraction: 1.02);
 
   @override
@@ -48,10 +55,7 @@ class RecipeSettingsContainer extends StatelessWidget {
                   ),
           ),
         ),
-        const Divider(
-          color: Color(0x00000000),
-          height: kRecipeSettingsVerticalPadding,
-        ),
+        const SizedBox(height: kRecipeSettingsVerticalPadding),
         (recipeSettings.length > 1)
             ? SmoothPageIndicator(
                 controller: _controller,

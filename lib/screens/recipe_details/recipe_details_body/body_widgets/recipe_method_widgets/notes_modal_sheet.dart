@@ -8,23 +8,24 @@ import 'package:aeroquest/widgets/custom_button.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 
-class CustomNotesModalSheet extends StatefulWidget {
-  const CustomNotesModalSheet({
+class NotesModalSheet extends StatelessWidget {
+  /// Defines the modal sheet used for editing recipe settings
+  const NotesModalSheet({
     Key? key,
     required this.submitAction,
     this.deleteAction,
     this.notesData,
   }) : super(key: key);
 
+  /// Function to execute when submitting the modal sheet
   final Function() submitAction;
+
+  /// Function to execute when pressing the delete button on the modal sheet
   final Function()? deleteAction;
+
+  /// Notes data being passed
   final Note? notesData;
 
-  @override
-  State<CustomNotesModalSheet> createState() => _CustomNotesModalSheetState();
-}
-
-class _CustomNotesModalSheetState extends State<CustomNotesModalSheet> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -40,7 +41,7 @@ class _CustomNotesModalSheetState extends State<CustomNotesModalSheet> {
             children: [
               NotesValueSlider(
                 maxWidth: constraints.maxWidth,
-                notesData: widget.notesData,
+                notesData: notesData,
               ),
               const Divider(height: 20, color: Color(0x00000000)),
               FormBuilder(
@@ -49,27 +50,27 @@ class _CustomNotesModalSheetState extends State<CustomNotesModalSheet> {
                 child: CustomFormField(
                   formName: "noteText",
                   hint: "Note",
-                  initialValue: widget.notesData?.text,
+                  initialValue: notesData?.text,
                   validate: true,
                   validateText: "Please enter a note",
                 ),
               ),
               const Divider(height: 20, color: Color(0x00000000)),
               Row(
-                mainAxisAlignment: (widget.deleteAction != null)
+                mainAxisAlignment: (deleteAction != null)
                     ? MainAxisAlignment.spaceBetween
                     : MainAxisAlignment.center,
                 children: [
                   CustomButton(
-                    onTap: widget.submitAction,
-                    buttonType: ButtonType.positive,
+                    onTap: submitAction,
+                    buttonType: ButtonType.vibrant,
                     text: "Save",
                     width: constraints.maxWidth / 2 - 10,
                   ),
-                  (widget.deleteAction != null)
+                  (deleteAction != null)
                       ? CustomButton(
-                          onTap: widget.deleteAction!,
-                          buttonType: ButtonType.negative,
+                          onTap: deleteAction!,
+                          buttonType: ButtonType.normal,
                           text: "Delete",
                           width: constraints.maxWidth / 2 - 10,
                         )

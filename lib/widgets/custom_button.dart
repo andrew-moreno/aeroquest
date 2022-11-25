@@ -2,18 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:aeroquest/constraints.dart';
 
 class CustomButton extends StatelessWidget {
-  const CustomButton(
-      {Key? key,
-      required this.onTap,
-      required this.buttonType,
-      required this.text,
-      this.width})
-      : super(key: key);
+  /// Defines the widget for buttons in modal sheets and dialog boxes
+  ///
+  /// eg. "Save" or "Delete", "Confirm" or "Cancel", etc.
+  const CustomButton({
+    Key? key,
+    required this.onTap,
+    required this.buttonType,
+    required this.text,
+    this.width,
+  }) : super(key: key);
 
+  /// Function to execute when the button is pressed
   final Function() onTap;
-  // defines style of button based on positive or negative use (save vs delete)
+
+  /// Defines style of button based on its desired appearance
   final ButtonType buttonType;
+
+  /// Text to be displayed inside the button
   final String text;
+
+  /// Width of the button
   final double? width;
 
   @override
@@ -24,9 +33,8 @@ class CustomButton extends StatelessWidget {
       child: Ink(
         padding: const EdgeInsets.symmetric(vertical: 5),
         decoration: BoxDecoration(
-          color: (buttonType == ButtonType.positive)
-              ? kLightSecondary
-              : kDeleteRed,
+          color:
+              (buttonType == ButtonType.vibrant) ? kLightSecondary : kDeleteRed,
           borderRadius: BorderRadius.circular(kCornerRadius),
           boxShadow: [kBoxShadow],
         ),
@@ -35,7 +43,7 @@ class CustomButton extends StatelessWidget {
           text,
           textAlign: TextAlign.center,
           style: TextStyle(
-              color: (buttonType == ButtonType.positive)
+              color: (buttonType == ButtonType.vibrant)
                   ? kAccent
                   : kLightSecondary,
               fontFamily: "Poppins",
@@ -47,7 +55,8 @@ class CustomButton extends StatelessWidget {
   }
 }
 
+/// Describes the type of styling a button will receive
 enum ButtonType {
-  positive,
-  negative,
+  vibrant,
+  normal,
 }

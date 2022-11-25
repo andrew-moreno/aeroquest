@@ -144,10 +144,10 @@ class _AnimatedToggleState extends State<AnimatedToggle> {
       child: GestureDetector(
         onTap: () {
           var index = 0;
-          if (_currentPosition == Position.second) {
+          if (_currentPosition == Position.last) {
             _currentPosition = Position.first;
           } else {
-            _currentPosition = Position.second;
+            _currentPosition = Position.last;
             index = 1;
           }
           widget.onToggleCallback(index);
@@ -229,7 +229,7 @@ class _AnimatedToggleState extends State<AnimatedToggle> {
 /// toggles, [first] position is left
 enum Position {
   first,
-  second,
+  last,
 }
 
 /// Describes the direction the toggle will operate in

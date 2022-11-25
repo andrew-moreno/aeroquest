@@ -2,34 +2,52 @@ import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/widgets/recipe_parameters_value.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vertical_weight_slider/vertical_weight_slider.dart';
 
-class CustomVerticalWeightSlider extends StatelessWidget {
-  const CustomVerticalWeightSlider({
+class SettingValueSlider extends StatefulWidget {
+  /// Defines an individual value slider to be used when editing recipe
+  /// setting values
+  const SettingValueSlider({
     Key? key,
     this.opacity = 1,
     this.disableScrolling = false,
     required this.maxWidth,
-    required this.provider,
     required this.parameterType,
   }) : super(key: key);
 
-  /// used to reduce opacity when slider is inactive
+  /// Opacity of the slider ticks
+  ///
+  /// Used for reducing the slider opacity when the slider is inactive
   final double opacity;
 
-  /// if true, will set the sliders physics to NeverScrollableScrollPhysics
+  /// Whether or not to disable scrolling for the slider
+  ///
+  /// If true, will set the sliders physics to NeverScrollableScrollPhysics
   final bool disableScrolling;
 
-  /// max width of parent
-  /// used to avoid clipping of the slider when modal is active
+  /// Max width of parent widget
+  ///
+  /// Used to avoid clipping of the slider when modal is active
   final double maxWidth;
 
-  /// provider passed down from parent
-  final RecipesProvider provider;
-
-  /// setting type to change for this slider
+  /// Setting type to change for this slider
   final ParameterType parameterType;
 
+  @override
+  State<SettingValueSlider> createState() => _SettingValueSliderState();
+}
+
+class _SettingValueSliderState extends State<SettingValueSlider> {
+  late RecipesProvider _provider;
+
+  @override
+  void initState() {
+    _provider = Provider.of<RecipesProvider>(context, listen: false);
+    super.initState();
+  }
+
+  /// Max possible value for each slider type
   int _maxValue(ParameterType parameterType) {
     switch (parameterType) {
       case ParameterType.grindSetting:
@@ -52,54 +70,54 @@ class CustomVerticalWeightSlider extends StatelessWidget {
     }
   }
 
+  // initializing controllers for weight slider
+  WeightSliderController _controllerSelector(ParameterType sliderType) {
+    switch (sliderType) {
+      case ParameterType.grindSetting:
+        return WeightSliderController(
+          initialWeight: _provider.tempGrindSetting!,
+          interval: 0.25,
+        );
+      case ParameterType.coffeeAmount:
+        return WeightSliderController(
+          initialWeight: _provider.tempCoffeeAmount!.toDouble(),
+          interval: 0.1,
+        );
+      case ParameterType.waterAmount:
+        return WeightSliderController(
+          initialWeight: _provider.tempWaterAmount!.toDouble(),
+          interval: 1,
+        );
+      case ParameterType.waterTemp:
+        return WeightSliderController(
+          initialWeight: _provider.tempWaterTemp!.toDouble(),
+          interval: 1,
+        );
+      case ParameterType.brewTime:
+        return WeightSliderController(
+          initialWeight: _provider.tempBrewTime!.toDouble(),
+          interval: 1,
+        );
+      case ParameterType.noteTime:
+        return WeightSliderController(
+            initialWeight: _provider.tempNoteTime!.toDouble(), interval: 1);
+      case ParameterType.none:
+        return WeightSliderController(initialWeight: 50);
+      default:
+        throw Exception("_controllerSelector received incorrect parameters");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // initializing controllers for weight slider
-    WeightSliderController _controllerSelector(ParameterType sliderType) {
-      switch (sliderType) {
-        case ParameterType.grindSetting:
-          return WeightSliderController(
-            initialWeight: provider.tempGrindSetting!,
-            interval: 0.25,
-          );
-        case ParameterType.coffeeAmount:
-          return WeightSliderController(
-            initialWeight: provider.tempCoffeeAmount!.toDouble(),
-            interval: 0.1,
-          );
-        case ParameterType.waterAmount:
-          return WeightSliderController(
-            initialWeight: provider.tempWaterAmount!.toDouble(),
-            interval: 1,
-          );
-        case ParameterType.waterTemp:
-          return WeightSliderController(
-            initialWeight: provider.tempWaterTemp!.toDouble(),
-            interval: 1,
-          );
-        case ParameterType.brewTime:
-          return WeightSliderController(
-            initialWeight: provider.tempBrewTime!.toDouble(),
-            interval: 1,
-          );
-        case ParameterType.noteTime:
-          return WeightSliderController(
-              initialWeight: provider.tempNoteTime!.toDouble(), interval: 1);
-        case ParameterType.none:
-          return WeightSliderController(initialWeight: 50);
-        default:
-          throw Exception("_controllerSelector received incorrect parameters");
-      }
-    }
-
     return Visibility(
-      visible: provider.activeSlider == parameterType ? true : false,
+      visible: _provider.activeSlider == widget.parameterType ? true : false,
       child: Opacity(
-        opacity: opacity,
+        opacity: widget.opacity,
         child: VerticalWeightSlider(
-          disableScrolling: disableScrolling,
-          maxWidth: maxWidth,
-          maxWeight: _maxValue(parameterType),
+          disableScrolling: widget.disableScrolling,
+          maxWidth: widget.maxWidth,
+          maxWeight: _maxValue(widget.parameterType),
           height: 40,
           decoration: const PointerDecoration(
             width: 25.0,
@@ -108,9 +126,9 @@ class CustomVerticalWeightSlider extends StatelessWidget {
             mediumColor: kLightSecondary,
             gap: 0,
           ),
-          controller: _controllerSelector(parameterType),
+          controller: _controllerSelector(widget.parameterType),
           onChanged: (double value) {
-            provider.sliderOnChanged(value, parameterType);
+            _provider.sliderOnChanged(value, widget.parameterType);
           },
         ),
       ),

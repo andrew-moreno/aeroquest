@@ -29,7 +29,7 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const AppBarLeading(function: LeadingFunction.menu),
+        leading: const AppBarLeading(leadingFunction: LeadingFunction.menu),
         title: const AppBarText(text: "BEANS"),
         actions: [
           AppBarButton(

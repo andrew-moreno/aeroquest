@@ -7,13 +7,17 @@ import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/constraints.dart';
 
 class RecipeDetailsHeader extends StatelessWidget {
+  /// Defines the widget that contains the title and description for a recipe
   const RecipeDetailsHeader({
     Key? key,
     required this.titleValue,
     required this.descriptionValue,
   }) : super(key: key);
 
+  /// The value of the title when the details page is opened
   final String titleValue;
+
+  /// The value of the description when the details page is opened
   final String? descriptionValue;
 
   @override
@@ -38,10 +42,7 @@ class RecipeDetailsHeader extends StatelessWidget {
                       height: 1.2),
                   validate: true,
                 ),
-                const Divider(
-                  height: 10,
-                  color: Color(0x00000000),
-                ),
+                const SizedBox(height: 10),
                 ((descriptionValue != null && descriptionValue != "") ||
                         recipesProvider.editMode == EditMode.enabled)
                     ? CustomHeaderFormField(
@@ -67,6 +68,7 @@ class RecipeDetailsHeader extends StatelessWidget {
 }
 
 class CustomHeaderFormField extends StatelessWidget {
+  /// Defines the widget used for editing the recipe title and description
   const CustomHeaderFormField(
       // make either title or description
       {Key? key,
@@ -86,7 +88,7 @@ class CustomHeaderFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<RecipesProvider>(
-      builder: (_, recipes, ___) {
+      builder: (_, recipes, __) {
         return FormBuilderTextField(
           name: name,
           cursorColor: kLightSecondary,

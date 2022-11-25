@@ -11,6 +11,7 @@ import 'package:aeroquest/widgets/custom_drawer.dart';
 import 'package:aeroquest/widgets/custom_dialog.dart';
 
 class Recipes extends StatefulWidget {
+  /// Defines the screen for displaying all recipes
   const Recipes({Key? key}) : super(key: key);
 
   static const routeName = "/recipes";
@@ -20,25 +21,26 @@ class Recipes extends StatefulWidget {
 }
 
 class _RecipesState extends State<Recipes> {
+  /// Confirmation for exiting the app when the user clicks the OS back button
+  Future<bool> showExitPopup() async {
+    return await showDialog(
+          context: context,
+          builder: (context) => CustomDialog(
+            titleText: "Exit app?",
+            leftAction: () => Navigator.of(context).pop(false),
+            rightAction: () => Navigator.of(context).pop(true),
+          ),
+        ) ??
+        false; //if showDialog had returned null, then return false
+  }
+
   @override
   Widget build(BuildContext context) {
-    Future<bool> showExitPopup() async {
-      return await showDialog(
-            context: context,
-            builder: (context) => CustomDialog(
-              titleText: "Exit app?",
-              leftAction: () => Navigator.of(context).pop(false),
-              rightAction: () => Navigator.of(context).pop(true),
-            ),
-          ) ??
-          false; //if showDialouge had returned null, then return false
-    }
-
     return WillPopScope(
       onWillPop: showExitPopup,
       child: Scaffold(
         appBar: AppBar(
-          leading: const AppBarLeading(function: LeadingFunction.menu),
+          leading: const AppBarLeading(leadingFunction: LeadingFunction.menu),
           title: const AppBarText(text: "RECIPES"),
           actions: [
             AppBarButton(
@@ -71,7 +73,7 @@ class _RecipesState extends State<Recipes> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 return Consumer<RecipesProvider>(
-                  builder: (_, recipesProvider, ___) {
+                  builder: (context, recipesProvider, ___) {
                     return ListView.separated(
                       padding: const EdgeInsets.all(20),
                       itemCount: recipesProvider.recipes.length,
@@ -81,10 +83,7 @@ class _RecipesState extends State<Recipes> {
                         );
                       },
                       separatorBuilder: (context, index) {
-                        return const Divider(
-                          color: Color(0x00000000),
-                          height: 20,
-                        );
+                        return const SizedBox(height: 20);
                       },
                     );
                   },

@@ -1,20 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:aeroquest/constraints.dart';
 
-// defines the template for displaying recipe information values
-// eg. grind: 17
 class RecipeParameterValue extends StatelessWidget {
+  /// Defines the widget for displaying recipe setting values
+  ///
+  /// eg. Grind: 17, Water Amount: 200, etc.
   const RecipeParameterValue({
     Key? key,
     required this.parameterValue,
     required this.parameterType,
   }) : super(key: key);
 
-  // can be int or double
-  final dynamic parameterValue;
+  /// Value to be displayed in the widget
+  final num parameterValue;
+
+  /// The type of value to display in the widget
+  ///
+  /// eg. grind, water amount, etc.
   final ParameterType parameterType;
 
-  /// defines default values and whether grams is added to the end or not
+  /// Generates the string representation of the parameter value based on
+  /// the [parameterType]
+  ///
+  /// Throws an exception is [ParameterType.none] is passed
   String _parameterValue(ParameterType parameterType) {
     switch (parameterType) {
       case ParameterType.grindSetting: // double
@@ -40,7 +48,9 @@ class RecipeParameterValue extends StatelessWidget {
     }
   }
 
-  /// defines text used for settings value display
+  /// Converts the enum passed to [parameterType] to a string
+  ///
+  /// Throws an exception if [ParameterType.none] is passed
   String _parameterType(ParameterType parameterType) {
     switch (parameterType) {
       case ParameterType.grindSetting:
@@ -85,8 +95,9 @@ class RecipeParameterValue extends StatelessWidget {
   }
 }
 
-/// all types of editable parameters for a recipe
-/// eg. water amount, grind setting, notes time
+/// Defines all types of editable parameters for a recipe
+///
+/// eg. water amount, grind setting, note time
 enum ParameterType {
   noteTime,
   grindSetting,

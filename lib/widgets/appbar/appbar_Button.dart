@@ -5,13 +5,17 @@ import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
 
 class AppBarButton extends StatelessWidget {
+  /// Defines the widget used for buttons in the app bar
   const AppBarButton({
     Key? key,
-    this.onTap,
+    required this.onTap,
     required this.icon,
   }) : super(key: key);
 
-  final Function()? onTap;
+  /// Function to execute when the button is pressed
+  final Function() onTap;
+
+  /// Icon to be displayed in the icon
   final IconData icon;
 
   @override

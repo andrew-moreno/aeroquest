@@ -6,6 +6,8 @@ import 'package:aeroquest/widgets/custom_drawer.dart';
 import 'package:aeroquest/constraints.dart';
 
 class AboutAeroquest extends StatelessWidget {
+  /// Defines the screen used for sharing information about myself and the
+  /// app :)
   const AboutAeroquest({Key? key}) : super(key: key);
 
   static const routeName = "/aboutAeroquest";
@@ -17,7 +19,7 @@ class AboutAeroquest extends StatelessWidget {
         backgroundColor: kPrimary,
         elevation: 0,
         centerTitle: true,
-        leading: const AppBarLeading(function: LeadingFunction.menu),
+        leading: const AppBarLeading(leadingFunction: LeadingFunction.menu),
         title: const AppBarText(text: "About AEROQUEST"),
       ),
       drawer: const CustomDrawer(),

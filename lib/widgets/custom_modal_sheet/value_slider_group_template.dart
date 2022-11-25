@@ -6,22 +6,26 @@ import 'package:provider/provider.dart';
 
 import 'package:aeroquest/providers/recipes_provider.dart';
 
-class ValueSliderGroupTemplate extends StatefulWidget {
-  const ValueSliderGroupTemplate(
-      {Key? key, required this.maxWidth, required this.modalType})
-      : super(key: key);
+class ValueSliderGroupTemplate extends StatelessWidget {
+  /// Defines the widget that contains all sliders and slider values
+  ///
+  /// Can be used for editing notes or recipe settings
+  const ValueSliderGroupTemplate({
+    Key? key,
+    required this.maxWidth,
+    required this.modalType,
+  }) : super(key: key);
 
+  /// Max width of parent widget
   final double maxWidth;
+
+  /// Whether the modal sheet being displayed is used for editing recipe
+  /// settings or notes
   final ModalType modalType;
 
-  @override
-  State<ValueSliderGroupTemplate> createState() =>
-      _ValueSliderGroupTemplateState();
-}
-
-class _ValueSliderGroupTemplateState extends State<ValueSliderGroupTemplate> {
+  /// Returns a list of the appropriate parameter types based on [modalType]
   List<ParameterType> _parameterTypeListSelector() {
-    if (widget.modalType == ModalType.settings) {
+    if (modalType == ModalType.settings) {
       return [
         ParameterType.grindSetting,
         ParameterType.coffeeAmount,
@@ -39,7 +43,7 @@ class _ValueSliderGroupTemplateState extends State<ValueSliderGroupTemplate> {
   Widget build(BuildContext context) {
     List<ParameterType> parameterType = _parameterTypeListSelector();
     return Consumer<RecipesProvider>(
-      builder: (context, provider, child) {
+      builder: (context, provider, _) {
         return Column(
           children: [
             Row(
@@ -51,18 +55,16 @@ class _ValueSliderGroupTemplateState extends State<ValueSliderGroupTemplate> {
                   parameterType: parameterType
                       .where((sliderType) => sliderType != ParameterType.none)
                       .toList()[index],
-                  provider: provider,
                 ),
               ),
             ),
-            const Divider(height: 13, color: Color(0x00000000)),
+            const SizedBox(height: 13),
             Stack(
               children: List.generate(
                 // includes ParameterType.none
                 parameterType.length,
-                (index) => CustomVerticalWeightSlider(
-                  maxWidth: widget.maxWidth,
-                  provider: provider,
+                (index) => SettingValueSlider(
+                  maxWidth: maxWidth,
                   parameterType: parameterType[index],
                   disableScrolling: (parameterType[index] == ParameterType.none)
                       ? true
@@ -79,6 +81,7 @@ class _ValueSliderGroupTemplateState extends State<ValueSliderGroupTemplate> {
   }
 }
 
+/// Describes the type of modal sheet to be displayed
 enum ModalType {
   settings,
   notes,

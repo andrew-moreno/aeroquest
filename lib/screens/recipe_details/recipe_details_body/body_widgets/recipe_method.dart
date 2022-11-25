@@ -3,6 +3,7 @@ import 'package:aeroquest/screens/recipe_details/recipe_details_body/recipe_deta
 import 'package:aeroquest/widgets/add_to_recipe_button.dart';
 import 'package:aeroquest/widgets/animated_toggle.dart';
 import 'package:aeroquest/widgets/custom_modal_sheet/value_slider_group_template.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:aeroquest/models/recipe.dart';
@@ -11,48 +12,49 @@ import 'package:aeroquest/constraints.dart';
 import 'package:provider/provider.dart';
 
 class RecipeMethod extends StatefulWidget {
+  /// Defines the widget for displaying push pressure, brew method, and notes
   const RecipeMethod({
     Key? key,
     required this.recipeEntryId,
   }) : super(key: key);
 
+  /// Recipe that the method is associated with
   final int recipeEntryId;
-  static const double _methodPadding = 15;
 
   @override
   State<RecipeMethod> createState() => _RecipeMethodState();
 }
 
 class _RecipeMethodState extends State<RecipeMethod> {
+  /// Padding to use between method elements
+  static const double _methodPadding = 15;
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Consumer<RecipesProvider>(
-        builder: (_, recipesProvider, ___) {
+        builder: (_, recipesProvider, __) {
           return Column(
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   RecipeMethodParameters(
-                    description: "Push Pressure",
-                    data: recipesProvider.tempPushPressure,
+                    methodParameter: "Push Pressure",
+                    methodParameterValue:
+                        describeEnum(recipesProvider.tempPushPressure),
                   ),
-                  const VerticalDivider(
-                    color: Color(0x00000000),
-                    thickness: 10,
+                  const SizedBox(
+                    width: 10,
                   ),
                   RecipeMethodParameters(
-                    description: "Brew Method",
-                    data: recipesProvider.tempBrewMethod,
+                    methodParameter: "Brew Method",
+                    methodParameterValue:
+                        describeEnum(recipesProvider.tempBrewMethod),
                   ),
                 ],
               ),
-              const Divider(
-                color: Color(0x00000000),
-                height: RecipeMethod._methodPadding,
-              ),
+              const SizedBox(height: _methodPadding),
               ListView.separated(
                 physics: const BouncingScrollPhysics(),
                 shrinkWrap: true,
@@ -63,16 +65,10 @@ class _RecipeMethodState extends State<RecipeMethod> {
                       note: recipesProvider.tempNotes[key]!);
                 },
                 separatorBuilder: (context, index) {
-                  return const Divider(
-                    color: Color(0x00000000),
-                    height: RecipeMethod._methodPadding,
-                  );
+                  return const SizedBox(height: _methodPadding);
                 },
               ),
-              const Divider(
-                color: Color(0x00000000),
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               (recipesProvider.editMode == EditMode.enabled)
                   ? AddToRecipeButton(
                       onTap: () {
@@ -102,95 +98,102 @@ class _RecipeMethodState extends State<RecipeMethod> {
   }
 }
 
-// template for push pressure and brew method text
 class RecipeMethodParameters extends StatelessWidget {
-  const RecipeMethodParameters({
+  /// Defines the widget used to display and edit push pressure and brew method
+  RecipeMethodParameters({
     Key? key,
-    required this.description,
-    required this.data,
+    required this.methodParameter,
+    required this.methodParameterValue,
   }) : super(key: key);
 
-  final String description;
-  final dynamic data;
+  /// Text used to identify the method parameter
+  ///
+  /// Values passed are either Push Pressure or Brew Method
+  final String methodParameter;
 
-  String _enumTextConvert(dynamic action) {
-    switch (action) {
-      case PushPressure.light:
-        return "Light";
+  /// Value of method parameter
+  ///
+  /// Passed as a lower cased string represetnation of either a PushPressure
+  /// or BrewMethod type
+  final String methodParameterValue;
 
-      case PushPressure.heavy:
-        return "Heavy";
-      case BrewMethod.regular:
-        return "Regular";
-      case BrewMethod.inverted:
-        return "Inverted";
+  /// Capitalizes the first letter of a lower case string
+  static String _capitalizeFirstLetter(String string) {
+    return "${string[0].toUpperCase()}${string.substring(1)}";
+  }
 
-      default:
-        return "";
+  /// Possible values that can be applied to the push pressure toggle
+  final List<String> _pushPressureToggleValues = [
+    _capitalizeFirstLetter(describeEnum(PushPressure.light)),
+    _capitalizeFirstLetter(describeEnum(PushPressure.heavy)),
+  ];
+
+  /// Possible values that can be applied to the brew method toggle
+  final List<String> _brewMethodToggleValues = [
+    _capitalizeFirstLetter(describeEnum(BrewMethod.regular)),
+    _capitalizeFirstLetter(describeEnum(BrewMethod.inverted)),
+  ];
+
+  /// Selects the appropriate toggle based on the type passed to
+  /// [methodParameterValue]
+  ///
+  /// Throws an exception if [methodParameterValue] receives the wrong type
+  Widget _displayToggle(BuildContext context) {
+    if (methodParameterValue == describeEnum(BrewMethod.regular) ||
+        methodParameterValue == describeEnum(BrewMethod.inverted)) {
+      return AnimatedToggle(
+        values: _brewMethodToggleValues,
+        onToggleCallback: (index) {
+          index == 0
+              ? Provider.of<RecipesProvider>(context, listen: false)
+                  .tempBrewMethod = BrewMethod.regular
+              : Provider.of<RecipesProvider>(context, listen: false)
+                  .tempBrewMethod = BrewMethod.inverted;
+        },
+        initialPosition: (Provider.of<RecipesProvider>(context, listen: false)
+                    .tempBrewMethod ==
+                BrewMethod.regular)
+            ? Position.first
+            : Position.last,
+        toggleType: ToggleType.vertical,
+      );
+    } else if (methodParameterValue == describeEnum(PushPressure.light) ||
+        methodParameter == describeEnum(PushPressure.heavy)) {
+      return AnimatedToggle(
+        values: _pushPressureToggleValues,
+        onToggleCallback: (index) {
+          index == 0
+              ? Provider.of<RecipesProvider>(context, listen: false)
+                  .tempPushPressure = PushPressure.light
+              : Provider.of<RecipesProvider>(context, listen: false)
+                  .tempPushPressure = PushPressure.heavy;
+        },
+        initialPosition: (Provider.of<RecipesProvider>(context, listen: false)
+                    .tempPushPressure ==
+                PushPressure.light)
+            ? Position.first
+            : Position.last,
+        toggleType: ToggleType.vertical,
+      );
+    } else {
+      throw Exception("Incorrect type passed to methodParameterValue");
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<String> _pushPressureToggleValues = [
-      _enumTextConvert(PushPressure.light),
-      _enumTextConvert(PushPressure.heavy),
-    ];
-    List<String> _brewMethodToggleValues = [
-      _enumTextConvert(BrewMethod.regular),
-      _enumTextConvert(BrewMethod.inverted),
-    ];
-
-    Widget displayToggle(BuildContext context) {
-      if (data.runtimeType == BrewMethod) {
-        return AnimatedToggle(
-          values: _brewMethodToggleValues,
-          onToggleCallback: (index) {
-            index == 0
-                ? Provider.of<RecipesProvider>(context, listen: false)
-                    .tempBrewMethod = BrewMethod.regular
-                : Provider.of<RecipesProvider>(context, listen: false)
-                    .tempBrewMethod = BrewMethod.inverted;
-          },
-          initialPosition: (Provider.of<RecipesProvider>(context, listen: false)
-                      .tempBrewMethod ==
-                  BrewMethod.regular)
-              ? Position.first
-              : Position.second,
-          toggleType: ToggleType.vertical,
-        );
-      } else {
-        return AnimatedToggle(
-          values: _pushPressureToggleValues,
-          onToggleCallback: (index) {
-            index == 0
-                ? Provider.of<RecipesProvider>(context, listen: false)
-                    .tempPushPressure = PushPressure.light
-                : Provider.of<RecipesProvider>(context, listen: false)
-                    .tempPushPressure = PushPressure.heavy;
-          },
-          initialPosition: (Provider.of<RecipesProvider>(context, listen: false)
-                      .tempPushPressure ==
-                  PushPressure.light)
-              ? Position.first
-              : Position.second,
-          toggleType: ToggleType.vertical,
-        );
-      }
-    }
-
     return Column(
       children: [
         Text(
-          description,
+          methodParameter,
           style:
               Theme.of(context).textTheme.subtitle2!.copyWith(color: kSubtitle),
         ),
         (Provider.of<RecipesProvider>(context, listen: false).editMode ==
                 EditMode.enabled)
-            ? displayToggle(context)
+            ? _displayToggle(context)
             : Text(
-                _enumTextConvert(data),
+                _capitalizeFirstLetter(methodParameterValue),
                 style: Theme.of(context)
                     .textTheme
                     .subtitle2!
@@ -202,8 +205,13 @@ class RecipeMethodParameters extends StatelessWidget {
 }
 
 class RecipeMethodNotes extends StatelessWidget {
-  const RecipeMethodNotes({Key? key, required this.note}) : super(key: key);
+  /// Defines the widget to display a single note for a recipe
+  const RecipeMethodNotes({
+    Key? key,
+    required this.note,
+  }) : super(key: key);
 
+  /// Note data to display
   final Note note;
 
   @override
@@ -252,10 +260,7 @@ class RecipeMethodNotes extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const VerticalDivider(
-                width: 20,
-                color: Color(0x00000000),
-              ),
+              const SizedBox(width: 20),
               Expanded(
                 child: Text(
                   note.text,

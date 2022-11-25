@@ -6,13 +6,15 @@ import 'package:aeroquest/widgets/recipe_parameters_value.dart';
 import 'package:aeroquest/constraints.dart';
 import 'package:provider/provider.dart';
 
-// template for the settings of a single coffee bean
 class BeanSettings extends StatelessWidget {
+  /// Defines the widget used to display recipe settings for a single
+  /// coffee bean
   const BeanSettings({
     Key? key,
     required this.recipeSetting,
   }) : super(key: key);
 
+  /// The recipe setting data to use
   final RecipeSettings recipeSetting;
 
   @override

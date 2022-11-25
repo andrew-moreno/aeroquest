@@ -6,11 +6,13 @@ import 'package:aeroquest/screens/coffee_beans/coffee_beans.dart';
 import 'package:aeroquest/screens/recipes/recipes.dart';
 
 class CustomDrawer extends StatelessWidget {
+  /// Defines the drawer to be used in the app
   const CustomDrawer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      backgroundColor: kPrimary,
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
@@ -20,33 +22,35 @@ class CustomDrawer extends StatelessWidget {
                 "AEROQUEST",
                 style: Theme.of(context).textTheme.headline1!,
               ),
-              const Divider(
-                color: Color(0x00000000),
-                thickness: 0,
+              const SizedBox(
                 height: 15,
               ),
-              _menuItemBuilder(
-                ctx: context,
-                icon: const Icon(Icons.coffee_rounded, size: 23),
+              const MenuItem(
+                icon: Icon(
+                  Icons.coffee_rounded,
+                  size: 23,
+                ),
                 route: Recipes.routeName,
                 text: "Recipes",
-                isAbout: false,
               ),
-              _menuItemBuilder(
-                ctx: context,
-                icon: Image.asset("assets/images/coffee_bean.png",
-                    scale: 25, color: kLightSecondary),
+              MenuItem(
+                icon: Image.asset(
+                  "assets/images/coffee_bean.png",
+                  scale: 25,
+                  color: kLightSecondary,
+                ),
                 route: CoffeeBeans.routeName,
                 text: "Coffee Beans",
-                isAbout: false,
               ),
               const Spacer(),
-              _menuItemBuilder(
-                ctx: context,
-                icon: const Icon(Icons.info_outline, size: 23),
+              const MenuItem(
+                icon: Icon(
+                  Icons.info_outline,
+                  size: 23,
+                ),
                 route: AboutAeroquest.routeName,
                 text: "About AEROQUEST",
-                isAbout: true,
+                isBottom: true,
               ),
             ],
           ),
@@ -54,40 +58,60 @@ class CustomDrawer extends StatelessWidget {
       ),
     );
   }
+}
 
-  ListTile _menuItemBuilder({
-    required BuildContext ctx,
-    required Widget icon,
-    required String route,
-    required String text,
-    required bool isAbout,
-  }) {
+class MenuItem extends StatelessWidget {
+  /// Defines the widget used for a menu item in the drawer
+  const MenuItem({
+    Key? key,
+    required this.icon,
+    required this.route,
+    required this.text,
+    this.isBottom = false,
+  }) : super(key: key);
+
+  /// Leading icon to display in the list tile
+  final Widget icon;
+
+  /// Route to push when list tile is pressed
+  final String route;
+
+  /// Text to display in the list tile
+  final String text;
+
+  /// Whether or not the list tile is at the bottom of the drawer or not
+  ///
+  /// Setting to true will style the list tile differently
+  final bool isBottom;
+
+  @override
+  Widget build(BuildContext context) {
     return ListTile(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
       onTap: () {
-        Navigator.of(ctx).pop();
+        Navigator.of(context).pop();
 
-        if (route != ModalRoute.of(ctx)!.settings.name) {
+        if (route != ModalRoute.of(context)!.settings.name) {
           if (route == Recipes.routeName) {
-            Navigator.of(ctx).pushNamedAndRemoveUntil(
+            Navigator.of(context).pushNamedAndRemoveUntil(
                 route, (Route<dynamic> route) => false);
           } else {
-            Navigator.of(ctx).pushNamed(route);
+            Navigator.of(context).pushNamed(route);
           }
         }
       },
       horizontalTitleGap: 0,
-      iconColor: (isAbout) ? kAccent : kLightSecondary,
+      iconColor: (isBottom) ? kAccent : kLightSecondary,
       leading: icon,
       title: Text(
         text,
         style: TextStyle(
-          color: (isAbout) ? kAccent : kLightSecondary,
+          color: (isBottom) ? kAccent : kLightSecondary,
           fontFamily: "Poppins",
-          fontSize: (isAbout) ? 18 : 17,
-          fontWeight: (isAbout) ? FontWeight.w600 : FontWeight.w500,
+          fontSize: (isBottom) ? 18 : 17,
+          fontWeight: (isBottom) ? FontWeight.w600 : FontWeight.w500,
         ),
       ),
     );

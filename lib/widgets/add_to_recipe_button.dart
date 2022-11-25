@@ -3,13 +3,17 @@ import 'package:flutter/material.dart';
 
 // used to
 class AddToRecipeButton extends StatelessWidget {
+  /// Defines the button used to add recipe settings or notes to a recipe
   const AddToRecipeButton({
     Key? key,
     required this.onTap,
     required this.buttonText,
   }) : super(key: key);
 
-  final Function onTap;
+  /// Function to be executed when pressing button
+  final Function() onTap;
+
+  /// Text to be displayed within the button
   final String buttonText;
 
   @override
@@ -17,9 +21,7 @@ class AddToRecipeButton extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {
-          onTap();
-        },
+        onTap: onTap,
         borderRadius: BorderRadius.circular(7),
         child: Ink(
           padding: const EdgeInsets.symmetric(vertical: 5),

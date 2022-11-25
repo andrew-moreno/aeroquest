@@ -10,11 +10,13 @@ import 'package:aeroquest/screens/recipe_details/recipe_details.dart';
 import 'package:provider/provider.dart';
 
 class RecipeCard extends StatelessWidget {
+  /// Defines the widget for displaying individual recipes
   const RecipeCard({
     Key? key,
     required this.recipeData,
   }) : super(key: key);
 
+  /// Recipe data to be displayed by the card
   final Recipe recipeData;
 
   @override

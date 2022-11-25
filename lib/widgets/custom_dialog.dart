@@ -4,22 +4,38 @@ import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/widgets/custom_button.dart';
 
 class CustomDialog extends StatelessWidget {
-  const CustomDialog(
-      {Key? key,
-      required this.titleText,
-      this.description,
-      required this.leftAction,
-      required this.rightAction,
-      this.leftText = "No",
-      this.rightText = "Yes"})
-      : super(key: key);
+  /// Defines the widget used for a dialog box
+  const CustomDialog({
+    Key? key,
+    required this.titleText,
+    this.description,
+    required this.leftAction,
+    required this.rightAction,
+    this.leftButtonText = "No",
+    this.rightButtonText = "Yes",
+  }) : super(key: key);
 
+  /// Title to display at the top of the dialog box
   final String titleText;
+
+  /// Description to display in the main body of the dialog box
+  ///
+  /// If null, no description will be displayed
   final String? description;
+
+  /// Function to execute when the button on the left side of the dialog box
+  /// is pressed
   final Function() leftAction;
+
+  /// Function to execute when the button on the right side of the dialog box
+  /// is pressed
   final Function() rightAction;
-  final String leftText;
-  final String rightText;
+
+  /// Text to display within the left side button
+  final String leftButtonText;
+
+  /// Text to display within the right side button
+  final String rightButtonText;
 
   @override
   Widget build(BuildContext context) {
@@ -48,14 +64,14 @@ class CustomDialog extends StatelessWidget {
       actions: [
         CustomButton(
           onTap: leftAction,
-          buttonType: ButtonType.positive,
-          text: leftText,
+          buttonType: ButtonType.vibrant,
+          text: leftButtonText,
           width: 100.0,
         ),
         CustomButton(
           onTap: rightAction,
-          buttonType: ButtonType.negative,
-          text: rightText,
+          buttonType: ButtonType.normal,
+          text: rightButtonText,
           width: 100.0,
         )
       ],

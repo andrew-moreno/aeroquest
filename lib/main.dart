@@ -16,7 +16,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -39,8 +38,7 @@ class MyApp extends StatelessWidget {
                 centerTitle: true,
                 shadowColor: Colors.black,
               ),
-              backgroundColor: kPrimary,
-              canvasColor: kPrimary,
+              scaffoldBackgroundColor: kPrimary,
               textTheme: const TextTheme(
                 headline1: TextStyle(
                   color: kLightSecondary,

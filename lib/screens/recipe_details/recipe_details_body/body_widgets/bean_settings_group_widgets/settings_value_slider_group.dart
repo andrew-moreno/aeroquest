@@ -7,13 +7,17 @@ import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/models/recipe_settings.dart';
 
 class SettingsValueSliderGroup extends StatefulWidget {
+  /// Initializes the slider group for editing recipe settings specifically
   const SettingsValueSliderGroup({
     Key? key,
     required this.maxWidth,
     this.recipeSettingsData,
   }) : super(key: key);
 
+  /// Max width passed from the parent widget
   final double maxWidth;
+
+  /// Recipe settings data to be edited
   final RecipeSettings? recipeSettingsData;
 
   @override
@@ -22,8 +26,10 @@ class SettingsValueSliderGroup extends StatefulWidget {
 }
 
 class _SettingsValueSliderGroupState extends State<SettingsValueSliderGroup> {
-  /// initializing setting values when modal sheet activated
-  /// default values set when no values are passed (eg. adding new bean settings)
+  /// Initializing setting values when modal sheet activated
+  ///
+  /// Default values set when no values are passed
+  /// (adding new bean settings)
   @override
   void initState() {
     super.initState();

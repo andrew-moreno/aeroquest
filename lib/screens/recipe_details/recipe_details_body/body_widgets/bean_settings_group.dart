@@ -15,25 +15,24 @@ import 'package:aeroquest/models/recipe_settings.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/widgets/recipe_settings/widgets/bean_settings.dart';
 
-class BeanSettingsGroup extends StatefulWidget {
-  const BeanSettingsGroup({
+class BeanSettingsGroup extends StatelessWidget {
+  /// Defines the widget for displaying all recipe settings on the recipe
+  /// details page
+  BeanSettingsGroup({
     Key? key,
     required this.recipeEntryId,
   }) : super(key: key);
 
+  /// Recipe that these recipe settings are associated with
   final int recipeEntryId;
 
-  @override
-  State<BeanSettingsGroup> createState() => _BeanSettingsGroupState();
-}
-
-class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
+  /// Form key used for validation in the modal sheet
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
 
   @override
   Widget build(BuildContext context) {
     return Consumer<RecipesProvider>(
-      builder: (_, recipesProvider, ___) {
+      builder: (_, recipesProvider, __) {
         return Column(
           children: [
             ListView.separated(
@@ -41,7 +40,7 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
               itemCount: recipesProvider.tempRecipeSettings.length,
               shrinkWrap: true,
               itemBuilder: (context, int index) {
-                int key =
+                int id =
                     recipesProvider.tempRecipeSettings.keys.elementAt(index);
 
                 return GestureDetector(
@@ -51,15 +50,15 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
                           modalType: ModalType.settings,
                           submitAction: () {
                             recipesProvider.editSetting(
-                                recipesProvider.tempRecipeSettings[key]!, key);
+                                recipesProvider.tempRecipeSettings[id]!, id);
                             Navigator.of(context).pop();
                           },
                           deleteAction: () {
-                            recipesProvider.tempDeleteSetting(key);
+                            recipesProvider.tempDeleteSetting(id);
                             Navigator.of(context).pop();
                           },
                           recipeSettingsData:
-                              recipesProvider.tempRecipeSettings[key],
+                              recipesProvider.tempRecipeSettings[id],
                           context: context);
                     }
                   },
@@ -67,14 +66,14 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
                     visible: (recipesProvider.editMode == EditMode.disabled &&
                             RecipeSettings.stringToSettingVisibility(
                                     recipesProvider
-                                        .tempRecipeSettings[key]!.visibility) ==
+                                        .tempRecipeSettings[id]!.visibility) ==
                                 SettingVisibility.hidden)
                         ? false
                         : true,
                     child: Opacity(
                       opacity: (recipesProvider.editMode == EditMode.enabled &&
                               RecipeSettings.stringToSettingVisibility(
-                                      recipesProvider.tempRecipeSettings[key]!
+                                      recipesProvider.tempRecipeSettings[id]!
                                           .visibility) ==
                                   SettingVisibility.hidden)
                           ? 0.5
@@ -93,7 +92,7 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
                         ),
                         child: BeanSettings(
                           recipeSetting:
-                              recipesProvider.tempRecipeSettings[key]!,
+                              recipesProvider.tempRecipeSettings[id]!,
                         ),
                       ),
                     ),
@@ -101,16 +100,10 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
                 );
               },
               separatorBuilder: (_, index) {
-                return const Divider(
-                  color: Color(0x00000000),
-                  height: 10,
-                );
+                return const SizedBox(height: 10);
               },
             ),
-            const Divider(
-              color: Color(0x00000000),
-              height: 20,
-            ),
+            const SizedBox(height: 20),
             (recipesProvider.editMode == EditMode.enabled)
                 ? AddToRecipeButton(
                     buttonText: "Add Setting",
@@ -168,8 +161,8 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
                                   .validate()) {
                                 return;
                               }
-                              recipesProvider.tempAddSetting(widget
-                                  .recipeEntryId); // index doesn't matter for recipe entry id
+                              recipesProvider.tempAddSetting(
+                                  recipeEntryId); // index doesn't matter for recipe entry id
                               Navigator.of(context).pop();
                             },
                             context: context);

@@ -7,13 +7,17 @@ import 'package:provider/provider.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
 
 class NotesValueSlider extends StatefulWidget {
+  /// Initializes the slider group for editing notes specifically
   const NotesValueSlider({
     Key? key,
     required this.maxWidth,
     this.notesData,
   }) : super(key: key);
 
+  /// Max width passed from the parent widget
   final double maxWidth;
+
+  /// Notes data to be edited
   final Note? notesData;
 
   @override
@@ -21,8 +25,10 @@ class NotesValueSlider extends StatefulWidget {
 }
 
 class _NotesValueSliderState extends State<NotesValueSlider> {
-  /// initializing setting values when modal sheet activated
-  /// default values set when no values are passed (eg. adding new bean settings)
+  /// Initializing note values when modal sheet activated
+  ///
+  /// Default values set when no values are passed
+  /// (adding new notes)
   @override
   void initState() {
     super.initState();
