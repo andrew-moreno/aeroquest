@@ -212,8 +212,10 @@ class RecipesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  ///
+  /// Saves the current recipe being added/edited to [_recipes] using data
+  /// from [_tempRecipe]
   Future<void> saveRecipe() async {
+    /// Updating [_tempRecipe] with current values to be saved to [_recipe]
     _tempRecipe.title =
         recipeIdentifiersFormKey.currentState!.fields["recipeTitle"]!.value;
     _tempRecipe.description = recipeIdentifiersFormKey
@@ -221,23 +223,19 @@ class RecipesProvider extends ChangeNotifier {
     _tempRecipe.pushPressure = describeEnum(tempPushPressure);
     _tempRecipe.brewMethod = describeEnum(tempBrewMethod);
 
-    if (_recipes.isEmpty) {
-      //TODO: figure out why initializing SplayTreeMap()
-      log(_recipeSettings[tempRecipe.id!].toString());
-      _recipeSettings[tempRecipe.id!] = SplayTreeMap();
-      _notes[tempRecipe.id!] = SplayTreeMap();
+    /// Adding [_tempRecipe] to [_recipes] or editing existing recipe with data
+    /// from [_tempRecipe]
+    int index = _recipes.indexWhere((recipe) => recipe.id == tempRecipe.id);
+    if (_recipes.isEmpty || index == -1) {
       _recipes.add(tempRecipe);
       await RecipesDatabase.instance.create(tempRecipe);
     } else {
-      int index = _recipes.indexWhere((recipe) => recipe.id == tempRecipe.id);
-      if (index == -1) {
-        _recipes.add(tempRecipe);
-        await RecipesDatabase.instance.create(tempRecipe);
-      } else {
-        _recipes[index] = tempRecipe;
-        await RecipesDatabase.instance.update(tempRecipe);
-      }
+      _recipes[index] = tempRecipe;
+      await RecipesDatabase.instance.update(tempRecipe);
     }
+
+    /// Saving recipe settings and notes if changes were made to them while
+    /// editing recipe
     if (areSettingsChanged(tempRecipe.id!)) {
       saveEditedRecipeSettings(tempRecipe.id!);
     }
