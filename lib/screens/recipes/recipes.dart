@@ -44,15 +44,15 @@ class _RecipesState extends State<Recipes> {
           title: const AppBarText(text: "RECIPES"),
           actions: [
             AppBarButton(
-              onTap: () {
+              onTap: () async {
                 Provider.of<RecipesProvider>(context, listen: false)
                     .tempAddRecipe()
                     .then(
-                      (recipe) => Navigator.push(
+                      (tempRecipe) => Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (_) => RecipeDetails(
-                            recipeData: recipe,
+                            recipeData: tempRecipe,
                             isAdding: true,
                           ),
                         ),

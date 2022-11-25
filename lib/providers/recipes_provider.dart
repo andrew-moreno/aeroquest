@@ -17,15 +17,38 @@ import 'package:aeroquest/models/recipe.dart';
 import '../models/recipe_settings.dart';
 
 class RecipesProvider extends ChangeNotifier {
+  /// Reflects recipe information from the recipes database
+  ///
+  /// Recipe objects must be updated in this list at the same time as they're
+  /// updated in the database to reflect changes properly
   late List<Recipe> _recipes;
+
+  /// Holds a temporary recipe object
+  ///
+  /// Used when adding a new recipe or editing a recipe before committing
+  /// the changes to [_recipes] and the database
   late Recipe _tempRecipe;
+
+  /// Returns an unmodifiable version of [_recipes]
+  UnmodifiableListView<Recipe> get recipes {
+    return UnmodifiableListView(_recipes);
+  }
+
+  /// Returns an unmodifiable version of [_tempRecipe]
+  Recipe get tempRecipe {
+    return _tempRecipe;
+  }
+
   late SplayTreeMap<int, SplayTreeMap<int, RecipeSettings>> _recipeSettings;
   late SplayTreeMap<int, RecipeSettings> _tempRecipeSettings;
   late SplayTreeMap<int, SplayTreeMap<int, Note>> _notes;
   late SplayTreeMap<int, Note> _tempNotes;
 
-  /// Holds up to date information on the coffee beans in the coffee beans
-  /// database mapped by id
+  /// Reflects coffee bean information from the coffee bean database mapped by
+  /// id
+  ///
+  /// Coffee bean objects must be updated in this map at the same time as
+  /// they're updated in the database to reflect changes properly
   ///
   /// Required for:
   /// - updating the AssociatedSettingsCount property of coffee
@@ -74,14 +97,6 @@ class RecipesProvider extends ChangeNotifier {
   int? tempNoteTime;
   String? tempNoteText;
 
-  UnmodifiableListView<Recipe> get recipes {
-    return UnmodifiableListView(_recipes);
-  }
-
-  Recipe get tempRecipe {
-    return _tempRecipe;
-  }
-
   UnmodifiableMapView<int, Map<int, RecipeSettings>> get recipeSettings {
     return UnmodifiableMapView(_recipeSettings);
   }
@@ -108,6 +123,7 @@ class RecipesProvider extends ChangeNotifier {
     _coffeeBeans = await CoffeeBeansDatabase.instance.readAllCoffeeBeans();
   }
 
+  /// Change edit mode to the opposite value
   void changeEditMode() {
     if (editMode == EditMode.disabled) {
       editMode = EditMode.enabled;
@@ -117,6 +133,10 @@ class RecipesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Used to prepare temp properties for when a new recipe is being added and
+  /// updates the edit mode to its editing state
+  ///
+  /// Returns [tempRecipe]
   Future<Recipe> tempAddRecipe() async {
     await setTempRecipe(null);
     setTempRecipeSettings(null);
@@ -125,7 +145,18 @@ class RecipesProvider extends ChangeNotifier {
     return tempRecipe;
   }
 
+  /// Sets [_tempRecipe] to a Recipe object
+  /// - If [recipeEntryId] is null: adding new recipe. Sets a new Recipe object
+  ///   to [_tempRecipe] with default/empty values.
+  /// - If [recipeEntryId] is passed a value: editing existing recipe. Sets
+  ///   [_tempRecipe] to the Recipe object that is currently being edited
+  ///
+  /// Sets [tempPushPressure] and [tempBrewMethod] to the values initialized
+  /// in [_tempRecipe]
+  ///
+  /// Throws an exception if [recipeEntryId] does not exist in [_recipes]
   Future<void> setTempRecipe(int? recipeEntryId) async {
+    // Adding new recipe
     if (recipeEntryId == null) {
       int id = await RecipesDatabase.instance.getUnusedId();
       _tempRecipe = Recipe(
@@ -134,61 +165,84 @@ class RecipesProvider extends ChangeNotifier {
           description: "",
           pushPressure: "light",
           brewMethod: "regular");
-    } else if (_recipes.any((recipe) => recipe.id == recipeEntryId)) {
-      _tempRecipe = _recipes.firstWhere((recipe) => recipe.id == recipeEntryId);
     }
-    // setting temp recipe not required when recipe doesn't exist
-    // for case where exiting recipe details page
+    // Editing existing recipe
+    else if (_recipes.any((recipe) => recipe.id == recipeEntryId)) {
+      _tempRecipe = _recipes.firstWhere((recipe) => recipe.id == recipeEntryId);
+    } else {
+      throw Exception(
+          "recipeEntryId of $recipeEntryId does not exist in _recipes");
+    }
+
+    /// Setting temp recipe not required when recipe doesn't exist. For case
+    /// where exiting recipe details page
+    /// TODO: WHAT DOES THIS MEAN????
     tempPushPressure = Recipe.stringToPushPressure(_tempRecipe.pushPressure);
     tempBrewMethod = Recipe.stringToBrewMethod(_tempRecipe.brewMethod);
   }
 
-  void deleteRecipe(int recipeId) async {
-    recipeSettings[recipeId]?.forEach((recipeSettingId, value) async {
+  /// Deletes a recipe of [recipeEntryId] and its associated data
+  /// - recipe of [recipeEntryId] removed from [_recipes]
+  /// - all recipe settings associated with this recipe are deleted
+  /// - all notes associated with this recipe are deleted
+  /// - coffee beans associated with this recipe have their
+  ///   associatedSettingsCount decreased by one
+  ///
+  /// Throws an exception if [recipeEntryId] does not exist in [_recipes]
+  Future<void> deleteRecipe(int recipeEntryId) async {
+    if (!_recipes.any((recipe) => recipe.id == recipeEntryId)) {
+      throw Exception(
+          "recipeEntryId of $recipeEntryId does not exist in _recipes");
+    }
+
+    /// Decrementing all associatedSettingsCounts for associated coffee beans
+    recipeSettings[recipeEntryId]?.forEach((recipeSettingId, value) async {
       editAssociatedSettingsCount(
-        recipeSettings[recipeId]![recipeSettingId]!.beanId,
+        recipeSettings[recipeEntryId]![recipeSettingId]!.beanId,
         AssociatedSettingsCountEditType.decrement,
       );
     });
-    _recipes.removeWhere((recipe) => recipe.id == recipeId);
-    _recipeSettings.remove(recipeId);
-    _notes.remove(recipeId);
-    await RecipesDatabase.instance.delete(recipeId);
-    await RecipeSettingsDatabase.instance.deleteAllSettingsForRecipe(recipeId);
-    await NotesDatabase.instance.deleteAllNotesForRecipe(recipeId);
+    _recipes.removeWhere((recipe) => recipe.id == recipeEntryId);
+    _recipeSettings.remove(recipeEntryId);
+    _notes.remove(recipeEntryId);
+    await RecipesDatabase.instance.delete(recipeEntryId);
+    await RecipeSettingsDatabase.instance
+        .deleteAllSettingsForRecipe(recipeEntryId);
+    await NotesDatabase.instance.deleteAllNotesForRecipe(recipeEntryId);
     notifyListeners();
   }
 
+  ///
   Future<void> saveRecipe() async {
-    Recipe newRecipe = _tempRecipe.copy(
-      title:
-          recipeIdentifiersFormKey.currentState!.fields["recipeTitle"]!.value,
-      description: recipeIdentifiersFormKey
-          .currentState!.fields["recipeDescription"]?.value,
-      pushPressure: describeEnum(tempPushPressure),
-      brewMethod: describeEnum(tempBrewMethod),
-    );
+    _tempRecipe.title =
+        recipeIdentifiersFormKey.currentState!.fields["recipeTitle"]!.value;
+    _tempRecipe.description = recipeIdentifiersFormKey
+        .currentState!.fields["recipeDescription"]?.value;
+    _tempRecipe.pushPressure = describeEnum(tempPushPressure);
+    _tempRecipe.brewMethod = describeEnum(tempBrewMethod);
+
     if (_recipes.isEmpty) {
-      _recipes = [];
-      _recipeSettings[newRecipe.id!] = SplayTreeMap();
-      _notes[newRecipe.id!] = SplayTreeMap();
-      _recipes.add(newRecipe);
-      await RecipesDatabase.instance.create(newRecipe);
+      //TODO: figure out why initializing SplayTreeMap()
+      log(_recipeSettings[tempRecipe.id!].toString());
+      _recipeSettings[tempRecipe.id!] = SplayTreeMap();
+      _notes[tempRecipe.id!] = SplayTreeMap();
+      _recipes.add(tempRecipe);
+      await RecipesDatabase.instance.create(tempRecipe);
     } else {
-      int index = _recipes.indexWhere((recipe) => recipe.id == newRecipe.id);
+      int index = _recipes.indexWhere((recipe) => recipe.id == tempRecipe.id);
       if (index == -1) {
-        _recipes.add(newRecipe);
-        await RecipesDatabase.instance.create(newRecipe);
+        _recipes.add(tempRecipe);
+        await RecipesDatabase.instance.create(tempRecipe);
       } else {
-        _recipes[index] = newRecipe;
-        await RecipesDatabase.instance.update(newRecipe);
+        _recipes[index] = tempRecipe;
+        await RecipesDatabase.instance.update(tempRecipe);
       }
     }
-    if (areSettingsChanged(newRecipe.id!)) {
-      saveEditedRecipeSettings(newRecipe.id!);
+    if (areSettingsChanged(tempRecipe.id!)) {
+      saveEditedRecipeSettings(tempRecipe.id!);
     }
-    if (areNotesChanged(newRecipe.id!)) {
-      saveEditedNotes(newRecipe.id!);
+    if (areNotesChanged(tempRecipe.id!)) {
+      saveEditedNotes(tempRecipe.id!);
     }
     notifyListeners();
   }
