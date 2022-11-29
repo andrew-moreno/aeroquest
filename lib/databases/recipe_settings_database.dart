@@ -76,7 +76,7 @@ class RecipeSettingsDatabase {
     }
   }
 
-  /// Returns a list of all recipes associated with a single recipe id
+  /// Returns a list of all recipe settings associated with a single recipe id
   Future<List<RecipeSettings>> readAllRecipeSettingsForRecipe(
       int recipeEntryId) async {
     final db = await instance.database;
