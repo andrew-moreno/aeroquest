@@ -204,19 +204,12 @@ class _RecipeDetailsState extends State<RecipeDetails> {
                       [
                         const SizedBox(height: 5),
                         RecipeDetailsHeader(
-                          titleValue: _recipesProvider.recipes
-                              .firstWhere(
-                                (recipe) => recipe.id == widget.recipeData.id,
-                                orElse: () => widget.recipeData,
-                              )
-                              .title,
-                          descriptionValue: _recipesProvider.recipes
-                                  .firstWhere(
-                                    (recipe) =>
-                                        recipe.id == widget.recipeData.id,
-                                    orElse: () => widget.recipeData,
-                                  )
-                                  .description ??
+                          titleValue: _recipesProvider
+                                  .recipes[widget.recipeData.id]?.title ??
+                              widget.recipeData.title,
+                          descriptionValue: _recipesProvider
+                                  .recipes[widget.recipeData.id]?.description ??
+                              widget.recipeData.description ??
                               "",
                         ),
                         const SizedBox(height: 20),

@@ -42,8 +42,7 @@ class _RecipeMethodState extends State<RecipeMethod> {
     if (_recipesProvider.editMode == EditMode.enabled) {
       return _recipesProvider.tempRecipe;
     } else {
-      return _recipesProvider.recipes[_recipesProvider.recipes
-          .indexWhere((recipe) => recipe.id == widget.recipeEntryId)];
+      return _recipesProvider.recipes[widget.recipeEntryId]!;
     }
   }
 

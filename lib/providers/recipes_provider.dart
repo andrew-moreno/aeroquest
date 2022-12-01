@@ -17,11 +17,12 @@ import 'package:aeroquest/models/recipe.dart';
 import '../models/recipe_settings.dart';
 
 class RecipesProvider extends ChangeNotifier {
-  /// Reflects recipe information from the recipes database
+  /// Reflects recipe information from the recipes database, mapped by recipe
+  /// id
   ///
   /// Recipe objects must be updated in this list at the same time as they're
   /// updated in the database to reflect changes properly
-  late List<Recipe> _recipes;
+  late Map<int, Recipe> _recipes;
 
   /// Holds a temporary recipe object
   ///
@@ -29,8 +30,8 @@ class RecipesProvider extends ChangeNotifier {
   late Recipe _tempRecipe;
 
   /// Returns an unmodifiable version of [_recipes]
-  UnmodifiableListView<Recipe> get recipes {
-    return UnmodifiableListView(_recipes);
+  UnmodifiableMapView<int, Recipe> get recipes {
+    return UnmodifiableMapView(_recipes);
   }
 
   /// Returns an unmodifiable version of [_tempRecipe]
@@ -39,6 +40,8 @@ class RecipesProvider extends ChangeNotifier {
   }
 
   /// Reflects recipe settings information from the recipe settings database
+  ///
+  /// Mapped by their associated recipe id first, then the recipe settings id
   ///
   /// RecipeSettings objects must be updated in this map at the same time
   /// as they're updated in the database to reflect changes properly
@@ -173,8 +176,8 @@ class RecipesProvider extends ChangeNotifier {
           brewMethod: "regular");
     }
     // Editing existing recipe
-    else if (_recipes.any((recipe) => recipe.id == recipeEntryId)) {
-      _tempRecipe = _recipes.firstWhere((recipe) => recipe.id == recipeEntryId);
+    else if (_recipes.containsKey(recipeEntryId)) {
+      _tempRecipe = _recipes[recipeEntryId]!;
     }
 
     /// Setting temp recipe not required when recipe doesn't exist. For case
@@ -197,7 +200,7 @@ class RecipesProvider extends ChangeNotifier {
   ///
   /// Throws an exception if [recipeEntryId] does not exist in [_recipes]
   Future<void> deleteRecipe(int recipeEntryId) async {
-    if (!_recipes.any((recipe) => recipe.id == recipeEntryId)) {
+    if (!_recipes.containsKey(recipeEntryId)) {
       throw Exception(
           "recipeEntryId of $recipeEntryId does not exist in _recipes");
     }
@@ -209,7 +212,7 @@ class RecipesProvider extends ChangeNotifier {
         AssociatedSettingsCountEditType.decrement,
       );
     });
-    _recipes.removeWhere((recipe) => recipe.id == recipeEntryId);
+    _recipes.remove(recipeEntryId);
     _recipeSettings.remove(recipeEntryId);
     _notes.remove(recipeEntryId);
     await RecipesDatabase.instance.delete(recipeEntryId);
@@ -232,12 +235,11 @@ class RecipesProvider extends ChangeNotifier {
 
     /// Adding [_tempRecipe] to [_recipes] or editing existing recipe with data
     /// from [_tempRecipe]
-    int index = _recipes.indexWhere((recipe) => recipe.id == tempRecipe.id);
-    if (_recipes.isEmpty || index == -1) {
-      _recipes.add(tempRecipe);
+    if (_recipes.isEmpty || !_recipes.containsKey(tempRecipe.id)) {
+      _recipes.addAll({tempRecipe.id!: tempRecipe});
       await RecipesDatabase.instance.create(tempRecipe);
     } else {
-      _recipes[index] = tempRecipe;
+      _recipes[tempRecipe.id!] = tempRecipe;
       await RecipesDatabase.instance.update(tempRecipe);
     }
 

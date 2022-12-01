@@ -82,12 +82,19 @@ class RecipesDatabase {
   }
 
   /// Returns all recipes in the database
-  Future<List<Recipe>> readAllRecipes() async {
+  ///
+  /// Recipes are mapped using their id as the key
+  Future<Map<int, Recipe>> readAllRecipes() async {
     final db = await instance.database;
 
     final result = await db.query(tableRecipes);
+    final recipesList = result.map((json) => Recipe.fromJson(json)).toList();
 
-    return result.map((json) => Recipe.fromJson(json)).toList();
+    final recipesMap = <int, Recipe>{};
+    for (var recipe in recipesList) {
+      recipesMap.addAll({recipe.id!: recipe});
+    }
+    return recipesMap;
   }
 
   /// Updates the recipe in the database that matches the [recipe] id
