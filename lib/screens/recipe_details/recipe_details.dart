@@ -34,21 +34,8 @@ class RecipeDetails extends StatefulWidget {
 class _RecipeDetailsState extends State<RecipeDetails> {
   final ScrollController _scrollController = ScrollController();
 
-  /// uesd for calling [clearTempNotesAndRecipeSettings()] in the dispose
-  /// method
-  late RecipesProvider _recipesProvider;
-
-  @override
-  void initState() {
-    _recipesProvider = Provider.of<RecipesProvider>(context, listen: false);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _recipesProvider.clearTempNotesAndRecipeSettings();
-    super.dispose();
-  }
+  late final RecipesProvider _recipesProvider =
+      Provider.of<RecipesProvider>(context, listen: false);
 
   /// Displays a dialog box used to confirm leaving the details page when
   /// changes have been made to the recipe without saving
@@ -62,16 +49,16 @@ class _RecipeDetailsState extends State<RecipeDetails> {
         titleText: "Discard changes?",
         leftAction: () => Navigator.of(context).pop(false),
         rightAction: () {
-          Provider.of<RecipesProvider>(context, listen: false).changeEditMode();
-          Provider.of<RecipesProvider>(context, listen: false)
-              .setTempRecipe(widget.recipeData.id!);
-          Provider.of<RecipesProvider>(context, listen: false)
-              .setTempRecipeSettings(widget.recipeData.id!);
-          Provider.of<RecipesProvider>(context, listen: false)
-              .setTempNotes(widget.recipeData.id!);
+          /// Popping dialog box
           Navigator.of(context).pop(true);
+
+          /// Popping back to Recipes page
           if (!isOsBackPressed || widget.isAdding) {
             Navigator.of(context).pop(true);
+          } else {
+            _recipesProvider.setEditMode(EditMode.disabled);
+            _recipesProvider.clearTempNotesAndRecipeSettings();
+            setState(() {});
           }
         },
       ),
@@ -79,26 +66,18 @@ class _RecipeDetailsState extends State<RecipeDetails> {
   }
 
   /// Displays a dialog box used to confirm deletion of this recipe
-  ///
-  ///
   Future<void> _showConfirmDeletePopup() async {
     return await showDialog(
       context: context,
       builder: (context) => CustomDialog(
         titleText: "Confirm delete",
         leftAction: () => Navigator.of(context).pop(false),
-        rightAction: () {
-          Provider.of<RecipesProvider>(context, listen: false)
-              .deleteRecipe(widget.recipeData.id!);
-
+        rightAction: () async {
           /// Close dialog, then go back to recipes page
-          Navigator.of(context).pop(false);
-          Navigator.of(context).pop(false);
-          if (Provider.of<RecipesProvider>(context, listen: false).editMode ==
-              EditMode.enabled) {
-            Provider.of<RecipesProvider>(context, listen: false)
-                .changeEditMode();
-          }
+          Navigator.of(context)
+            ..pop(false)
+            ..pop(false);
+          await _recipesProvider.deleteRecipe(widget.recipeData.id!);
         },
         leftButtonText: "Cancel",
         rightButtonText: "Delete",
@@ -109,7 +88,7 @@ class _RecipeDetailsState extends State<RecipeDetails> {
   /// Checks if this recipe has changed by comparing to the initial data
   /// passed to this widget
   bool _isRecipeChanged() {
-    return Provider.of<RecipesProvider>(context, listen: false).isRecipeChanged(
+    return _recipesProvider.isRecipeChanged(
       originalTitle: widget.recipeData.title,
       originalDescription: widget.recipeData.description,
       originalPushPressure:
@@ -125,21 +104,16 @@ class _RecipeDetailsState extends State<RecipeDetails> {
   /// Implementation is very similar to [_exitDetailsPage()]. Changes made here
   /// should be reflected in that function
   Future<bool> _onWillPop() async {
-    if (Provider.of<RecipesProvider>(context, listen: false).editMode ==
-        EditMode.enabled) {
+    if (_recipesProvider.editMode == EditMode.enabled) {
       if (_isRecipeChanged()) {
         _showDiscardChangesPopup(true);
       } else {
-        Provider.of<RecipesProvider>(context, listen: false).changeEditMode();
-
         if (widget.isAdding) {
           return Future.value(true);
         }
         return Future.value(false);
       }
     }
-    Provider.of<RecipesProvider>(context, listen: false)
-        .clearTempNotesAndRecipeSettings();
     return Future.value(true);
   }
 
@@ -148,41 +122,39 @@ class _RecipeDetailsState extends State<RecipeDetails> {
   /// Implementation is very similar to [_onWillPop()]. Changes made here
   /// should be reflected in that function
   void _exitDetailsPage() {
-    if (Provider.of<RecipesProvider>(context, listen: false).editMode ==
-        EditMode.enabled) {
-      if (_isRecipeChanged()) {
-        _showDiscardChangesPopup(false);
-      } else {
-        Provider.of<RecipesProvider>(context, listen: false).changeEditMode();
-        Provider.of<RecipesProvider>(context, listen: false)
-            .clearTempNotesAndRecipeSettings();
-        Navigator.of(context).pop();
-      }
+    if (_recipesProvider.editMode == EditMode.enabled && _isRecipeChanged()) {
+      _showDiscardChangesPopup(false);
     } else {
-      Provider.of<RecipesProvider>(context, listen: false)
-          .clearTempNotesAndRecipeSettings();
       Navigator.of(context).pop();
     }
   }
 
+  /// Function to be executed when pressing the edit button
+  void _editRecipe() {
+    _recipesProvider.setTempRecipe(widget.recipeData.id!);
+
+    _recipesProvider.setEditMode(EditMode.enabled);
+    setState(() {});
+  }
+
   /// Function to be executed when pressing the save button
-  void _saveRecipe() {
-    // exiting edit mode
+  ///
+  /// Assums that the edit mode is enabled
+  Future<void> _saveRecipe() async {
     // checks if any changes made before showing popup
-    if (!Provider.of<RecipesProvider>(context, listen: false)
-        .recipeIdentifiersFormKey
-        .currentState!
-        .validate()) {
+    if (!_recipesProvider.recipeIdentifiersFormKey.currentState!.validate()) {
       return;
     }
-    if (Provider.of<RecipesProvider>(context, listen: false).editMode ==
-        EditMode.enabled) {
-      Provider.of<RecipesProvider>(context, listen: false).saveRecipe();
-      Provider.of<RecipesProvider>(context, listen: false).changeEditMode();
-    } else {
-      // entering edit mode
-      Provider.of<RecipesProvider>(context, listen: false).changeEditMode();
-    }
+    await _recipesProvider.saveRecipe();
+    _recipesProvider.setEditMode(EditMode.disabled);
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _recipesProvider.setEditMode(EditMode.disabled);
+    _recipesProvider.clearTempNotesAndRecipeSettings();
+    super.dispose();
   }
 
   @override
@@ -206,16 +178,23 @@ class _RecipeDetailsState extends State<RecipeDetails> {
                     ),
                     actions: [
                       AppBarButton(
-                        onTap: () => _saveRecipe(),
-                        icon: (Provider.of<RecipesProvider>(context).editMode ==
-                                EditMode.enabled)
+                        onTap: () async {
+                          if (_recipesProvider.editMode == EditMode.enabled) {
+                            await _saveRecipe();
+                          } else {
+                            _editRecipe();
+                          }
+                        },
+                        icon: (_recipesProvider.editMode == EditMode.enabled)
                             ? Icons.check
                             : Icons.edit,
+                        hasDynamicColour: true,
                       ),
                       (!widget.isAdding)
                           ? AppBarButton(
-                              onTap: () => _showConfirmDeletePopup(),
+                              onTap: _showConfirmDeletePopup,
                               icon: Icons.delete,
+                              hasDynamicColour: true,
                             )
                           : Container(),
                     ],
@@ -224,26 +203,21 @@ class _RecipeDetailsState extends State<RecipeDetails> {
                     delegate: SliverChildListDelegate(
                       [
                         const SizedBox(height: 5),
-                        Consumer<RecipesProvider>(
-                          builder: (_, recipesProvider, ___) {
-                            return RecipeDetailsHeader(
-                              titleValue: recipesProvider.recipes
+                        RecipeDetailsHeader(
+                          titleValue: _recipesProvider.recipes
+                              .firstWhere(
+                                (recipe) => recipe.id == widget.recipeData.id,
+                                orElse: () => widget.recipeData,
+                              )
+                              .title,
+                          descriptionValue: _recipesProvider.recipes
                                   .firstWhere(
                                     (recipe) =>
                                         recipe.id == widget.recipeData.id,
                                     orElse: () => widget.recipeData,
                                   )
-                                  .title,
-                              descriptionValue: recipesProvider.recipes
-                                      .firstWhere(
-                                        (recipe) =>
-                                            recipe.id == widget.recipeData.id,
-                                        orElse: () => widget.recipeData,
-                                      )
-                                      .description ??
-                                  "",
-                            );
-                          },
+                                  .description ??
+                              "",
                         ),
                         const SizedBox(height: 20),
                         RecipeDetailsBody(

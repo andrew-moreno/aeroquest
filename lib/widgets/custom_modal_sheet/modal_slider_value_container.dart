@@ -20,6 +20,9 @@ class ModalSliderValueContainer extends StatefulWidget {
       _ModalSliderValueContainerState();
 }
 
+/// TODO: values shouldn't be listening unless they are being edited
+/// Maybe make [listen] parameter a variable that is true when parameter type
+/// is matching
 class _ModalSliderValueContainerState extends State<ModalSliderValueContainer> {
   /// Used for setting the appropriate setting value to the widget
   ///

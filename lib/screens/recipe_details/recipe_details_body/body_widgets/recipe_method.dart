@@ -1,6 +1,5 @@
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/recipe_details_body.dart';
-import 'package:aeroquest/widgets/add_to_recipe_button.dart';
 import 'package:aeroquest/widgets/animated_toggle.dart';
 import 'package:aeroquest/widgets/custom_modal_sheet/value_slider_group_template.dart';
 import 'package:flutter/foundation.dart';
@@ -28,6 +27,26 @@ class RecipeMethod extends StatefulWidget {
 class _RecipeMethodState extends State<RecipeMethod> {
   /// Padding to use between method elements
   static const double _methodPadding = 15;
+
+  late Recipe _recipeData;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _recipeData = _selectRecipeData();
+  }
+
+  late final RecipesProvider _recipesProvider =
+      Provider.of<RecipesProvider>(context, listen: false);
+
+  Recipe _selectRecipeData() {
+    if (_recipesProvider.editMode == EditMode.enabled) {
+      return _recipesProvider.tempRecipe;
+    } else {
+      return _recipesProvider.recipes[_recipesProvider.recipes
+          .indexWhere((recipe) => recipe.id == widget.recipeEntryId)];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -41,55 +60,53 @@ class _RecipeMethodState extends State<RecipeMethod> {
                 children: [
                   RecipeMethodParameters(
                     methodParameter: "Push Pressure",
-                    methodParameterValue:
-                        describeEnum(recipesProvider.tempPushPressure),
+                    methodParameterValue: _recipeData.pushPressure,
                   ),
                   const SizedBox(
                     width: 10,
                   ),
                   RecipeMethodParameters(
                     methodParameter: "Brew Method",
-                    methodParameterValue:
-                        describeEnum(recipesProvider.tempBrewMethod),
+                    methodParameterValue: _recipeData.brewMethod,
                   ),
                 ],
               ),
               const SizedBox(height: _methodPadding),
-              ListView.separated(
-                physics: const BouncingScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: recipesProvider.tempNotes.length,
-                itemBuilder: (BuildContext context, int index) {
-                  int key = recipesProvider.tempNotes.keys.elementAt(index);
-                  return RecipeMethodNotes(
-                      note: recipesProvider.tempNotes[key]!);
-                },
-                separatorBuilder: (context, index) {
-                  return const SizedBox(height: _methodPadding);
-                },
-              ),
-              const SizedBox(height: 20),
-              (recipesProvider.editMode == EditMode.enabled)
-                  ? AddToRecipeButton(
-                      onTap: () {
-                        showCustomModalSheet(
-                            modalType: ModalType.notes,
-                            submitAction: () {
-                              if (!Provider.of<RecipesProvider>(context,
-                                      listen: false)
-                                  .recipeNotesFormKey
-                                  .currentState!
-                                  .validate()) {
-                                return;
-                              }
-                              recipesProvider.tempAddNote(widget
-                                  .recipeEntryId); // index doesn't matter for recipe entry id
-                              Navigator.of(context).pop();
-                            },
-                            context: _);
-                      },
-                      buttonText: "Add Note")
-                  : Container(),
+              // ListView.separated(
+              //   physics: const BouncingScrollPhysics(),
+              //   shrinkWrap: true,
+              //   itemCount: recipesProvider.tempNotes.length,
+              //   itemBuilder: (BuildContext context, int index) {
+              //     int key = recipesProvider.tempNotes.keys.elementAt(index);
+              //     return RecipeMethodNotes(
+              //         note: recipesProvider.tempNotes[key]!);
+              //   },
+              //   separatorBuilder: (context, index) {
+              //     return const SizedBox(height: _methodPadding);
+              //   },
+              // ),
+              // const SizedBox(height: 20),
+              // (recipesProvider.editMode == EditMode.enabled)
+              //     ? AddToRecipeButton(
+              //         onTap: () {
+              //           showCustomModalSheet(
+              //               modalType: ModalType.notes,
+              //               submitAction: () {
+              //                 if (!Provider.of<RecipesProvider>(context,
+              //                         listen: false)
+              //                     .recipeNotesFormKey
+              //                     .currentState!
+              //                     .validate()) {
+              //                   return;
+              //                 }
+              //                 recipesProvider.tempAddNote(widget
+              //                     .recipeEntryId); // index doesn't matter for recipe entry id
+              //                 Navigator.of(context).pop();
+              //               },
+              //               context: _);
+              //         },
+              //         buttonText: "Add Note")
+              //     : Container(),
             ],
           );
         },
@@ -150,15 +167,14 @@ class RecipeMethodParameters extends StatelessWidget {
               : Provider.of<RecipesProvider>(context, listen: false)
                   .tempBrewMethod = BrewMethod.inverted;
         },
-        initialPosition: (Provider.of<RecipesProvider>(context, listen: false)
-                    .tempBrewMethod ==
-                BrewMethod.regular)
-            ? Position.first
-            : Position.last,
+        initialPosition:
+            (methodParameterValue == describeEnum(BrewMethod.regular))
+                ? Position.first
+                : Position.last,
         toggleType: ToggleType.vertical,
       );
     } else if (methodParameterValue == describeEnum(PushPressure.light) ||
-        methodParameter == describeEnum(PushPressure.heavy)) {
+        methodParameterValue == describeEnum(PushPressure.heavy)) {
       return AnimatedToggle(
         values: _pushPressureToggleValues,
         onToggleCallback: (index) {
@@ -168,11 +184,10 @@ class RecipeMethodParameters extends StatelessWidget {
               : Provider.of<RecipesProvider>(context, listen: false)
                   .tempPushPressure = PushPressure.heavy;
         },
-        initialPosition: (Provider.of<RecipesProvider>(context, listen: false)
-                    .tempPushPressure ==
-                PushPressure.light)
-            ? Position.first
-            : Position.last,
+        initialPosition:
+            (methodParameterValue == describeEnum(PushPressure.light))
+                ? Position.first
+                : Position.last,
         toggleType: ToggleType.vertical,
       );
     } else {

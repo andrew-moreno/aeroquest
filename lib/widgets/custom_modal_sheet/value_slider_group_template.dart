@@ -39,6 +39,7 @@ class ValueSliderGroupTemplate extends StatelessWidget {
     }
   }
 
+  /// TODO: change consumer to selector for [activeSlider]
   @override
   Widget build(BuildContext context) {
     List<ParameterType> parameterType = _parameterTypeListSelector();

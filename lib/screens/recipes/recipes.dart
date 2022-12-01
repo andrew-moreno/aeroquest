@@ -46,6 +46,8 @@ class _RecipesState extends State<Recipes> {
             AppBarButton(
               onTap: () async {
                 Provider.of<RecipesProvider>(context, listen: false)
+                    .setEditMode(EditMode.enabled);
+                Provider.of<RecipesProvider>(context, listen: false)
                     .tempAddRecipe()
                     .then(
                       (tempRecipe) => Navigator.push(

@@ -27,12 +27,8 @@ class RecipeCard extends StatelessWidget {
             {};
     return GestureDetector(
       onTap: () {
-        Provider.of<RecipesProvider>(context, listen: false)
-            .setTempRecipeSettings(recipeData.id!);
-        Provider.of<RecipesProvider>(context, listen: false)
-            .setTempNotes(recipeData.id!);
-        Provider.of<RecipesProvider>(context, listen: false)
-            .setTempRecipe(recipeData.id!);
+        // Provider.of<RecipesProvider>(context, listen: false)
+        //     .setTempRecipe(recipeData.id!);
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -63,10 +59,7 @@ class RecipeCard extends StatelessWidget {
               visible: recipeSettings.isNotEmpty,
               child: Column(
                 children: [
-                  const Divider(
-                    color: Color(0x00000000),
-                    height: 10,
-                  ),
+                  const SizedBox(height: 10),
                   (recipeSettings.values.any((recipeSetting) =>
                           RecipeSettings.stringToSettingVisibility(
                               recipeSetting.visibility) ==

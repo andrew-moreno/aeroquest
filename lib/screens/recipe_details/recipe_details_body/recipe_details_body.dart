@@ -9,7 +9,7 @@ import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widget
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/recipe_method.dart';
 
-class RecipeDetailsBody extends StatefulWidget {
+class RecipeDetailsBody extends StatelessWidget {
   /// Defines the widget that contains all information about a recipe
   /// excluding its title and description
   const RecipeDetailsBody({
@@ -20,11 +20,6 @@ class RecipeDetailsBody extends StatefulWidget {
   /// The recipe that is associated with this details page
   final int recipeId;
 
-  @override
-  State<RecipeDetailsBody> createState() => _RecipeDetailsBodyState();
-}
-
-class _RecipeDetailsBodyState extends State<RecipeDetailsBody> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -44,7 +39,7 @@ class _RecipeDetailsBodyState extends State<RecipeDetailsBody> {
           ),
           const SizedBox(height: 15),
           BeanSettingsGroup(
-            recipeEntryId: widget.recipeId,
+            recipeEntryId: recipeId,
           ),
           const SizedBox(height: 30),
           Text(
@@ -54,7 +49,7 @@ class _RecipeDetailsBodyState extends State<RecipeDetailsBody> {
           ),
           const SizedBox(height: 15),
           RecipeMethod(
-            recipeEntryId: widget.recipeId,
+            recipeEntryId: recipeId,
           ),
         ],
       ),
