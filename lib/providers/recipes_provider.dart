@@ -435,9 +435,9 @@ class RecipesProvider extends ChangeNotifier {
 
         int newId =
             await RecipeSettingsDatabase.instance.create(newCoffeeSettingsData);
+
         _tempRecipeSettings
-            .addAll({newId: _tempRecipeSettings[id]!.copy(id: newId)});
-        _tempRecipeSettings.remove(id);
+            .addAll({newId: _tempRecipeSettings.remove(id)!.copy(id: newId)});
       }
 
       /// Id exists in recipe settings but entry in [recipeSettings] is
