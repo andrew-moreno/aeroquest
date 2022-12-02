@@ -1,5 +1,6 @@
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
+import 'package:aeroquest/providers/settings_slider_provider.dart';
 import 'package:aeroquest/widgets/recipe_parameters_value.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,9 +21,6 @@ class ModalSliderValueContainer extends StatefulWidget {
       _ModalSliderValueContainerState();
 }
 
-/// TODO: values shouldn't be listening unless they are being edited
-/// Maybe make [listen] parameter a variable that is true when parameter type
-/// is matching
 class _ModalSliderValueContainerState extends State<ModalSliderValueContainer> {
   /// Used for setting the appropriate setting value to the widget
   ///
@@ -30,17 +28,17 @@ class _ModalSliderValueContainerState extends State<ModalSliderValueContainer> {
   num _settingValue(ParameterType parameterType) {
     switch (parameterType) {
       case ParameterType.grindSetting:
-        return Provider.of<RecipesProvider>(context).tempGrindSetting!;
+        return Provider.of<SettingsSliderProvider>(context).tempGrindSetting!;
       case ParameterType.coffeeAmount:
-        return Provider.of<RecipesProvider>(context).tempCoffeeAmount!;
+        return Provider.of<SettingsSliderProvider>(context).tempCoffeeAmount!;
       case ParameterType.waterAmount:
-        return Provider.of<RecipesProvider>(context).tempWaterAmount!;
+        return Provider.of<SettingsSliderProvider>(context).tempWaterAmount!;
       case ParameterType.waterTemp:
-        return Provider.of<RecipesProvider>(context).tempWaterTemp!;
+        return Provider.of<SettingsSliderProvider>(context).tempWaterTemp!;
       case ParameterType.brewTime:
-        return Provider.of<RecipesProvider>(context).tempBrewTime!;
+        return Provider.of<SettingsSliderProvider>(context).tempBrewTime!;
       case ParameterType.noteTime:
-        return Provider.of<RecipesProvider>(context).tempNoteTime!;
+        return Provider.of<SettingsSliderProvider>(context).tempNoteTime!;
       case ParameterType.none:
         throw Exception("SettingType.none passed incorrectly");
     }

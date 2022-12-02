@@ -1,9 +1,10 @@
+import 'package:aeroquest/providers/recipes_provider.dart';
+import 'package:aeroquest/providers/settings_slider_provider.dart';
 import 'package:aeroquest/widgets/custom_modal_sheet/value_slider_group_template.dart';
 import 'package:aeroquest/widgets/recipe_parameters_value.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/models/recipe_settings.dart';
 
 class SettingsValueSliderGroup extends StatefulWidget {
@@ -33,15 +34,15 @@ class _SettingsValueSliderGroupState extends State<SettingsValueSliderGroup> {
   @override
   void initState() {
     super.initState();
-    Provider.of<RecipesProvider>(context, listen: false).tempGrindSetting =
-        widget.recipeSettingsData?.grindSetting ?? 0;
-    Provider.of<RecipesProvider>(context, listen: false).tempCoffeeAmount =
-        widget.recipeSettingsData?.coffeeAmount ?? 0;
-    Provider.of<RecipesProvider>(context, listen: false).tempWaterAmount =
-        widget.recipeSettingsData?.waterAmount ?? 0;
-    Provider.of<RecipesProvider>(context, listen: false).tempWaterTemp =
+    Provider.of<SettingsSliderProvider>(context, listen: false)
+        .tempGrindSetting = widget.recipeSettingsData?.grindSetting ?? 0;
+    Provider.of<SettingsSliderProvider>(context, listen: false)
+        .tempCoffeeAmount = widget.recipeSettingsData?.coffeeAmount ?? 0;
+    Provider.of<SettingsSliderProvider>(context, listen: false)
+        .tempWaterAmount = widget.recipeSettingsData?.waterAmount ?? 0;
+    Provider.of<SettingsSliderProvider>(context, listen: false).tempWaterTemp =
         widget.recipeSettingsData?.waterTemp ?? 100;
-    Provider.of<RecipesProvider>(context, listen: false).tempBrewTime =
+    Provider.of<SettingsSliderProvider>(context, listen: false).tempBrewTime =
         widget.recipeSettingsData?.brewTime ?? 0;
     Provider.of<RecipesProvider>(context, listen: false).activeSlider =
         ParameterType.none;

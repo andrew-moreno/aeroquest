@@ -1,7 +1,6 @@
 import 'package:aeroquest/constraints.dart';
 import 'package:flutter/material.dart';
 
-// TODO: make build more optimized by extracting moving part
 class AnimatedToggle extends StatefulWidget {
   /// Defines the toggle widget for selecting between values stacked
   /// horizontally

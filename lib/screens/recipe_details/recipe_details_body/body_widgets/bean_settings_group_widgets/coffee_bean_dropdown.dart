@@ -1,5 +1,4 @@
 import 'package:aeroquest/constraints.dart';
-import 'package:aeroquest/models/coffee_bean.dart';
 import 'package:aeroquest/models/recipe_settings.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -24,6 +23,8 @@ class CoffeeBeanDropdown extends StatefulWidget {
 class _CoffeeBeanDropdownState extends State<CoffeeBeanDropdown> {
   /// Handles validate error text for the coffee bean dropdown menu
   bool showValidateErrorText = false;
+  late final RecipesProvider _recipesProvider =
+      Provider.of<RecipesProvider>(context, listen: false);
 
   @override
   Widget build(BuildContext context) {
@@ -31,84 +32,77 @@ class _CoffeeBeanDropdownState extends State<CoffeeBeanDropdown> {
       mainAxisSize: MainAxisSize.min,
       children: [
         DropdownButtonHideUnderline(
-          child: Selector<RecipesProvider, Map<int, CoffeeBean>>(
-            selector: (_, recipesProvider) => recipesProvider.coffeeBeans,
-            builder: (_, coffeeBeans, __) {
-              return FormBuilder(
-                key: Provider.of<RecipesProvider>(context, listen: false)
-                    .settingsBeanFormKey,
-                child: DropdownButtonFormField2(
-                  items: List.generate(
-                    coffeeBeans.length,
-                    (index) {
-                      int key = coffeeBeans.keys.elementAt(index);
-                      return DropdownMenuItem(
-                        child: Text(
-                          coffeeBeans[key]!.beanName,
-                          style: const TextStyle(
-                            color: kPrimary,
-                            fontSize: 16,
-                          ),
-                        ),
-                        value: coffeeBeans[key]!.beanName,
-                      );
-                    },
-                  ),
-                  value: (widget.recipeSettingsData != null)
-                      ? coffeeBeans[widget.recipeSettingsData!.beanId]!.beanName
-                      : null,
-                  onChanged: (String? value) {
-                    Provider.of<RecipesProvider>(context, listen: false)
-                            .tempBeanId =
-                        coffeeBeans.values
-                            .firstWhere(
-                                (coffeeBean) => coffeeBean.beanName == value)
-                            .id;
-                    setState(() {
-                      showValidateErrorText = false;
-                    });
-                  },
-                  hint: const Text(
-                    "Select coffee beans",
-                    style: TextStyle(
-                      color: kPrimary,
-                      fontFamily: "Poppins",
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
+          child: FormBuilder(
+            key: Provider.of<RecipesProvider>(context, listen: false)
+                .settingsBeanFormKey,
+            child: DropdownButtonFormField2(
+              items: List.generate(
+                _recipesProvider.coffeeBeans.length,
+                (index) {
+                  int key = _recipesProvider.coffeeBeans.keys.elementAt(index);
+                  return DropdownMenuItem(
+                    child: Text(
+                      _recipesProvider.coffeeBeans[key]!.beanName,
+                      style: const TextStyle(
+                        color: kPrimary,
+                        fontSize: 16,
+                      ),
                     ),
-                  ),
-                  buttonHeight: 45,
-                  isExpanded: true,
-                  buttonPadding: const EdgeInsets.symmetric(
-                      horizontal: kInputDecorationHorizontalPadding),
-                  decoration: const InputDecoration(
-                    errorStyle: TextStyle(height: 0),
-                    isDense: true,
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                  dropdownDecoration: const BoxDecoration(
-                    borderRadius:
-                        BorderRadius.all(Radius.circular(kCornerRadius)),
-                    color: kLightSecondary,
-                  ),
-                  buttonWidth: double.infinity,
-                  icon: const Icon(
-                    Icons.arrow_drop_down,
-                    color: kPrimary,
-                  ),
-                  validator: (value) {
-                    if (value == null) {
-                      setState(() {
-                        showValidateErrorText = true;
-                      });
-                      return "";
-                    }
-
-                    return null;
-                  },
+                    value: _recipesProvider.coffeeBeans[key]!.beanName,
+                  );
+                },
+              ),
+              value: (widget.recipeSettingsData != null)
+                  ? _recipesProvider
+                      .coffeeBeans[widget.recipeSettingsData!.beanId]!.beanName
+                  : null,
+              onChanged: (String? value) {
+                _recipesProvider.tempBeanId = _recipesProvider
+                    .coffeeBeans.values
+                    .firstWhere((coffeeBean) => coffeeBean.beanName == value)
+                    .id;
+                setState(() {
+                  showValidateErrorText = false;
+                });
+              },
+              hint: const Text(
+                "Select coffee beans",
+                style: TextStyle(
+                  color: kPrimary,
+                  fontFamily: "Poppins",
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
                 ),
-              );
-            },
+              ),
+              buttonHeight: 45,
+              isExpanded: true,
+              buttonPadding: const EdgeInsets.symmetric(
+                  horizontal: kInputDecorationHorizontalPadding),
+              decoration: const InputDecoration(
+                errorStyle: TextStyle(height: 0),
+                isDense: true,
+                contentPadding: EdgeInsets.zero,
+              ),
+              dropdownDecoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(kCornerRadius)),
+                color: kLightSecondary,
+              ),
+              buttonWidth: double.infinity,
+              icon: const Icon(
+                Icons.arrow_drop_down,
+                color: kPrimary,
+              ),
+              validator: (value) {
+                if (value == null) {
+                  setState(() {
+                    showValidateErrorText = true;
+                  });
+                  return "";
+                }
+
+                return null;
+              },
+            ),
           ),
         ),
         (showValidateErrorText)

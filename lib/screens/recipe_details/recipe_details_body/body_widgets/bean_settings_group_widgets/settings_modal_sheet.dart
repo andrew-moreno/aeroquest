@@ -1,3 +1,4 @@
+import 'package:aeroquest/providers/settings_slider_provider.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/bean_settings_group_widgets/coffee_bean_dropdown.dart';
 import 'package:aeroquest/widgets/animated_toggle.dart';
 import 'package:flutter/material.dart';
@@ -35,9 +36,18 @@ class _SettingsModalSheetState extends State<SettingsModalSheet> {
   /// recipe settings
   final List<String> _animatedToggleValues = const ["Show", "Hide"];
 
+  late final RecipesProvider _recipesProvider;
+  late final SettingsSliderProvider _settingsSliderProvider;
+
   @override
   void initState() {
     super.initState();
+
+    /// Used to initialize providers for use in [dispose] method
+    _recipesProvider = Provider.of<RecipesProvider>(context, listen: false);
+    _settingsSliderProvider =
+        Provider.of<SettingsSliderProvider>(context, listen: false);
+
     Provider.of<RecipesProvider>(context, listen: false).tempSettingVisibility =
         (widget.recipeSettingsData?.visibility == null)
             ? SettingVisibility.shown
@@ -45,6 +55,13 @@ class _SettingsModalSheetState extends State<SettingsModalSheet> {
                 widget.recipeSettingsData!.visibility);
     Provider.of<RecipesProvider>(context, listen: false).tempBeanId =
         widget.recipeSettingsData?.beanId;
+  }
+
+  @override
+  void dispose() {
+    _recipesProvider.clearTempSettingParameters();
+    _settingsSliderProvider.clearTempSettingParameters();
+    super.dispose();
   }
 
   @override

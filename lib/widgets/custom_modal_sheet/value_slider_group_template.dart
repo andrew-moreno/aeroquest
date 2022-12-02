@@ -39,12 +39,12 @@ class ValueSliderGroupTemplate extends StatelessWidget {
     }
   }
 
-  /// TODO: change consumer to selector for [activeSlider]
   @override
   Widget build(BuildContext context) {
     List<ParameterType> parameterType = _parameterTypeListSelector();
-    return Consumer<RecipesProvider>(
-      builder: (context, provider, _) {
+    return Selector<RecipesProvider, ParameterType>(
+      selector: (_, recipesProvider) => recipesProvider.activeSlider,
+      builder: (_, activeSlider, __) {
         return Column(
           children: [
             Row(

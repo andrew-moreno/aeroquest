@@ -57,7 +57,7 @@ class _RecipeDetailsState extends State<RecipeDetails> {
             Navigator.of(context).pop(true);
           } else {
             _recipesProvider.setEditMode(EditMode.disabled);
-            _recipesProvider.clearTempNotesAndRecipeSettings();
+            _recipesProvider.clearTempData();
             setState(() {});
           }
         },
@@ -153,7 +153,7 @@ class _RecipeDetailsState extends State<RecipeDetails> {
   @override
   void dispose() {
     _recipesProvider.setEditMode(EditMode.disabled);
-    _recipesProvider.clearTempNotesAndRecipeSettings();
+    _recipesProvider.clearTempData();
     super.dispose();
   }
 

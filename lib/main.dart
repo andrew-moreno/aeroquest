@@ -1,3 +1,4 @@
+import 'package:aeroquest/providers/settings_slider_provider.dart';
 import 'package:control_style/decorated_input_border.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<CoffeeBeanProvider>(
           create: (_) => CoffeeBeanProvider(),
+        ),
+        ChangeNotifierProvider<SettingsSliderProvider>(
+          create: (_) => SettingsSliderProvider(),
         )
       ],
       child: Builder(

@@ -1,5 +1,6 @@
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
+import 'package:aeroquest/providers/settings_slider_provider.dart';
 import 'package:aeroquest/widgets/recipe_parameters_value.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -39,11 +40,12 @@ class SettingValueSlider extends StatefulWidget {
 }
 
 class _SettingValueSliderState extends State<SettingValueSlider> {
-  late RecipesProvider _provider;
+  late final SettingsSliderProvider _settingsSliderProvider;
 
   @override
   void initState() {
-    _provider = Provider.of<RecipesProvider>(context, listen: false);
+    _settingsSliderProvider =
+        Provider.of<SettingsSliderProvider>(context, listen: false);
     super.initState();
   }
 
@@ -75,32 +77,33 @@ class _SettingValueSliderState extends State<SettingValueSlider> {
     switch (sliderType) {
       case ParameterType.grindSetting:
         return WeightSliderController(
-          initialWeight: _provider.tempGrindSetting!,
+          initialWeight: _settingsSliderProvider.tempGrindSetting!,
           interval: 0.25,
         );
       case ParameterType.coffeeAmount:
         return WeightSliderController(
-          initialWeight: _provider.tempCoffeeAmount!.toDouble(),
+          initialWeight: _settingsSliderProvider.tempCoffeeAmount!.toDouble(),
           interval: 0.1,
         );
       case ParameterType.waterAmount:
         return WeightSliderController(
-          initialWeight: _provider.tempWaterAmount!.toDouble(),
+          initialWeight: _settingsSliderProvider.tempWaterAmount!.toDouble(),
           interval: 1,
         );
       case ParameterType.waterTemp:
         return WeightSliderController(
-          initialWeight: _provider.tempWaterTemp!.toDouble(),
+          initialWeight: _settingsSliderProvider.tempWaterTemp!.toDouble(),
           interval: 1,
         );
       case ParameterType.brewTime:
         return WeightSliderController(
-          initialWeight: _provider.tempBrewTime!.toDouble(),
+          initialWeight: _settingsSliderProvider.tempBrewTime!.toDouble(),
           interval: 1,
         );
       case ParameterType.noteTime:
         return WeightSliderController(
-            initialWeight: _provider.tempNoteTime!.toDouble(), interval: 1);
+            initialWeight: _settingsSliderProvider.tempNoteTime!.toDouble(),
+            interval: 1);
       case ParameterType.none:
         return WeightSliderController(initialWeight: 50);
       default:
@@ -111,7 +114,11 @@ class _SettingValueSliderState extends State<SettingValueSlider> {
   @override
   Widget build(BuildContext context) {
     return Visibility(
-      visible: _provider.activeSlider == widget.parameterType ? true : false,
+      visible:
+          Provider.of<RecipesProvider>(context, listen: false).activeSlider ==
+                  widget.parameterType
+              ? true
+              : false,
       child: Opacity(
         opacity: widget.opacity,
         child: VerticalWeightSlider(
@@ -128,7 +135,8 @@ class _SettingValueSliderState extends State<SettingValueSlider> {
           ),
           controller: _controllerSelector(widget.parameterType),
           onChanged: (double value) {
-            _provider.sliderOnChanged(value, widget.parameterType);
+            _settingsSliderProvider.sliderOnChanged(
+                value, widget.parameterType);
           },
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:aeroquest/providers/settings_slider_provider.dart';
 import 'package:aeroquest/screens/coffee_beans/coffee_beans.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/recipe_details_body.dart';
 import 'package:aeroquest/widgets/add_to_recipe_button.dart';
@@ -94,6 +95,7 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
                 .validate()) {
               return;
             }
+            setRecipesProviderTempSettingParameters();
             _recipesProvider.tempAddSetting(widget
                 .recipeEntryId); // index doesn't matter for recipe entry id
             Navigator.of(context).pop();
@@ -107,6 +109,7 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
     showCustomModalSheet(
       modalType: ModalType.settings,
       submitAction: () {
+        setRecipesProviderTempSettingParameters();
         _recipesProvider
             .editSetting(_recipesProvider.tempRecipeSettings[recipeSettingId]!);
         Navigator.of(context).pop();
@@ -118,6 +121,26 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
       recipeSettingsData: _recipesProvider.tempRecipeSettings[recipeSettingId],
       context: context,
     );
+  }
+
+  /// Sets the temp recipe settings parameter from the SettingsSliderProvider
+  /// to the associated temp recipe settings parameter in the RecipeProvider
+  void setRecipesProviderTempSettingParameters() {
+    Provider.of<RecipesProvider>(context, listen: false).tempGrindSetting =
+        Provider.of<SettingsSliderProvider>(context, listen: false)
+            .tempGrindSetting;
+    Provider.of<RecipesProvider>(context, listen: false).tempCoffeeAmount =
+        Provider.of<SettingsSliderProvider>(context, listen: false)
+            .tempCoffeeAmount;
+    Provider.of<RecipesProvider>(context, listen: false).tempWaterAmount =
+        Provider.of<SettingsSliderProvider>(context, listen: false)
+            .tempWaterAmount;
+    Provider.of<RecipesProvider>(context, listen: false).tempWaterTemp =
+        Provider.of<SettingsSliderProvider>(context, listen: false)
+            .tempWaterTemp;
+    Provider.of<RecipesProvider>(context, listen: false).tempBrewTime =
+        Provider.of<SettingsSliderProvider>(context, listen: false)
+            .tempBrewTime;
   }
 
   @override

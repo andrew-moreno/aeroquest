@@ -114,8 +114,13 @@ class RecipesProvider extends ChangeNotifier {
   // currently active setting to adjust when editing/adding
   late ParameterType activeSlider;
 
-  // variables for editing/adding settings to a recipe
-  // contain values for the currently edited/added setting
+  /// Parameters used for generating/editing recipe settings
+  ///
+  /// These parameters are separate from RecipesProvider to avoid unnecessary
+  /// rebuilds for widgets using RecipeProvider
+  ///
+  /// All values associated with each variable are set to null at all times
+  /// except when editing recipe settings values using the editing modal sheet
   SettingVisibility? tempSettingVisibility;
   int? tempBeanId;
   double? tempGrindSetting;
@@ -180,9 +185,6 @@ class RecipesProvider extends ChangeNotifier {
       _tempRecipe = _recipes[recipeEntryId]!;
     }
 
-    /// Setting temp recipe not required when recipe doesn't exist. For case
-    /// where exiting recipe details page
-    /// TODO: WHAT DOES THIS MEAN????
     tempPushPressure = Recipe.stringToPushPressure(_tempRecipe.pushPressure);
     tempBrewMethod = Recipe.stringToBrewMethod(_tempRecipe.brewMethod);
 
@@ -286,8 +288,6 @@ class RecipesProvider extends ChangeNotifier {
         notesChangedCheck);
   }
 
-  ///TODO: make slider related things their own provider so rebuilds don't
-  ///happen when changing slider
   /// Used to activate/deactivate a particular recipe settings slider when
   /// editing recipe setting values
   ///
@@ -304,36 +304,9 @@ class RecipesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Defines which value is getting changed when sliding the slider and
-  /// assigns the appropriate settings value to [value]
-  void sliderOnChanged(double value, ParameterType parameterType) {
-    switch (parameterType) {
-      case ParameterType.grindSetting:
-        tempGrindSetting = value;
-        break;
-      case ParameterType.coffeeAmount:
-        tempCoffeeAmount = value;
-        break;
-      case ParameterType.waterAmount:
-        tempWaterAmount = value.toInt();
-        break;
-      case ParameterType.waterTemp:
-        tempWaterTemp = value.toInt();
-        break;
-      case ParameterType.brewTime:
-        tempBrewTime = value.toInt();
-        break;
-      case ParameterType.noteTime:
-        tempNoteTime = value.toInt();
-        break;
-      case ParameterType.none:
-        break;
-    }
-    notifyListeners();
-  }
-
-  /// Clears [_tempRecipeSettings] and [_tempNotes]
-  void clearTempNotesAndRecipeSettings() {
+  /// Clears [_tempRecipeSettings] and [_tempNotes] and all temp recipe setting
+  /// parameters
+  void clearTempData() {
     _tempRecipeSettings.clear();
     _tempNotes.clear();
   }
@@ -409,21 +382,19 @@ class RecipesProvider extends ChangeNotifier {
       brewTime: tempBrewTime!,
       visibility: describeEnum(tempSettingVisibility!),
     );
-    //clearTempSettingParameters();
     notifyListeners();
   }
 
-  ///TODO: add this when fixing editing
-  // /// Clears all temporary setting parameters by setting them to null
-  // void clearTempSettingParameters() {
-  //   tempBeanId = null;
-  //   tempGrindSetting = null;
-  //   tempCoffeeAmount = null;
-  //   tempWaterAmount = null;
-  //   tempWaterTemp = null;
-  //   tempBrewTime = null;
-  //   tempSettingVisibility = null;
-  // }
+  /// Clears all temporary setting parameters by setting them to null
+  void clearTempSettingParameters() {
+    tempBeanId = null;
+    tempGrindSetting = null;
+    tempCoffeeAmount = null;
+    tempWaterAmount = null;
+    tempWaterTemp = null;
+    tempBrewTime = null;
+    tempSettingVisibility = null;
+  }
 
   // on saving changes to recipe details page
   // stores tempRecipeSettings in database and cache
