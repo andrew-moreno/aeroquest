@@ -370,8 +370,6 @@ class RecipesProvider extends ChangeNotifier {
 
   /// Sets all parameters in [_tempRecipeSettings] to ones that have been
   /// updated by the user when editing recipe settings
-  ///
-  /// Afterwards, all temporary settings parameters are set to null
   void editSetting(RecipeSettings recipeSettingsData) {
     _tempRecipeSettings[recipeSettingsData.id!] = recipeSettingsData.copy(
       beanId: tempBeanId!,
@@ -396,10 +394,15 @@ class RecipesProvider extends ChangeNotifier {
     tempSettingVisibility = null;
   }
 
-  // on saving changes to recipe details page
-  // stores tempRecipeSettings in database and cache
+  /// Saves data in [_tempRecipeSettings] to [recipeSettings] after edits and
+  /// updates the recipe settings database accordingly
+  ///
+  /// First makes updates to the database and [associatedSettingsCount], then
+  /// populates [_recipeSettings] with the data from [_tempRecipeSettings]
+  /// at once
   Future<void> saveEditedRecipeSettings(int recipeEntryId) async {
-    // for deleting
+    /// If [_tempRecipeSettings] doesn't contain a recipe setting that is in
+    /// [_recipeSettings], delete that recipe setting from the database
     for (var id
         in recipeSettings[recipeEntryId]?.keys ?? const Iterable.empty()) {
       if (!tempRecipeSettings.containsKey(id)) {
@@ -411,13 +414,16 @@ class RecipesProvider extends ChangeNotifier {
       }
     }
 
-    List<int> keys = tempRecipeSettings.keys.toList();
-    for (var id in keys) {
-      // new id -> add
+    /// If [_tempRecipeSettings] contains a recipe setting that is not in
+    /// [_recipeSettings], add that recipe setting to the database or make
+    /// updates to the recipe settings if there are discrepencies between it
+    /// and [_tempRecipeSettings]
+    for (var id in tempRecipeSettings.keys.toList()) {
+      /// New id -> add
       bool containsKey =
           recipeSettings[recipeEntryId]?.containsKey(id) ?? false;
       if (!containsKey) {
-        // for clearing tempId
+        /// Populate the recipe setting with a proper id from the database
         RecipeSettings newCoffeeSettingsData = RecipeSettings(
           recipeEntryId: tempRecipeSettings[id]!.recipeEntryId,
           beanId: tempRecipeSettings[id]!.beanId,
@@ -433,36 +439,53 @@ class RecipesProvider extends ChangeNotifier {
           AssociatedSettingsCountEditType.increment,
         );
 
-        int newId =
-            await RecipeSettingsDatabase.instance.create(newCoffeeSettingsData);
+        int newId = await RecipeSettingsDatabase.instance.create(
+          newCoffeeSettingsData,
+        );
 
-        _tempRecipeSettings
-            .addAll({newId: _tempRecipeSettings.remove(id)!.copy(id: newId)});
+        _tempRecipeSettings.addAll({
+          newId: _tempRecipeSettings.remove(id)!.copy(id: newId),
+        });
       }
 
-      /// Id exists in recipe settings but entry in [recipeSettings] is
+      /// Id exists in [recipeSettings] but entry in [recipeSettings] is
       /// different from [tempRecipeSettings]
       else if (recipeSettings[recipeEntryId]![id] != tempRecipeSettings[id]) {
-        // update because entries of same id
-        //recipeSettings[recipeEntryId]![id] = tempRecipeSettings[id]!;
         await RecipeSettingsDatabase.instance.update(tempRecipeSettings[id]!);
       }
-      // else do nothing
     }
 
+    /// Commit data from [_tempRecipeSettings] to [_recipeSettings]
     _recipeSettings[recipeEntryId] = SplayTreeMap.from(_tempRecipeSettings);
     notifyListeners();
   }
 
-  // Recipe method
+  /// Sets [_tempNotes] to the notes in [_notes] associated with [recipeEntryId]
+  ///
+  /// If [recipeEntryId] is null or doesn't exist, [_tempNotes] is set to an
+  /// empty SplayTreeMap object
+  /// - possibility that [recipeEntryId] doesn't exist in [_notes] when adding
+  ///   a new recipe.
+  void setTempNotes(int? recipeEntryId) {
+    _tempNotes = SplayTreeMap<int, Note>.from(
+        _notes[recipeEntryId] ?? SplayTreeMap<int, Note>());
+  }
+
+  /// Checks if the notes associated with [recipeEntryId] have been
+  /// updated since RecipeDetails page has loaded
+  bool areNotesChanged(int recipeEntryId) {
+    return !(const DeepCollectionEquality()
+        .equals(_tempNotes, _notes[recipeEntryId] ?? SplayTreeMap()));
+  }
+
+  /// Adds a new note to [_tempNotes] using [recipeEntryId]
+  /// as the key
   Future<void> tempAddNote(int recipeEntryId) async {
-    if (notes[recipeEntryId] == null) {
-      _notes[recipeEntryId] = SplayTreeMap<int, Note>();
-    }
-    // setting tempId to a unique number for this recipe
+    /// Setting tempId to a unique number for this recipe
     int tempId;
     if (tempNotes.isEmpty) {
-      if (notes[recipeEntryId]!.isEmpty) {
+      /// [tempId] set to 0 if no notes exist in the database for this recipe
+      if (notes[recipeEntryId]?.isEmpty ?? true) {
         tempId = 0;
       } else {
         tempId = _notes[recipeEntryId]!.lastKey()! + 1;
@@ -480,71 +503,72 @@ class RecipesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Deletes a note from [_tempNotes] associated with the recipe setting id
+  /// [settingId]
   Future<void> tempDeleteNote(int settingId) async {
     _tempNotes.remove(settingId);
     notifyListeners();
   }
 
-  // initialize tempNotes
-  void setTempNotes(int? recipeEntryId) {
-    _tempNotes = SplayTreeMap<int, Note>.from(
-        _notes[recipeEntryId] ?? SplayTreeMap<int, Note>());
+  /// Sets all parameters in [_tempNotes] to ones that have been updated by the
+  /// user when editing notes
+  Future<void> editNote(Note noteData) async {
+    _tempNotes[noteData.id!] = noteData.copy(
+      text: recipeNotesFormKey.currentState!.fields["noteText"]!.value,
+      time: tempNoteTime!,
+    );
+    notifyListeners();
   }
 
-  // check if settings have been updated since details page load
-  bool areNotesChanged(int recipeEntryId) {
-    return !(const DeepCollectionEquality()
-        .equals(_tempNotes, _notes[recipeEntryId] ?? SplayTreeMap()));
+  /// Clears all temporary note parameters by setting them to null
+  void clearTempNoteParameters() {
+    tempNoteText = null;
+    tempNoteTime = null;
   }
 
-  // on saving changes to recipe details page
-  // stores tempRecipeSettings in database and cache
+  /// Saves data in [_tempNotes] to [_notes] after edits and updates the notes
+  /// database accordingly
+  ///
+  /// First makes updates to the database and [associatedSettingsCount], then
+  /// populates [_notes] with the all data from [_tempNotes]
   Future<void> saveEditedNotes(int recipeEntryId) async {
-    // for deleting
-    for (var id in notes[recipeEntryId]!.keys) {
+    /// If [_tempNotes] doesn't contain a note that is in [_notes], delete that
+    ///note from the database
+    for (var id in notes[recipeEntryId]?.keys ?? const Iterable.empty()) {
       if (!tempNotes.containsKey(id)) {
         await RecipeSettingsDatabase.instance.delete(id);
       }
     }
-    List<int> keys = tempNotes.keys.toList();
-    for (var id in keys) {
-      // new id -> add
-      if (!notes[recipeEntryId]!.containsKey(id)) {
-        // for clearing tempId
+
+    /// If [_tempNotes] contains a note that is not in [_notes], add that note
+    /// to the database or make updates to the note if there are discrepencies
+    /// etween it and [_tempNotes]
+    for (var id in tempNotes.keys.toList()) {
+      /// New id -> add
+      bool containsKey = notes[recipeEntryId]?.containsKey(id) ?? false;
+      if (!containsKey) {
+        /// Populate the note with a proper id from the database
         Note newNote = Note(
-            recipeEntryId: tempNotes[id]!.recipeEntryId,
-            time: tempNotes[id]!.time,
-            text: tempNotes[id]!.text);
+          recipeEntryId: tempNotes[id]!.recipeEntryId,
+          time: tempNotes[id]!.time,
+          text: tempNotes[id]!.text,
+        );
+
         int newId = await NotesDatabase.instance.create(newNote);
-        _tempNotes[newId] = _tempNotes[id]!.copy(id: newId);
-        _tempNotes.remove(id);
+
+        _tempNotes.addAll({newId: _tempNotes.remove(id)!.copy(id: newId)});
       }
-      // id exists in recipe settings -> update or don't do anything if settings are the same
+
+      /// Id exists in [notes] but entry in [notes] is different from
+      /// [tempNotes]
       else if (notes[recipeEntryId]![id] != tempNotes[id]) {
-        // update because entries of same id
         await NotesDatabase.instance.update(tempNotes[id]!);
       }
       // else do nothing
     }
 
-    _notes[recipeEntryId] = SplayTreeMap.from(tempNotes);
-    notifyListeners();
-  }
-
-  // when save button pressed
-  // saves to tempNotes
-  Future<void> editNote(Note noteData) async {
-    Note newNoteData = noteData.copy();
-
-    if (noteData.time != tempNoteTime) {
-      newNoteData.time = tempNoteTime!;
-    }
-    if (noteData.text !=
-        recipeNotesFormKey.currentState!.fields["noteText"]!.value) {
-      newNoteData.text =
-          recipeNotesFormKey.currentState!.fields["noteText"]!.value;
-    }
-    _tempNotes[noteData.id!] = newNoteData;
+    /// Commit data from [_tempNotes] to [_notes]
+    _notes[recipeEntryId] = SplayTreeMap.from(_tempNotes);
     notifyListeners();
   }
 

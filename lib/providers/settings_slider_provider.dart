@@ -59,4 +59,10 @@ class SettingsSliderProvider extends ChangeNotifier {
     tempBrewTime = null;
     tempSettingVisibility = null;
   }
+
+  /// Clears all temporary note parameters by setting them to null
+  void clearTempNoteParameters() {
+    tempNoteText = null;
+    tempNoteTime = null;
+  }
 }

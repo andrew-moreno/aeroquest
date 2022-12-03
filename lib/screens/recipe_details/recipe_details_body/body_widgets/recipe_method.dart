@@ -1,5 +1,7 @@
 import 'package:aeroquest/providers/recipes_provider.dart';
+import 'package:aeroquest/providers/settings_slider_provider.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/recipe_details_body.dart';
+import 'package:aeroquest/widgets/add_to_recipe_button.dart';
 import 'package:aeroquest/widgets/animated_toggle.dart';
 import 'package:aeroquest/widgets/custom_modal_sheet/value_slider_group_template.dart';
 import 'package:flutter/foundation.dart';
@@ -29,14 +31,17 @@ class _RecipeMethodState extends State<RecipeMethod> {
   static const double _methodPadding = 15;
 
   late Recipe _recipeData;
+  late Map<int, Note> _notesData;
+
+  late final RecipesProvider _recipesProvider =
+      Provider.of<RecipesProvider>(context, listen: false);
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _recipeData = _selectRecipeData();
+    _notesData = _selectNotesData();
   }
-
-  late final RecipesProvider _recipesProvider =
-      Provider.of<RecipesProvider>(context, listen: false);
 
   Recipe _selectRecipeData() {
     if (_recipesProvider.editMode == EditMode.enabled) {
@@ -46,12 +51,52 @@ class _RecipeMethodState extends State<RecipeMethod> {
     }
   }
 
+  Map<int, Note> _selectNotesData() {
+    if (_recipesProvider.editMode == EditMode.enabled) {
+      return _recipesProvider.tempNotes;
+    } else {
+      return _recipesProvider.notes[widget.recipeEntryId] ?? {};
+    }
+  }
+
+  /// Sets the temp note parameters from the SettingsSliderProvider to the
+  /// associated temp note parameter in the RecipeProvider
+  void _setRecipesProviderTempNoteParameters() {
+    Provider.of<RecipesProvider>(context, listen: false).tempNoteText =
+        Provider.of<SettingsSliderProvider>(context, listen: false)
+            .tempNoteText;
+    Provider.of<RecipesProvider>(context, listen: false).tempNoteTime =
+        Provider.of<SettingsSliderProvider>(context, listen: false)
+            .tempNoteTime;
+  }
+
+  /// Function to execute when pressing the "Add Note" button
+  void addNote() {
+    showCustomModalSheet(
+      modalType: ModalType.notes,
+      submitAction: () {
+        if (!Provider.of<RecipesProvider>(context, listen: false)
+            .recipeNotesFormKey
+            .currentState!
+            .validate()) {
+          return;
+        }
+        _setRecipesProviderTempNoteParameters();
+        _recipesProvider.tempAddNote(
+            widget.recipeEntryId); // index doesn't matter for recipe entry id
+        Navigator.of(context).pop();
+      },
+      context: context,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Consumer<RecipesProvider>(
         builder: (_, recipesProvider, __) {
+          Map<int, Note> _notesData = _selectNotesData();
           return Column(
             children: [
               Row(
@@ -71,41 +116,25 @@ class _RecipeMethodState extends State<RecipeMethod> {
                 ],
               ),
               const SizedBox(height: _methodPadding),
-              // ListView.separated(
-              //   physics: const BouncingScrollPhysics(),
-              //   shrinkWrap: true,
-              //   itemCount: recipesProvider.tempNotes.length,
-              //   itemBuilder: (BuildContext context, int index) {
-              //     int key = recipesProvider.tempNotes.keys.elementAt(index);
-              //     return RecipeMethodNotes(
-              //         note: recipesProvider.tempNotes[key]!);
-              //   },
-              //   separatorBuilder: (context, index) {
-              //     return const SizedBox(height: _methodPadding);
-              //   },
-              // ),
-              // const SizedBox(height: 20),
-              // (recipesProvider.editMode == EditMode.enabled)
-              //     ? AddToRecipeButton(
-              //         onTap: () {
-              //           showCustomModalSheet(
-              //               modalType: ModalType.notes,
-              //               submitAction: () {
-              //                 if (!Provider.of<RecipesProvider>(context,
-              //                         listen: false)
-              //                     .recipeNotesFormKey
-              //                     .currentState!
-              //                     .validate()) {
-              //                   return;
-              //                 }
-              //                 recipesProvider.tempAddNote(widget
-              //                     .recipeEntryId); // index doesn't matter for recipe entry id
-              //                 Navigator.of(context).pop();
-              //               },
-              //               context: _);
-              //         },
-              //         buttonText: "Add Note")
-              //     : Container(),
+              ListView.separated(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: _notesData.length,
+                itemBuilder: (BuildContext context, int index) {
+                  int key = _notesData.keys.elementAt(index);
+                  return RecipeMethodNotes(note: _notesData[key]!);
+                },
+                separatorBuilder: (context, index) {
+                  return const SizedBox(height: _methodPadding);
+                },
+              ),
+              const SizedBox(height: 20),
+              (recipesProvider.editMode == EditMode.enabled)
+                  ? AddToRecipeButton(
+                      onTap: addNote,
+                      buttonText: "Add Note",
+                    )
+                  : Container(),
             ],
           );
         },
@@ -218,7 +247,7 @@ class RecipeMethodParameters extends StatelessWidget {
   }
 }
 
-class RecipeMethodNotes extends StatelessWidget {
+class RecipeMethodNotes extends StatefulWidget {
   /// Defines the widget to display a single note for a recipe
   const RecipeMethodNotes({
     Key? key,
@@ -229,26 +258,46 @@ class RecipeMethodNotes extends StatelessWidget {
   final Note note;
 
   @override
+  State<RecipeMethodNotes> createState() => _RecipeMethodNotesState();
+}
+
+class _RecipeMethodNotesState extends State<RecipeMethodNotes> {
+  late final _recipesProvider =
+      Provider.of<RecipesProvider>(context, listen: false);
+
+  void showEditingModal() {
+    if (_recipesProvider.editMode == EditMode.enabled) {
+      showCustomModalSheet(
+          modalType: ModalType.notes,
+          submitAction: () {
+            _setRecipesProviderTempNoteParameters();
+            _recipesProvider.editNote(widget.note);
+            Navigator.of(context).pop();
+          },
+          deleteAction: () {
+            _recipesProvider.tempDeleteNote(widget.note.id!);
+            Navigator.of(context).pop();
+          },
+          notesData: widget.note,
+          context: context);
+    }
+  }
+
+  /// Sets the temp note parameters from the SettingsSliderProvider to the
+  /// associated temp note parameter in the RecipeProvider
+  void _setRecipesProviderTempNoteParameters() {
+    Provider.of<RecipesProvider>(context, listen: false).tempNoteText =
+        Provider.of<SettingsSliderProvider>(context, listen: false)
+            .tempNoteText;
+    Provider.of<RecipesProvider>(context, listen: false).tempNoteTime =
+        Provider.of<SettingsSliderProvider>(context, listen: false)
+            .tempNoteTime;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        var recipesProvider =
-            Provider.of<RecipesProvider>(context, listen: false);
-        if (recipesProvider.editMode == EditMode.enabled) {
-          showCustomModalSheet(
-              modalType: ModalType.notes,
-              submitAction: () {
-                recipesProvider.editNote(note);
-                Navigator.of(context).pop();
-              },
-              deleteAction: () {
-                recipesProvider.tempDeleteNote(note.id!);
-                Navigator.of(context).pop();
-              },
-              notesData: note,
-              context: context);
-        }
-      },
+      onTap: showEditingModal,
       child: Container(
         padding: const EdgeInsets.symmetric(
           vertical: 10,
@@ -263,9 +312,9 @@ class RecipeMethodNotes extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
-                (note.time ~/ 6).toString() +
+                (widget.note.time ~/ 6).toString() +
                     ":" +
-                    (note.time % 6).toString() +
+                    (widget.note.time % 6).toString() +
                     "0",
                 style: const TextStyle(
                   color: kPrimary,
@@ -277,7 +326,7 @@ class RecipeMethodNotes extends StatelessWidget {
               const SizedBox(width: 20),
               Expanded(
                 child: Text(
-                  note.text,
+                  widget.note.text,
                   style: const TextStyle(
                     color: kPrimary,
                     fontSize: 13,

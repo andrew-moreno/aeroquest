@@ -89,18 +89,18 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
       );
     } else {
       showCustomModalSheet(
-          modalType: ModalType.settings,
-          submitAction: () {
-            if (!_recipesProvider.settingsBeanFormKey.currentState!
-                .validate()) {
-              return;
-            }
-            setRecipesProviderTempSettingParameters();
-            _recipesProvider.tempAddSetting(widget
-                .recipeEntryId); // index doesn't matter for recipe entry id
-            Navigator.of(context).pop();
-          },
-          context: context);
+        modalType: ModalType.settings,
+        submitAction: () {
+          if (!_recipesProvider.settingsBeanFormKey.currentState!.validate()) {
+            return;
+          }
+          setRecipesProviderTempSettingParameters();
+          _recipesProvider.tempAddSetting(
+              widget.recipeEntryId); // index doesn't matter for recipe entry id
+          Navigator.of(context).pop();
+        },
+        context: context,
+      );
     }
   }
 
