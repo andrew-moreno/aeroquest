@@ -52,11 +52,23 @@ class ValueSliderGroupTemplate extends StatelessWidget {
               children: List.generate(
                 // does not include Parameter.none
                 parameterType.length - 1,
-                (index) => ModalSliderValueContainer(
-                  parameterType: parameterType
-                      .where((sliderType) => sliderType != ParameterType.none)
-                      .toList()[index],
-                ),
+
+                /// notes modal cannot have an interactive value container
+                /// see [isClickable]
+                (modalType == ModalType.settings)
+                    ? (index) => ModalSliderValueContainer(
+                          parameterType: parameterType
+                              .where((sliderType) =>
+                                  sliderType != ParameterType.none)
+                              .toList()[index],
+                        )
+                    : (index) => ModalSliderValueContainer(
+                          parameterType: parameterType
+                              .where((sliderType) =>
+                                  sliderType != ParameterType.none)
+                              .toList()[index],
+                          isClickable: false,
+                        ),
               ),
             ),
             const SizedBox(height: 13),

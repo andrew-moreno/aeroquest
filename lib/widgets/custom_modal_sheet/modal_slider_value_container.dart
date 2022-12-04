@@ -11,10 +11,16 @@ class ModalSliderValueContainer extends StatefulWidget {
   const ModalSliderValueContainer({
     Key? key,
     required this.parameterType,
+    this.isClickable = true,
   }) : super(key: key);
 
   /// Defines the setting type of the settings value container
   final ParameterType parameterType;
+
+  /// Defines whether the container can be clicked or not
+  ///
+  /// Used to prevent deactivating the notes time slider
+  final bool isClickable;
 
   @override
   State<ModalSliderValueContainer> createState() =>
@@ -48,8 +54,10 @@ class _ModalSliderValueContainerState extends State<ModalSliderValueContainer> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Provider.of<RecipesProvider>(context, listen: false)
-            .selectSliderType(widget.parameterType);
+        if (widget.isClickable) {
+          Provider.of<RecipesProvider>(context, listen: false)
+              .selectSliderType(widget.parameterType);
+        }
       },
       child: Container(
         padding: const EdgeInsets.all(7),

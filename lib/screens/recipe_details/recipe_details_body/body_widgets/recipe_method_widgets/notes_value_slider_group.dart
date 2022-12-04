@@ -35,7 +35,7 @@ class _NotesValueSliderState extends State<NotesValueSlider> {
     Provider.of<SettingsSliderProvider>(context, listen: false).tempNoteTime =
         widget.notesData?.time ?? 0;
     Provider.of<RecipesProvider>(context, listen: false).activeSlider =
-        ParameterType.none;
+        ParameterType.noteTime;
   }
 
   @override
