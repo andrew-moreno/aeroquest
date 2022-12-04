@@ -270,6 +270,12 @@ class _RecipeMethodNotesState extends State<RecipeMethodNotes> {
       showCustomModalSheet(
           modalType: ModalType.notes,
           submitAction: () {
+            if (!Provider.of<RecipesProvider>(context, listen: false)
+                .recipeNotesFormKey
+                .currentState!
+                .validate()) {
+              return;
+            }
             _setRecipesProviderTempNoteParameters();
             _recipesProvider.editNote(widget.note);
             Navigator.of(context).pop();
