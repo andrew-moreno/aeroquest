@@ -59,17 +59,6 @@ class _RecipeMethodState extends State<RecipeMethod> {
     }
   }
 
-  /// Sets the temp note parameters from the SettingsSliderProvider to the
-  /// associated temp note parameter in the RecipeProvider
-  void _setRecipesProviderTempNoteParameters() {
-    Provider.of<RecipesProvider>(context, listen: false).tempNoteText =
-        Provider.of<SettingsSliderProvider>(context, listen: false)
-            .tempNoteText;
-    Provider.of<RecipesProvider>(context, listen: false).tempNoteTime =
-        Provider.of<SettingsSliderProvider>(context, listen: false)
-            .tempNoteTime;
-  }
-
   /// Function to execute when pressing the "Add Note" button
   void addNote() {
     showCustomModalSheet(
@@ -81,7 +70,7 @@ class _RecipeMethodState extends State<RecipeMethod> {
             .validate()) {
           return;
         }
-        _setRecipesProviderTempNoteParameters();
+        _setRecipesProviderTempNoteParameters(context: context);
         _recipesProvider.tempAddNote(
             widget.recipeEntryId); // index doesn't matter for recipe entry id
         Navigator.of(context).pop();
@@ -276,7 +265,7 @@ class _RecipeMethodNotesState extends State<RecipeMethodNotes> {
                 .validate()) {
               return;
             }
-            _setRecipesProviderTempNoteParameters();
+            _setRecipesProviderTempNoteParameters(context: context);
             _recipesProvider.editNote(widget.note);
             Navigator.of(context).pop();
           },
@@ -287,17 +276,6 @@ class _RecipeMethodNotesState extends State<RecipeMethodNotes> {
           notesData: widget.note,
           context: context);
     }
-  }
-
-  /// Sets the temp note parameters from the SettingsSliderProvider to the
-  /// associated temp note parameter in the RecipeProvider
-  void _setRecipesProviderTempNoteParameters() {
-    Provider.of<RecipesProvider>(context, listen: false).tempNoteText =
-        Provider.of<SettingsSliderProvider>(context, listen: false)
-            .tempNoteText;
-    Provider.of<RecipesProvider>(context, listen: false).tempNoteTime =
-        Provider.of<SettingsSliderProvider>(context, listen: false)
-            .tempNoteTime;
   }
 
   @override
@@ -347,4 +325,15 @@ class _RecipeMethodNotesState extends State<RecipeMethodNotes> {
       ),
     );
   }
+}
+
+/// Sets the temp note parameters from the SettingsSliderProvider to the
+/// associated temp note parameter in the RecipeProvider
+void _setRecipesProviderTempNoteParameters({
+  required BuildContext context,
+}) {
+  Provider.of<RecipesProvider>(context, listen: false).tempNoteText =
+      Provider.of<SettingsSliderProvider>(context, listen: false).tempNoteText;
+  Provider.of<RecipesProvider>(context, listen: false).tempNoteTime =
+      Provider.of<SettingsSliderProvider>(context, listen: false).tempNoteTime;
 }
