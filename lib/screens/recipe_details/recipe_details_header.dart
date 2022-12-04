@@ -54,6 +54,7 @@ class RecipeDetailsHeader extends StatelessWidget {
                     hintText: "Title",
                     textStyle: _titleTextStyle,
                     validate: true,
+                    textCapitalization: TextCapitalization.words,
                   ),
                   const SizedBox(height: _sizedBoxHeight),
                   CustomHeaderFormField(
@@ -62,6 +63,7 @@ class RecipeDetailsHeader extends StatelessWidget {
                     hintText: "Description",
                     textStyle: _descriptionTextStyle,
                     validate: false,
+                    textCapitalization: TextCapitalization.sentences,
                   ),
                 ],
               ),
@@ -84,26 +86,28 @@ class RecipeDetailsHeader extends StatelessWidget {
 
 class CustomHeaderFormField extends StatelessWidget {
   /// Defines the widget used for editing the recipe title and description
-  const CustomHeaderFormField(
-      // make either title or description
-      {Key? key,
-      required this.name,
-      required this.initialValue,
-      required this.hintText,
-      required this.textStyle,
-      required this.validate})
-      : super(key: key);
+  const CustomHeaderFormField({
+    Key? key,
+    required this.name,
+    required this.initialValue,
+    required this.hintText,
+    required this.textStyle,
+    required this.validate,
+    required this.textCapitalization,
+  }) : super(key: key);
 
   final String name;
   final String? initialValue;
   final String hintText;
   final TextStyle textStyle;
   final bool validate;
+  final TextCapitalization textCapitalization;
 
   @override
   Widget build(BuildContext context) {
     return FormBuilderTextField(
       name: name,
+      textCapitalization: textCapitalization,
       cursorColor: kLightSecondary,
       cursorWidth: 2,
       maxLines: null,

@@ -24,6 +24,7 @@ class CustomFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FormBuilderTextField(
+      textCapitalization: TextCapitalization.sentences,
       maxLines: null,
       cursorColor: kPrimary,
       cursorWidth: 1,
