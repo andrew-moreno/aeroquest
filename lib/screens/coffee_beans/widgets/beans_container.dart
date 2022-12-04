@@ -96,6 +96,7 @@ class BeansContainer extends StatelessWidget {
             formKey: formKey,
             beanName: beanData.beanName,
             description: beanData.description,
+            autoFocusTitleField: false,
           );
         },
       ),

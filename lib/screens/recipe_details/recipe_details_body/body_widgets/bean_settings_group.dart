@@ -81,6 +81,7 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
                     );
                     Navigator.of(context).pop();
                   },
+                  autoFocusTitleField: true,
                   context: context,
                   formKey: _formKey,
                 );

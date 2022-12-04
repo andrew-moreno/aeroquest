@@ -47,6 +47,7 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
                       .addBean(beanName, description);
                   Navigator.of(context).pop();
                 },
+                autoFocusTitleField: true,
                 context: context,
                 formKey: _formKey,
               );
@@ -105,6 +106,7 @@ void showCustomCoffeeBeanModalSheet({
   Function()? deleteAction,
   String? beanName,
   String? description,
+  required bool autoFocusTitleField,
 }) {
   showModalBottomSheet(
     context: context,
@@ -121,6 +123,7 @@ void showCustomCoffeeBeanModalSheet({
         deleteAction: deleteAction,
         beanName: beanName,
         description: description,
+        autoFocusTitleField: autoFocusTitleField,
       );
     },
   );

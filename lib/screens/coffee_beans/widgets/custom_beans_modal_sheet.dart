@@ -12,6 +12,7 @@ class CustomBeansModalSheet extends StatelessWidget {
     this.deleteAction,
     this.beanName,
     this.description,
+    required this.autoFocusTitleField,
   }) : super(key: key);
 
   /// Form key passed from [CoffeeBeans] that handles validation
@@ -33,6 +34,9 @@ class CustomBeansModalSheet extends StatelessWidget {
   /// If null, the associated text field will remain empty
   final String? description;
 
+  /// Whether to autofocus the title form field or not when opening the modal
+  final bool autoFocusTitleField;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -50,7 +54,7 @@ class CustomBeansModalSheet extends StatelessWidget {
               CustomFormField(
                 formName: "beanName",
                 hint: "Name",
-                autoFocus: true,
+                autoFocus: autoFocusTitleField,
                 validate: true,
                 initialValue: beanName,
                 validateText: "Please enter a name for these beans",
