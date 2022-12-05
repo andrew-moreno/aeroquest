@@ -55,6 +55,7 @@ class RecipeDetailsHeader extends StatelessWidget {
                     textStyle: _titleTextStyle,
                     validate: true,
                     textCapitalization: TextCapitalization.words,
+                    validateUniqueness: true,
                   ),
                   const SizedBox(height: _sizedBoxHeight),
                   CustomHeaderFormField(
@@ -64,6 +65,7 @@ class RecipeDetailsHeader extends StatelessWidget {
                     textStyle: _descriptionTextStyle,
                     validate: false,
                     textCapitalization: TextCapitalization.sentences,
+                    validateUniqueness: false,
                   ),
                 ],
               ),
@@ -94,14 +96,19 @@ class CustomHeaderFormField extends StatelessWidget {
     required this.textStyle,
     required this.validate,
     required this.textCapitalization,
+    required this.validateUniqueness,
   }) : super(key: key);
 
+  // TODO: comments
   final String name;
   final String? initialValue;
   final String hintText;
   final TextStyle textStyle;
   final bool validate;
   final TextCapitalization textCapitalization;
+
+  /// Whether to check if the entered text already exists within the app
+  final bool validateUniqueness;
 
   @override
   Widget build(BuildContext context) {
@@ -131,6 +138,15 @@ class CustomHeaderFormField extends StatelessWidget {
       validator: (value) {
         if (validate && (value == null || value.isEmpty)) {
           return "Please enter a title";
+        } else if (validateUniqueness) {
+          // TODO: make more efficient
+          if (value != initialValue &&
+              Provider.of<RecipesProvider>(context, listen: false)
+                  .recipes
+                  .values
+                  .any((recipe) => recipe.title == value)) {
+            return "Please select a unique recipe title";
+          }
         }
         return null;
       },

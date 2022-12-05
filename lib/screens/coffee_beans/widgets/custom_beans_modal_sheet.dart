@@ -58,6 +58,7 @@ class CustomBeansModalSheet extends StatelessWidget {
                 validate: true,
                 initialValue: beanName,
                 validateText: "Please enter a name for these beans",
+                validateUniqueness: true,
               ),
               const Divider(height: 20, color: Color(0x00000000)),
               CustomFormField(
