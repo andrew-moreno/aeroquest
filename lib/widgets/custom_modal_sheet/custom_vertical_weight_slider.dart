@@ -57,7 +57,7 @@ class _SettingValueSliderState extends State<SettingValueSlider> {
       case ParameterType.coffeeAmount:
         return 100;
       case ParameterType.waterAmount:
-        return 999;
+        return 300; // roughly max amount of water possible in aeropress
       case ParameterType.waterTemp:
         return 100;
       case ParameterType.brewTime:
@@ -88,22 +88,19 @@ class _SettingValueSliderState extends State<SettingValueSlider> {
       case ParameterType.waterAmount:
         return WeightSliderController(
           initialWeight: _settingsSliderProvider.tempWaterAmount!.toDouble(),
-          interval: 1,
         );
       case ParameterType.waterTemp:
         return WeightSliderController(
           initialWeight: _settingsSliderProvider.tempWaterTemp!.toDouble(),
-          interval: 1,
         );
       case ParameterType.brewTime:
         return WeightSliderController(
           initialWeight: _settingsSliderProvider.tempBrewTime!.toDouble(),
-          interval: 1,
         );
       case ParameterType.noteTime:
         return WeightSliderController(
-            initialWeight: _settingsSliderProvider.tempNoteTime!.toDouble(),
-            interval: 1);
+          initialWeight: _settingsSliderProvider.tempNoteTime!.toDouble(),
+        );
       case ParameterType.none:
         return WeightSliderController(initialWeight: 50);
       default:

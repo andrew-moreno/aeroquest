@@ -73,24 +73,20 @@ class _VerticalWeightSliderState extends State<VerticalWeightSlider> {
                     i
                 ].length,
                 (index) => Center(
-                  child: (index == widget.maxWeight || index == 0)
+                  child: (index ==
+                              widget.maxWeight *
+                                  widget.controller.getIntervalToInt() ||
+                          index == 0)
                       ? WeightPointer(
                           color: widget.decoration.largeColor,
                           width: widget.decoration.width + 30,
                           height: widget.decoration.height,
                         )
-                      : index % 10 == 0
-                          ? WeightPointer(
-                              color: widget.decoration.largeColor,
-                              width: widget.decoration.width,
-                              height: widget.decoration.height,
-                            )
-                          : WeightPointer(
-                              color: widget.decoration.mediumColor,
-                              width: widget.decoration.width -
-                                  widget.decoration.gap,
-                              height: widget.decoration.height,
-                            ),
+                      : WeightPointer(
+                          color: widget.decoration.mediumColor,
+                          width: widget.decoration.width,
+                          height: widget.decoration.height,
+                        ),
                 ),
               ),
               onSelectedItemChanged: (index) {
