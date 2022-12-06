@@ -69,7 +69,7 @@ class _NotesModalSheetState extends State<NotesModalSheet> {
                 maxWidth: constraints.maxWidth,
                 notesData: widget.notesData,
               ),
-              const Divider(height: 20, color: Color(0x00000000)),
+              const SizedBox(height: 20),
               FormBuilder(
                 key: Provider.of<RecipesProvider>(context, listen: false)
                     .recipeNotesFormKey,
@@ -79,9 +79,10 @@ class _NotesModalSheetState extends State<NotesModalSheet> {
                   initialValue: widget.notesData?.text,
                   validate: true,
                   validateText: "Please enter a note",
+                  textCapitalization: TextCapitalization.sentences,
                 ),
               ),
-              const Divider(height: 20, color: Color(0x00000000)),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: (widget.deleteAction != null)
                     ? MainAxisAlignment.spaceBetween

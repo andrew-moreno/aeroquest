@@ -59,14 +59,16 @@ class CustomBeansModalSheet extends StatelessWidget {
                 initialValue: beanName,
                 validateText: "Please enter a name for these beans",
                 validateUniqueness: true,
+                textCapitalization: TextCapitalization.words,
               ),
-              const Divider(height: 20, color: Color(0x00000000)),
+              const SizedBox(height: 20),
               CustomFormField(
                 formName: "description",
                 hint: "Description",
                 initialValue: description,
+                textCapitalization: TextCapitalization.sentences,
               ),
-              const Divider(height: 20, color: Color(0x00000000)),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: (deleteAction != null)
                     ? MainAxisAlignment.spaceBetween

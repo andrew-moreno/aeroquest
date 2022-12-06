@@ -14,6 +14,7 @@ class CustomFormField extends StatelessWidget {
     this.validate = false,
     this.validateUniqueness = false,
     this.validateText,
+    required this.textCapitalization,
     required this.initialValue,
   }) : super(key: key);
 
@@ -31,10 +32,13 @@ class CustomFormField extends StatelessWidget {
   /// Whether to check if the entered text already exists within the app
   final bool validateUniqueness;
 
+  /// Type of text capitalization to use in the form field
+  final TextCapitalization textCapitalization;
+
   @override
   Widget build(BuildContext context) {
     return FormBuilderTextField(
-      textCapitalization: TextCapitalization.sentences,
+      textCapitalization: textCapitalization,
       maxLines: null,
       cursorColor: kPrimary,
       cursorWidth: 1,
