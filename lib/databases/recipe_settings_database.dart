@@ -92,7 +92,7 @@ class RecipeSettingsDatabase {
   ///
   /// Recipe settings are mapped by their associated recipe id first,
   /// then their recipe setting id
-  Future<SplayTreeMap<int, SplayTreeMap<int, RecipeSettings>>>
+  Future<Map<int, SplayTreeMap<int, RecipeSettings>>>
       readAllRecipeSettings() async {
     final db = await instance.database;
 
@@ -101,7 +101,7 @@ class RecipeSettingsDatabase {
     final recipeSettingsList =
         result.map((json) => RecipeSettings.fromJson(json)).toList();
 
-    final settingsMap = SplayTreeMap<int, SplayTreeMap<int, RecipeSettings>>();
+    final settingsMap = <int, SplayTreeMap<int, RecipeSettings>>{};
     for (var recipeSetting in recipeSettingsList) {
       if (settingsMap.containsKey(recipeSetting.recipeEntryId)) {
         settingsMap[recipeSetting.recipeEntryId]!

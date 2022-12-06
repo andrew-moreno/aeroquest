@@ -42,10 +42,12 @@ class RecipesProvider extends ChangeNotifier {
   /// Reflects recipe settings information from the recipe settings database
   ///
   /// Mapped by their associated recipe id first, then the recipe settings id
+  /// which are ordered by key for ease of assignming temporary ids in
+  /// [tempAddSetting]
   ///
   /// RecipeSettings objects must be updated in this map at the same time
   /// as they're updated in the database to reflect changes properly
-  late SplayTreeMap<int, SplayTreeMap<int, RecipeSettings>> _recipeSettings;
+  late Map<int, SplayTreeMap<int, RecipeSettings>> _recipeSettings;
 
   /// Holds a temporary map of the recipe settings associated with a particular
   /// recipe
@@ -63,13 +65,24 @@ class RecipesProvider extends ChangeNotifier {
     return UnmodifiableMapView(_tempRecipeSettings);
   }
 
-  late SplayTreeMap<int, SplayTreeMap<int, Note>> _notes;
+  /// Reflests the notes information from the notes database, but sorted by
+  /// note time
+  ///
+  /// Mapped by their associated recipe id fist, then the notes id
+  ///
+  /// Notes objects must be updated in this map at the same time as they're
+  /// updated in the database to reflect changes properly
+  late Map<int, SplayTreeMap<int, Note>> _notes;
+
+  /// Holds a temporary map of the notes asosciated with a particular recipe
   var _tempNotes = SplayTreeMap<int, Note>();
 
+  /// returns an unmodifaible version of [_notes]
   UnmodifiableMapView<int, Map<int, Note>> get notes {
     return UnmodifiableMapView(_notes);
   }
 
+  /// Returns an unmodifiable version of [_tempNotes]
   UnmodifiableMapView<int, Note> get tempNotes {
     return UnmodifiableMapView(_tempNotes);
   }
@@ -530,7 +543,7 @@ class RecipesProvider extends ChangeNotifier {
   /// database accordingly
   ///
   /// First makes updates to the database and [associatedSettingsCount], then
-  /// populates [_notes] with the all data from [_tempNotes]
+  /// populates [_notes] with the all data from [_tempNotes] sorted by time
   Future<void> saveEditedNotes(int recipeEntryId) async {
     /// If [_tempNotes] doesn't contain a note that is in [_notes], delete that
     ///note from the database

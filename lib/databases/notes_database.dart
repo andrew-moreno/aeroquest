@@ -52,13 +52,13 @@ class NotesDatabase {
   ///
   /// Notes are mapped by their associated recipe id first,
   /// then their note id
-  Future<SplayTreeMap<int, SplayTreeMap<int, Note>>> readAllNotes() async {
+  Future<Map<int, SplayTreeMap<int, Note>>> readAllNotes() async {
     final db = await instance.database;
 
     final result = await db.query(tableNotes);
 
     final notesList = result.map((json) => Note.fromJson(json)).toList();
-    final notesMap = SplayTreeMap<int, SplayTreeMap<int, Note>>();
+    final notesMap = <int, SplayTreeMap<int, Note>>{};
     for (var note in notesList) {
       if (notesMap.containsKey(note.recipeEntryId)) {
         notesMap[note.recipeEntryId]!.addAll({note.id!: note});
