@@ -43,6 +43,8 @@ class _CoffeeBeanDropdownState extends State<CoffeeBeanDropdown> {
                   return DropdownMenuItem(
                     child: Text(
                       _recipesProvider.coffeeBeans[key]!.beanName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         color: kPrimary,
                         fontSize: 16,

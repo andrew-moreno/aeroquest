@@ -24,12 +24,14 @@ class BeanSettings extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 5,
-            vertical: 0,
+            vertical: 1,
           ),
           child: Text(
             Provider.of<RecipesProvider>(context, listen: true)
                 .coffeeBeans[recipeSetting.beanId]!
                 .beanName,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: Theme.of(context)
                 .textTheme
                 .subtitle1!
