@@ -31,7 +31,6 @@ class _RecipeMethodState extends State<RecipeMethod> {
   static const double _methodPadding = 15;
 
   late Recipe _recipeData;
-  late Map<int, Note> _notesData;
 
   late final RecipesProvider _recipesProvider =
       Provider.of<RecipesProvider>(context, listen: false);
@@ -40,7 +39,6 @@ class _RecipeMethodState extends State<RecipeMethod> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _recipeData = _selectRecipeData();
-    _notesData = _selectNotesData();
   }
 
   Recipe _selectRecipeData() {
@@ -85,7 +83,9 @@ class _RecipeMethodState extends State<RecipeMethod> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Consumer<RecipesProvider>(
         builder: (_, recipesProvider, __) {
-          Map<int, Note> _notesData = _selectNotesData();
+          /// TODO: sorting of [_notesData] could be more efficient
+          List<Note> _notesData = _selectNotesData().values.toList();
+          _notesData.sort((a, b) => a.time.compareTo(b.time));
           return Column(
             children: [
               Row(
@@ -110,8 +110,7 @@ class _RecipeMethodState extends State<RecipeMethod> {
                 shrinkWrap: true,
                 itemCount: _notesData.length,
                 itemBuilder: (BuildContext context, int index) {
-                  int key = _notesData.keys.elementAt(index);
-                  return RecipeMethodNotes(note: _notesData[key]!);
+                  return RecipeMethodNotes(note: _notesData[index]);
                 },
                 separatorBuilder: (context, index) {
                   return const SizedBox(height: _methodPadding);
