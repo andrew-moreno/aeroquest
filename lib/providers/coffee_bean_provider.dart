@@ -75,8 +75,7 @@ class CoffeeBeanProvider extends ChangeNotifier {
     _coffeeBeans[id]!.beanName = beanName;
     _coffeeBeans[id]?.description = description;
     _coffeeBeans[id]!.associatedSettingsCount = associatedSettingsCount;
-    await CoffeeBeansDatabase.instance.update(
-        coffeeBean); // TODO: can use coffeeBeans[id] instead of creating new object
+    await CoffeeBeansDatabase.instance.update(coffeeBean);
     log("beans updated with id: " + id.toString());
     notifyListeners();
   }
