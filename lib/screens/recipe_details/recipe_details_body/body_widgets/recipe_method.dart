@@ -294,19 +294,22 @@ class _RecipeMethodNotesState extends State<RecipeMethodNotes> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(
-                (widget.note.time ~/ 6).toString() +
-                    ":" +
-                    (widget.note.time % 6).toString() +
-                    "0",
-                style: const TextStyle(
-                  color: kPrimary,
-                  fontSize: 17,
-                  fontFamily: "Poppins",
-                  fontWeight: FontWeight.w600,
+              SizedBox(
+                width: 55,
+                child: Text(
+                  (widget.note.time ~/ 6).toString() +
+                      ":" +
+                      (widget.note.time % 6).toString() +
+                      "0",
+                  style: const TextStyle(
+                    color: kPrimary,
+                    fontSize: 17,
+                    fontFamily: "Poppins",
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
-              const SizedBox(width: 20),
+              //const SizedBox(width: 20),
               Expanded(
                 child: Text(
                   widget.note.text,
