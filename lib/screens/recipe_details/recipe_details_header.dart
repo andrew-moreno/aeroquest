@@ -33,9 +33,10 @@ class RecipeDetailsHeader extends StatelessWidget {
     fontFamily: "Poppins",
     fontSize: 15,
     fontWeight: FontWeight.w500,
+    height: 1.4,
   );
 
-  static const double? _sizedBoxHeight = 10;
+  static const double _sizedBoxHeight = 10;
 
   @override
   Widget build(BuildContext context) {
@@ -70,17 +71,26 @@ class RecipeDetailsHeader extends StatelessWidget {
                 ],
               ),
             )
-          : Column(
-              children: [
-                Text(titleValue, style: _titleTextStyle),
-                const SizedBox(height: _sizedBoxHeight),
-                (descriptionValue != null && descriptionValue != "")
-                    ? Text(
-                        descriptionValue!,
-                        style: _descriptionTextStyle,
-                      )
-                    : Container(),
-              ],
+          : Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Column(
+                children: [
+                  Text(
+                    titleValue,
+                    style: _titleTextStyle,
+                    textAlign: TextAlign.center,
+                  ),
+                  // 5*2 used to match padding of text form fields
+                  const SizedBox(height: _sizedBoxHeight + (5 * 2)),
+                  (descriptionValue != null && descriptionValue != "")
+                      ? Text(
+                          descriptionValue!,
+                          style: _descriptionTextStyle,
+                          textAlign: TextAlign.center,
+                        )
+                      : Container(),
+                ],
+              ),
             ),
     );
   }
@@ -116,16 +126,15 @@ class CustomHeaderFormField extends StatelessWidget {
       name: name,
       textCapitalization: textCapitalization,
       cursorColor: kLightSecondary,
-      cursorWidth: 2,
       maxLines: null,
       textAlign: TextAlign.center,
       initialValue: initialValue,
       style: textStyle,
       decoration: InputDecoration(
+        isDense: true,
         contentPadding: const EdgeInsets.all(5),
         hintText: hintText,
         hintStyle: textStyle,
-        filled: true,
         fillColor: kPrimary,
         border: DecoratedInputBorder(
           shadow: [kBoxShadow],
