@@ -1,10 +1,11 @@
+import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/bean_settings_group.dart';
+import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/recipe_method.dart';
+import 'package:aeroquest/screens/recipe_details/recipe_details_header.dart';
 import 'package:aeroquest/widgets/appbar/appbar_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:aeroquest/providers/recipes_provider.dart';
-import 'package:aeroquest/screens/recipe_details/recipe_details_body/recipe_details_body.dart';
-import 'package:aeroquest/screens/recipe_details/recipe_details_header.dart';
 import 'package:aeroquest/widgets/appbar/appbar_leading.dart';
 import 'package:aeroquest/widgets/custom_dialog.dart';
 import 'package:aeroquest/constraints.dart';
@@ -159,91 +160,161 @@ class _RecipeDetailsState extends State<RecipeDetails> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: WillPopScope(
-        onWillPop: _onWillPop,
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: SafeArea(
-            child: StretchingOverscrollIndicator(
-              axisDirection: AxisDirection.down,
-              child: CustomScrollView(
+    final List<String> tabs = <String>['Bean Settings', 'Method'];
+    return DefaultTabController(
+      length: tabs.length,
+      child: Scaffold(
+        body: WillPopScope(
+          onWillPop: _onWillPop,
+          child: GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: SafeArea(
+              child: NestedScrollView(
                 controller: _scrollController,
-                slivers: [
-                  SliverAppBar(
-                    backgroundColor: kPrimary,
-                    leading: AppBarLeading(
-                      leadingFunction: LeadingFunction.back,
-                      onTap: () => _exitDetailsPage(),
-                    ),
-                    actions: [
-                      AppBarButton(
-                        onTap: () async {
-                          if (_recipesProvider.editMode == EditMode.enabled) {
-                            await _saveRecipe();
-                          } else {
-                            _editRecipe();
-                          }
-                        },
-                        icon: (_recipesProvider.editMode == EditMode.enabled)
-                            ? Icons.check
-                            : Icons.edit,
-                        hasDynamicColour: true,
+                headerSliverBuilder:
+                    (BuildContext context, bool innerBoxIsScrolled) {
+                  return <Widget>[
+                    SliverOverlapAbsorber(
+                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                          context),
+                      sliver: SliverAppBar(
+                        backgroundColor: kPrimary,
+                        leading: AppBarLeading(
+                          leadingFunction: LeadingFunction.back,
+                          onTap: () => _exitDetailsPage(),
+                        ),
+                        actions: [
+                          AppBarButton(
+                            onTap: () async {
+                              if (_recipesProvider.editMode ==
+                                  EditMode.enabled) {
+                                await _saveRecipe();
+                              } else {
+                                _editRecipe();
+                              }
+                            },
+                            icon:
+                                (_recipesProvider.editMode == EditMode.enabled)
+                                    ? Icons.check
+                                    : Icons.edit,
+                            hasDynamicColour: true,
+                          ),
+                          (!widget.isAdding)
+                              ? AppBarButton(
+                                  onTap: _showConfirmDeletePopup,
+                                  icon: Icons.delete,
+                                  hasDynamicColour: true,
+                                )
+                              : Container(),
+                        ],
                       ),
-                      (!widget.isAdding)
-                          ? AppBarButton(
-                              onTap: _showConfirmDeletePopup,
-                              icon: Icons.delete,
-                              hasDynamicColour: true,
-                            )
-                          : Container(),
-                    ],
-                  ),
-                  SliverList(
-                    delegate: SliverChildListDelegate(
-                      [
-                        const SizedBox(height: 5),
-                        RecipeDetailsHeader(
-                          titleValue: _recipesProvider
-                                  .recipes[widget.recipeData.id]?.title ??
-                              widget.recipeData.title,
-                          descriptionValue: _recipesProvider
-                                  .recipes[widget.recipeData.id]?.description ??
-                              widget.recipeData.description ??
-                              "",
-                        ),
-                        const SizedBox(height: 20),
-                        RecipeDetailsBody(
-                          recipeId: widget.recipeData.id!,
-                        ),
-                      ],
                     ),
-                  ),
-
-                  /// Fills remaining space if content doesn't expand to
-                  /// height of screen
-                  SliverFillRemaining(
-                    hasScrollBody: false,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        color: kDarkSecondary,
-                        // Necessary to fix 1 pixel gap bug in slivers
-                        boxShadow: [
-                          BoxShadow(
+                    SliverToBoxAdapter(
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 5),
+                          RecipeDetailsHeader(
+                            titleValue: _recipesProvider
+                                    .recipes[widget.recipeData.id]?.title ??
+                                widget.recipeData.title,
+                            descriptionValue: _recipesProvider
+                                    .recipes[widget.recipeData.id]
+                                    ?.description ??
+                                widget.recipeData.description ??
+                                "",
+                          ),
+                          const SizedBox(height: 20),
+                          Container(
                             color: kDarkSecondary,
-                            blurRadius: 0.0,
-                            spreadRadius: 0.0,
-                            offset: Offset(0, -2),
+                            child: TabBar(
+                              tabs: tabs
+                                  .map((String name) => Tab(text: name))
+                                  .toList(),
+                              labelStyle: const TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 15),
+                              labelColor: kAccent,
+                              unselectedLabelColor: kPrimary,
+                              indicatorColor: kAccent,
+                            ),
                           ),
                         ],
                       ),
                     ),
-                  )
-                ],
+                  ];
+                },
+                body: Container(
+                  color: kDarkSecondary,
+                  child: TabBarView(
+                    children: [
+                      RecipeDetailsBodyChild(
+                        header: "Bean Settings",
+                        child: BeanSettingsGroup(
+                          recipeEntryId: widget.recipeData.id!,
+                        ),
+                      ),
+                      RecipeDetailsBodyChild(
+                        header: "Method",
+                        child: RecipeMethod(
+                          recipeEntryId: widget.recipeData.id!,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class RecipeDetailsBodyChild extends StatelessWidget {
+  const RecipeDetailsBodyChild({
+    Key? key,
+    required this.header,
+    required this.child,
+  }) : super(key: key);
+
+  final String header;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 35),
+      child: Builder(
+        builder: (context) {
+          return CustomScrollView(
+            slivers: [
+              SliverOverlapInjector(
+                handle:
+                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              ),
+              SliverList(
+                delegate: SliverChildListDelegate(
+                  [
+                    const SizedBox(height: 20),
+                    Column(
+                      children: [
+                        Text(
+                          header,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.headline4,
+                        ),
+                        const SizedBox(height: 15),
+                        child,
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
