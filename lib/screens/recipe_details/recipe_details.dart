@@ -10,6 +10,7 @@ import 'package:aeroquest/widgets/appbar/appbar_leading.dart';
 import 'package:aeroquest/widgets/custom_dialog.dart';
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/models/recipe.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 
 class RecipeDetails extends StatefulWidget {
   /// The screen used for displaying and editing the details of a single recipe
@@ -33,8 +34,6 @@ class RecipeDetails extends StatefulWidget {
 }
 
 class _RecipeDetailsState extends State<RecipeDetails> {
-  final ScrollController _scrollController = ScrollController();
-
   late final RecipesProvider _recipesProvider =
       Provider.of<RecipesProvider>(context, listen: false);
 
@@ -170,73 +169,83 @@ class _RecipeDetailsState extends State<RecipeDetails> {
             onTap: () => FocusScope.of(context).unfocus(),
             child: SafeArea(
               child: NestedScrollView(
-                controller: _scrollController,
                 headerSliverBuilder:
                     (BuildContext context, bool innerBoxIsScrolled) {
                   return <Widget>[
                     SliverOverlapAbsorber(
                       handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
                           context),
-                      sliver: SliverAppBar(
-                        backgroundColor: kPrimary,
-                        leading: AppBarLeading(
-                          leadingFunction: LeadingFunction.back,
-                          onTap: () => _exitDetailsPage(),
-                        ),
-                        actions: [
-                          AppBarButton(
-                            onTap: () async {
-                              if (_recipesProvider.editMode ==
-                                  EditMode.enabled) {
-                                await _saveRecipe();
-                              } else {
-                                _editRecipe();
-                              }
-                            },
-                            icon:
-                                (_recipesProvider.editMode == EditMode.enabled)
+                      sliver: MultiSliver(
+                        children: [
+                          SliverAppBar(
+                            pinned: true,
+                            backgroundColor: kPrimary,
+                            leading: AppBarLeading(
+                              leadingFunction: LeadingFunction.back,
+                              onTap: () => _exitDetailsPage(),
+                            ),
+                            actions: [
+                              AppBarButton(
+                                onTap: () async {
+                                  if (_recipesProvider.editMode ==
+                                      EditMode.enabled) {
+                                    await _saveRecipe();
+                                  } else {
+                                    _editRecipe();
+                                  }
+                                },
+                                icon: (_recipesProvider.editMode ==
+                                        EditMode.enabled)
                                     ? Icons.check
                                     : Icons.edit,
-                            hasDynamicColour: true,
+                                hasDynamicColour: true,
+                              ),
+                              (!widget.isAdding)
+                                  ? AppBarButton(
+                                      onTap: _showConfirmDeletePopup,
+                                      icon: Icons.delete,
+                                      hasDynamicColour: true,
+                                    )
+                                  : Container(),
+                            ],
                           ),
-                          (!widget.isAdding)
-                              ? AppBarButton(
-                                  onTap: _showConfirmDeletePopup,
-                                  icon: Icons.delete,
-                                  hasDynamicColour: true,
-                                )
-                              : Container(),
-                        ],
-                      ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 5),
-                          RecipeDetailsHeader(
-                            titleValue: _recipesProvider
-                                    .recipes[widget.recipeData.id]?.title ??
-                                widget.recipeData.title,
-                            descriptionValue: _recipesProvider
-                                    .recipes[widget.recipeData.id]
-                                    ?.description ??
-                                widget.recipeData.description ??
-                                "",
+                          SliverToBoxAdapter(
+                            child: Container(
+                              color: kPrimary,
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: 5),
+                                  RecipeDetailsHeader(
+                                    titleValue: _recipesProvider
+                                            .recipes[widget.recipeData.id]
+                                            ?.title ??
+                                        widget.recipeData.title,
+                                    descriptionValue: _recipesProvider
+                                            .recipes[widget.recipeData.id]
+                                            ?.description ??
+                                        widget.recipeData.description ??
+                                        "",
+                                  ),
+                                  const SizedBox(height: 20),
+                                ],
+                              ),
+                            ),
                           ),
-                          const SizedBox(height: 20),
-                          Container(
-                            color: kDarkSecondary,
-                            child: TabBar(
-                              tabs: tabs
-                                  .map((String name) => Tab(text: name))
-                                  .toList(),
-                              labelStyle: const TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15),
-                              labelColor: kAccent,
-                              unselectedLabelColor: kPrimary,
-                              indicatorColor: kAccent,
+                          SliverPinnedHeader(
+                            child: Container(
+                              color: kDarkSecondary,
+                              child: TabBar(
+                                tabs: tabs
+                                    .map((String name) => Tab(text: name))
+                                    .toList(),
+                                labelStyle: const TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 15),
+                                labelColor: kAccent,
+                                unselectedLabelColor: kPrimary,
+                                indicatorColor: kAccent,
+                              ),
                             ),
                           ),
                         ],
@@ -286,36 +295,27 @@ class RecipeDetailsBodyChild extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 35),
-      child: Builder(
-        builder: (context) {
-          return CustomScrollView(
-            slivers: [
-              SliverOverlapInjector(
+      child: Builder(builder: (context) {
+        return CustomScrollView(
+          slivers: [
+            SliverOverlapInjector(
                 handle:
-                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                    NestedScrollView.sliverOverlapAbsorberHandleFor(context)),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      child,
+                    ],
+                  ),
+                ],
               ),
-              SliverList(
-                delegate: SliverChildListDelegate(
-                  [
-                    const SizedBox(height: 20),
-                    Column(
-                      children: [
-                        Text(
-                          header,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headline4,
-                        ),
-                        const SizedBox(height: 15),
-                        child,
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          );
-        },
-      ),
+            ),
+          ],
+        );
+      }),
     );
   }
 }
