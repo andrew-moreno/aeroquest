@@ -116,13 +116,15 @@ class _RecipeMethodState extends State<RecipeMethod> {
                   return const SizedBox(height: _methodPadding);
                 },
               ),
-              const SizedBox(height: 20),
-              (recipesProvider.editMode == EditMode.enabled)
-                  ? AddToRecipeButton(
-                      onTap: addNote,
-                      buttonText: "Add Note",
-                    )
-                  : Container(),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: (recipesProvider.editMode == EditMode.enabled)
+                    ? AddToRecipeButton(
+                        onTap: addNote,
+                        buttonText: "Add Note",
+                      )
+                    : Container(),
+              ),
             ],
           );
         },
