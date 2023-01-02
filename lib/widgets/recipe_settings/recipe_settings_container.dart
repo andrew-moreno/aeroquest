@@ -45,7 +45,8 @@ class RecipeSettingsContainer extends StatelessWidget {
                       (index) => FractionallySizedBox(
                         widthFactor: 1 / _controller.viewportFraction,
                         child: BeanSettings(
-                          recipeSetting: recipeSettings[index],
+                          recipeSetting:
+                              recipeSettings[recipeSettings.length - index - 1],
                         ),
                       ),
                     ),
