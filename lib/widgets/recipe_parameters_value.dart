@@ -38,7 +38,7 @@ class RecipeParameterValue extends StatelessWidget {
             ":" +
             (parameterValue % 6).toString() +
             "0";
-      case ParameterType.noteTime:
+      case ParameterType.recipeStepTime:
         return (parameterValue ~/ 6).toString() +
             ":" +
             (parameterValue % 6).toString() +
@@ -63,7 +63,7 @@ class RecipeParameterValue extends StatelessWidget {
         return "Temp";
       case ParameterType.brewTime:
         return "Time";
-      case ParameterType.noteTime:
+      case ParameterType.recipeStepTime:
         return "Time";
       case ParameterType.none:
         throw Exception("ParameterType.none passed incorrectly");
@@ -97,9 +97,9 @@ class RecipeParameterValue extends StatelessWidget {
 
 /// Defines all types of editable parameters for a recipe
 ///
-/// eg. water amount, grind setting, note time
+/// eg. water amount, grind setting, recipe step time
 enum ParameterType {
-  noteTime,
+  recipeStepTime,
   grindSetting,
   coffeeAmount,
   waterAmount,

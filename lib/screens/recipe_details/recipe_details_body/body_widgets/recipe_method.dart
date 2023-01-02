@@ -8,12 +8,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:aeroquest/models/recipe.dart';
-import 'package:aeroquest/models/note.dart';
+import 'package:aeroquest/models/recipe_step.dart';
 import 'package:aeroquest/constraints.dart';
 import 'package:provider/provider.dart';
 
 class RecipeMethod extends StatefulWidget {
-  /// Defines the widget for displaying push pressure, brew method, and notes
+  /// Defines the widget for displaying push pressure, brew method, and
+  /// recipe steps
   const RecipeMethod({
     Key? key,
     required this.recipeEntryId,
@@ -49,27 +50,27 @@ class _RecipeMethodState extends State<RecipeMethod> {
     }
   }
 
-  Map<int, Note> _selectNotesData() {
+  Map<int, RecipeStep> _selectRecipeStepsData() {
     if (_recipesProvider.editMode == EditMode.enabled) {
-      return _recipesProvider.tempNotes;
+      return _recipesProvider.tempRecipeSteps;
     } else {
-      return _recipesProvider.notes[widget.recipeEntryId] ?? {};
+      return _recipesProvider.recipeSteps[widget.recipeEntryId] ?? {};
     }
   }
 
-  /// Function to execute when pressing the "Add Note" button
-  void addNote() {
+  /// Function to execute when pressing the "Add Step" button
+  void addRecipeStep() {
     showCustomModalSheet(
-      modalType: ModalType.notes,
+      modalType: ModalType.recipeSteps,
       submitAction: () {
         if (!Provider.of<RecipesProvider>(context, listen: false)
-            .recipeNotesFormKey
+            .recipeRecipeStepsFormKey
             .currentState!
             .validate()) {
           return;
         }
-        _setRecipesProviderTempNoteParameters(context: context);
-        _recipesProvider.tempAddNote(
+        _setRecipesProviderTempRecipeStepParameters(context: context);
+        _recipesProvider.tempAddRecipeStep(
             widget.recipeEntryId); // index doesn't matter for recipe entry id
         Navigator.of(context).pop();
       },
@@ -83,9 +84,10 @@ class _RecipeMethodState extends State<RecipeMethod> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Consumer<RecipesProvider>(
         builder: (_, recipesProvider, __) {
-          /// TODO: sorting of [_notesData] could be more efficient
-          List<Note> _notesData = _selectNotesData().values.toList();
-          _notesData.sort((a, b) => a.time.compareTo(b.time));
+          /// TODO: sorting of [_recipeStepsData] could be more efficient
+          List<RecipeStep> _recipeStepsData =
+              _selectRecipeStepsData().values.toList();
+          _recipeStepsData.sort((a, b) => a.time.compareTo(b.time));
           return Column(
             children: [
               Row(
@@ -108,9 +110,10 @@ class _RecipeMethodState extends State<RecipeMethod> {
               ListView.separated(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: _notesData.length,
+                itemCount: _recipeStepsData.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return RecipeMethodNotes(note: _notesData[index]);
+                  return RecipeMethodRecipeSteps(
+                      recipeStep: _recipeStepsData[index]);
                 },
                 separatorBuilder: (context, index) {
                   return const SizedBox(height: _methodPadding);
@@ -120,8 +123,8 @@ class _RecipeMethodState extends State<RecipeMethod> {
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 child: (recipesProvider.editMode == EditMode.enabled)
                     ? AddToRecipeButton(
-                        onTap: addNote,
-                        buttonText: "Add Note",
+                        onTap: addRecipeStep,
+                        buttonText: "Add Step",
                       )
                     : Container(),
               ),
@@ -237,44 +240,45 @@ class RecipeMethodParameters extends StatelessWidget {
   }
 }
 
-class RecipeMethodNotes extends StatefulWidget {
-  /// Defines the widget to display a single note for a recipe
-  const RecipeMethodNotes({
+class RecipeMethodRecipeSteps extends StatefulWidget {
+  /// Defines the widget to display a single recipeStep for a recipe
+  const RecipeMethodRecipeSteps({
     Key? key,
-    required this.note,
+    required this.recipeStep,
   }) : super(key: key);
 
-  /// Note data to display
-  final Note note;
+  /// RecipeStep data to display
+  final RecipeStep recipeStep;
 
   @override
-  State<RecipeMethodNotes> createState() => _RecipeMethodNotesState();
+  State<RecipeMethodRecipeSteps> createState() =>
+      _RecipeMethodRecipeStepsState();
 }
 
-class _RecipeMethodNotesState extends State<RecipeMethodNotes> {
+class _RecipeMethodRecipeStepsState extends State<RecipeMethodRecipeSteps> {
   late final _recipesProvider =
       Provider.of<RecipesProvider>(context, listen: false);
 
   void showEditingModal() {
     if (_recipesProvider.editMode == EditMode.enabled) {
       showCustomModalSheet(
-          modalType: ModalType.notes,
+          modalType: ModalType.recipeSteps,
           submitAction: () {
             if (!Provider.of<RecipesProvider>(context, listen: false)
-                .recipeNotesFormKey
+                .recipeRecipeStepsFormKey
                 .currentState!
                 .validate()) {
               return;
             }
-            _setRecipesProviderTempNoteParameters(context: context);
-            _recipesProvider.editNote(widget.note);
+            _setRecipesProviderTempRecipeStepParameters(context: context);
+            _recipesProvider.editRecipeStep(widget.recipeStep);
             Navigator.of(context).pop();
           },
           deleteAction: () {
-            _recipesProvider.tempDeleteNote(widget.note.id!);
+            _recipesProvider.tempDeleteRecipeStep(widget.recipeStep.id!);
             Navigator.of(context).pop();
           },
-          notesData: widget.note,
+          recipeStepsData: widget.recipeStep,
           context: context);
     }
   }
@@ -299,9 +303,9 @@ class _RecipeMethodNotesState extends State<RecipeMethodNotes> {
               SizedBox(
                 width: 55,
                 child: Text(
-                  (widget.note.time ~/ 6).toString() +
+                  (widget.recipeStep.time ~/ 6).toString() +
                       ":" +
-                      (widget.note.time % 6).toString() +
+                      (widget.recipeStep.time % 6).toString() +
                       "0",
                   style: const TextStyle(
                     color: kPrimary,
@@ -314,7 +318,7 @@ class _RecipeMethodNotesState extends State<RecipeMethodNotes> {
               //const SizedBox(width: 20),
               Expanded(
                 child: Text(
-                  widget.note.text,
+                  widget.recipeStep.text,
                   style: const TextStyle(
                     color: kPrimary,
                     fontSize: 13,
@@ -331,13 +335,15 @@ class _RecipeMethodNotesState extends State<RecipeMethodNotes> {
   }
 }
 
-/// Sets the temp note parameters from the SettingsSliderProvider to the
-/// associated temp note parameter in the RecipeProvider
-void _setRecipesProviderTempNoteParameters({
+/// Sets the temp recipeStep parameters from the SettingsSliderProvider to the
+/// associated temp recipeStep parameter in the RecipeProvider
+void _setRecipesProviderTempRecipeStepParameters({
   required BuildContext context,
 }) {
-  Provider.of<RecipesProvider>(context, listen: false).tempNoteText =
-      Provider.of<SettingsSliderProvider>(context, listen: false).tempNoteText;
-  Provider.of<RecipesProvider>(context, listen: false).tempNoteTime =
-      Provider.of<SettingsSliderProvider>(context, listen: false).tempNoteTime;
+  Provider.of<RecipesProvider>(context, listen: false).tempRecipeStepText =
+      Provider.of<SettingsSliderProvider>(context, listen: false)
+          .tempRecipeStepText;
+  Provider.of<RecipesProvider>(context, listen: false).tempRecipeStepTime =
+      Provider.of<SettingsSliderProvider>(context, listen: false)
+          .tempRecipeStepTime;
 }

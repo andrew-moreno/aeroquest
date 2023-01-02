@@ -19,7 +19,7 @@ class ModalSliderValueContainer extends StatefulWidget {
 
   /// Defines whether the container can be clicked or not
   ///
-  /// Used to prevent deactivating the notes time slider
+  /// Used to prevent deactivating the recipe steps time slider
   final bool isClickable;
 
   @override
@@ -43,8 +43,8 @@ class _ModalSliderValueContainerState extends State<ModalSliderValueContainer> {
         return Provider.of<SettingsSliderProvider>(context).tempWaterTemp!;
       case ParameterType.brewTime:
         return Provider.of<SettingsSliderProvider>(context).tempBrewTime!;
-      case ParameterType.noteTime:
-        return Provider.of<SettingsSliderProvider>(context).tempNoteTime!;
+      case ParameterType.recipeStepTime:
+        return Provider.of<SettingsSliderProvider>(context).tempRecipeStepTime!;
       case ParameterType.none:
         throw Exception("SettingType.none passed incorrectly");
     }

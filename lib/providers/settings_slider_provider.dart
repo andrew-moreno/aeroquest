@@ -18,8 +18,8 @@ class SettingsSliderProvider extends ChangeNotifier {
   int? tempWaterTemp;
   int? tempBrewTime;
 
-  int? tempNoteTime;
-  String? tempNoteText;
+  int? tempRecipeStepTime;
+  String? tempRecipeStepText;
 
   /// Defines which value is getting changed when sliding the slider and
   /// assigns the appropriate settings value to [value]
@@ -40,8 +40,8 @@ class SettingsSliderProvider extends ChangeNotifier {
       case ParameterType.brewTime:
         tempBrewTime = value.toInt();
         break;
-      case ParameterType.noteTime:
-        tempNoteTime = value.toInt();
+      case ParameterType.recipeStepTime:
+        tempRecipeStepTime = value.toInt();
         break;
       case ParameterType.none:
         break;
@@ -60,9 +60,9 @@ class SettingsSliderProvider extends ChangeNotifier {
     tempSettingVisibility = null;
   }
 
-  /// Clears all temporary note parameters by setting them to null
-  void clearTempNoteParameters() {
-    tempNoteText = null;
-    tempNoteTime = null;
+  /// Clears all temporary recipe step parameters by setting them to null
+  void clearTempRecipeStepParameters() {
+    tempRecipeStepText = null;
+    tempRecipeStepTime = null;
   }
 }

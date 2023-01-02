@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 // used to
 class AddToRecipeButton extends StatelessWidget {
-  /// Defines the button used to add recipe settings or notes to a recipe
+  /// Defines the button used to add recipe settings or recipe steps to a recipe
   const AddToRecipeButton({
     Key? key,
     required this.onTap,

@@ -62,7 +62,7 @@ class _SettingValueSliderState extends State<SettingValueSlider> {
         return 100;
       case ParameterType.brewTime:
         return 180; // 30 minutes
-      case ParameterType.noteTime:
+      case ParameterType.recipeStepTime:
         return 180;
       case ParameterType.none:
 
@@ -97,9 +97,9 @@ class _SettingValueSliderState extends State<SettingValueSlider> {
         return WeightSliderController(
           initialWeight: _settingsSliderProvider.tempBrewTime!.toDouble(),
         );
-      case ParameterType.noteTime:
+      case ParameterType.recipeStepTime:
         return WeightSliderController(
-          initialWeight: _settingsSliderProvider.tempNoteTime!.toDouble(),
+          initialWeight: _settingsSliderProvider.tempRecipeStepTime!.toDouble(),
         );
       case ParameterType.none:
         return WeightSliderController(initialWeight: 50);

@@ -1,7 +1,7 @@
-import 'package:aeroquest/models/note.dart';
+import 'package:aeroquest/models/recipe_step.dart';
 import 'package:aeroquest/models/recipe_settings.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/bean_settings_group_widgets/settings_modal_sheet.dart';
-import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/recipe_method_widgets/notes_modal_sheet.dart';
+import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/recipe_method_widgets/recipe_steps_modal_sheet.dart';
 import 'package:aeroquest/widgets/custom_modal_sheet/value_slider_group_template.dart';
 import 'package:flutter/material.dart';
 
@@ -57,14 +57,14 @@ class RecipeDetailsBody extends StatelessWidget {
   }
 }
 
-/// Used to show the modal sheet used for editing notes or recipe settings
+/// Used to show the modal sheet used for editing recipe steps or recipe settings
 void showCustomModalSheet({
   required BuildContext context,
   required Function() submitAction,
   Function()? deleteAction,
   required ModalType modalType,
   RecipeSettings? recipeSettingsData,
-  Note? notesData,
+  RecipeStep? recipeStepsData,
 }) {
   showModalBottomSheet(
     context: context,
@@ -82,10 +82,10 @@ void showCustomModalSheet({
           recipeSettingsData: recipeSettingsData,
         );
       } else {
-        return NotesModalSheet(
+        return RecipeStepsModalSheet(
           submitAction: submitAction,
           deleteAction: deleteAction,
-          notesData: notesData,
+          recipeStepsData: recipeStepsData,
         );
       }
     },

@@ -2,9 +2,9 @@ import 'dart:collection';
 import 'dart:developer';
 
 import 'package:aeroquest/databases/coffee_beans_database.dart';
-import 'package:aeroquest/databases/notes_database.dart';
+import 'package:aeroquest/databases/recipe_steps_database.dart';
 import 'package:aeroquest/models/coffee_bean.dart';
-import 'package:aeroquest/models/note.dart';
+import 'package:aeroquest/models/recipe_step.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import "package:collection/collection.dart";
@@ -65,26 +65,27 @@ class RecipesProvider extends ChangeNotifier {
     return UnmodifiableMapView(_tempRecipeSettings);
   }
 
-  /// Reflests the notes information from the notes database, but sorted by
-  /// note time
+  /// Reflests the recipe steps information from the recipe steps database, but
+  /// sorted by recipe step time
   ///
-  /// Mapped by their associated recipe id fist, then the notes id
+  /// Mapped by their associated recipe id fist, then the recipe steps id
   ///
-  /// Notes objects must be updated in this map at the same time as they're
-  /// updated in the database to reflect changes properly
-  late Map<int, SplayTreeMap<int, Note>> _notes;
+  /// RecipeSteps objects must be updated in this map at the same time as
+  /// they're updated in the database to reflect changes properly
+  late Map<int, SplayTreeMap<int, RecipeStep>> _recipeSteps;
 
-  /// Holds a temporary map of the notes asosciated with a particular recipe
-  var _tempNotes = SplayTreeMap<int, Note>();
+  /// Holds a temporary map of the recipe steps asosciated with a particular
+  /// recipe
+  var _tempRecipeSteps = SplayTreeMap<int, RecipeStep>();
 
-  /// returns an unmodifaible version of [_notes]
-  UnmodifiableMapView<int, Map<int, Note>> get notes {
-    return UnmodifiableMapView(_notes);
+  /// returns an unmodifaible version of [_recipeSteps]
+  UnmodifiableMapView<int, Map<int, RecipeStep>> get recipeSteps {
+    return UnmodifiableMapView(_recipeSteps);
   }
 
-  /// Returns an unmodifiable version of [_tempNotes]
-  UnmodifiableMapView<int, Note> get tempNotes {
-    return UnmodifiableMapView(_tempNotes);
+  /// Returns an unmodifiable version of [_tempRecipeSteps]
+  UnmodifiableMapView<int, RecipeStep> get tempRecipeSteps {
+    return UnmodifiableMapView(_tempRecipeSteps);
   }
 
   /// Reflects coffee bean information from the coffee bean database mapped by
@@ -109,22 +110,22 @@ class RecipesProvider extends ChangeNotifier {
 
   EditMode editMode = EditMode.disabled;
 
-  // form key for title and description
+  /// Form key for title and description
   GlobalKey<FormBuilderState> recipeIdentifiersFormKey =
       GlobalKey<FormBuilderState>();
 
-  // form key for selecting a bean in the settings modal
+  /// Form key for selecting a bean in the settings modal
   GlobalKey<FormBuilderState> settingsBeanFormKey =
       GlobalKey<FormBuilderState>();
 
-  // form key for note text
-  GlobalKey<FormBuilderState> recipeNotesFormKey =
+  /// Form key for recipe step text
+  GlobalKey<FormBuilderState> recipeRecipeStepsFormKey =
       GlobalKey<FormBuilderState>();
 
   late PushPressure tempPushPressure;
   late BrewMethod tempBrewMethod;
 
-  // currently active setting to adjust when editing/adding
+  /// Currently active setting to adjust when editing/adding
   late ParameterType activeSlider;
 
   /// Parameters used for generating/editing recipe settings
@@ -142,16 +143,16 @@ class RecipesProvider extends ChangeNotifier {
   int? tempWaterTemp;
   int? tempBrewTime;
 
-  int? tempNoteTime;
-  String? tempNoteText;
+  int? tempRecipeStepTime;
+  String? tempRecipeStepText;
 
-  /// Populates [_recipes], [_recipeSettings], [_notes], and [_coffeeBeans]
-  /// with data from their respective databases
+  /// Populates [_recipes], [_recipeSettings], [_recipeSteps], and
+  /// [_coffeeBeans] with data from their respective databases
   Future<void> cacheRecipeData() async {
     _recipes = await RecipesDatabase.instance.readAllRecipes();
     _recipeSettings =
         await RecipeSettingsDatabase.instance.readAllRecipeSettings();
-    _notes = await NotesDatabase.instance.readAllNotes();
+    _recipeSteps = await RecipeStepsDatabase.instance.readAllRecipeSteps();
     _coffeeBeans = await CoffeeBeansDatabase.instance.readAllCoffeeBeans();
   }
 
@@ -168,7 +169,7 @@ class RecipesProvider extends ChangeNotifier {
   Future<Recipe> tempAddRecipe() async {
     await setTempRecipe(null);
     setTempRecipeSettings(null);
-    setTempNotes(null);
+    setTempRecipeSteps(null);
     return tempRecipe;
   }
 
@@ -181,7 +182,7 @@ class RecipesProvider extends ChangeNotifier {
   /// Sets [tempPushPressure] and [tempBrewMethod] to the values initialized
   /// in [_tempRecipe]
   ///
-  /// Prepares recipe settings and notes for editing
+  /// Prepares recipe settings and recipe steps for editing
   Future<void> setTempRecipe(int? recipeEntryId) async {
     // Adding new recipe
     if (recipeEntryId == null) {
@@ -201,15 +202,15 @@ class RecipesProvider extends ChangeNotifier {
     tempPushPressure = Recipe.stringToPushPressure(_tempRecipe.pushPressure);
     tempBrewMethod = Recipe.stringToBrewMethod(_tempRecipe.brewMethod);
 
-    /// Preparing recipe settings and notes for editing
+    /// Preparing recipe settings and recipe steps for editing
     setTempRecipeSettings(recipeEntryId);
-    setTempNotes(recipeEntryId);
+    setTempRecipeSteps(recipeEntryId);
   }
 
   /// Deletes a recipe of [recipeEntryId] and its associated data
   /// - recipe of [recipeEntryId] removed from [_recipes]
   /// - all recipe settings associated with this recipe are deleted
-  /// - all notes associated with this recipe are deleted
+  /// - all recipe steps associated with this recipe are deleted
   /// - coffee beans associated with this recipe have their
   ///   associatedSettingsCount decreased by one
   ///
@@ -229,11 +230,12 @@ class RecipesProvider extends ChangeNotifier {
     });
     _recipes.remove(recipeEntryId);
     _recipeSettings.remove(recipeEntryId);
-    _notes.remove(recipeEntryId);
+    _recipeSteps.remove(recipeEntryId);
     await RecipesDatabase.instance.delete(recipeEntryId);
     await RecipeSettingsDatabase.instance
         .deleteAllSettingsForRecipe(recipeEntryId);
-    await NotesDatabase.instance.deleteAllNotesForRecipe(recipeEntryId);
+    await RecipeStepsDatabase.instance
+        .deleteAllRecipeStepsForRecipe(recipeEntryId);
     notifyListeners();
   }
 
@@ -258,13 +260,13 @@ class RecipesProvider extends ChangeNotifier {
       await RecipesDatabase.instance.update(tempRecipe);
     }
 
-    /// Saving recipe settings and notes if changes were made to them while
-    /// editing recipe
+    /// Saving recipe settings and recipe steps if changes were made to them
+    /// while editing recipe
     if (areSettingsChanged(tempRecipe.id!)) {
       await saveEditedRecipeSettings(tempRecipe.id!);
     }
-    if (areNotesChanged(tempRecipe.id!)) {
-      await saveEditedNotes(tempRecipe.id!);
+    if (areRecipeStepsChanged(tempRecipe.id!)) {
+      await saveEditedRecipeSteps(tempRecipe.id!);
     }
     notifyListeners();
   }
@@ -291,14 +293,14 @@ class RecipesProvider extends ChangeNotifier {
       recipeSettingsChangedCheck = areSettingsChanged(recipeId);
     }
 
-    bool notesChangedCheck = false;
-    if (_tempNotes.isNotEmpty) {
-      notesChangedCheck = areNotesChanged(recipeId);
+    bool recipeStepsChangedCheck = false;
+    if (_tempRecipeSteps.isNotEmpty) {
+      recipeStepsChangedCheck = areRecipeStepsChanged(recipeId);
     }
 
     return (recipePropertiesChangedCheck ||
         recipeSettingsChangedCheck ||
-        notesChangedCheck);
+        recipeStepsChangedCheck);
   }
 
   /// Used to activate/deactivate a particular recipe settings slider when
@@ -317,11 +319,11 @@ class RecipesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Clears [_tempRecipeSettings] and [_tempNotes] and all temp recipe setting
-  /// parameters
+  /// Clears [_tempRecipeSettings] and [_tempRecipeSteps] and all temp recipe
+  /// setting parameters
   void clearTempData() {
     _tempRecipeSettings.clear();
-    _tempNotes.clear();
+    _tempRecipeSteps.clear();
   }
 
   /// Sets [_tempRecipeSettings] to the recipe settings in [_recipeSettings]
@@ -473,115 +475,122 @@ class RecipesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Sets [_tempNotes] to the notes in [_notes] associated with [recipeEntryId]
+  /// Sets [_tempRecipeSteps] to the recipe steps in [_recipeSteps] associated
+  /// with [recipeEntryId]
   ///
-  /// If [recipeEntryId] is null or doesn't exist, [_tempNotes] is set to an
-  /// empty SplayTreeMap object
-  /// - possibility that [recipeEntryId] doesn't exist in [_notes] when adding
-  ///   a new recipe.
-  void setTempNotes(int? recipeEntryId) {
-    _tempNotes = SplayTreeMap<int, Note>.from(
-        _notes[recipeEntryId] ?? SplayTreeMap<int, Note>());
+  /// If [recipeEntryId] is null or doesn't exist, [_tempRecipeSteps] is set to
+  /// an empty SplayTreeMap object
+  /// - possibility that [recipeEntryId] doesn't exist in [_recipeSteps] when
+  /// adding a new recipe
+  void setTempRecipeSteps(int? recipeEntryId) {
+    _tempRecipeSteps = SplayTreeMap<int, RecipeStep>.from(
+        _recipeSteps[recipeEntryId] ?? SplayTreeMap<int, RecipeStep>());
   }
 
-  /// Checks if the notes associated with [recipeEntryId] have been
+  /// Checks if the recipe steps associated with [recipeEntryId] have been
   /// updated since RecipeDetails page has loaded
-  bool areNotesChanged(int recipeEntryId) {
-    return !(const DeepCollectionEquality()
-        .equals(_tempNotes, _notes[recipeEntryId] ?? SplayTreeMap()));
+  bool areRecipeStepsChanged(int recipeEntryId) {
+    return !(const DeepCollectionEquality().equals(
+        _tempRecipeSteps, _recipeSteps[recipeEntryId] ?? SplayTreeMap()));
   }
 
-  /// Adds a new note to [_tempNotes] using [recipeEntryId]
+  /// Adds a new recipe step to [_tempRecipeSteps] using [recipeEntryId]
   /// as the key
-  Future<void> tempAddNote(int recipeEntryId) async {
+  Future<void> tempAddRecipeStep(int recipeEntryId) async {
     /// Setting tempId to a unique number for this recipe
     int tempId;
-    if (tempNotes.isEmpty) {
-      /// [tempId] set to 0 if no notes exist in the database for this recipe
-      if (notes[recipeEntryId]?.isEmpty ?? true) {
+    if (tempRecipeSteps.isEmpty) {
+      /// [tempId] set to 0 if no recipe steps exist in the database for this
+      /// recipe
+      if (recipeSteps[recipeEntryId]?.isEmpty ?? true) {
         tempId = 0;
       } else {
-        tempId = _notes[recipeEntryId]!.lastKey()! + 1;
+        tempId = _recipeSteps[recipeEntryId]!.lastKey()! + 1;
       }
     } else {
-      tempId = _tempNotes.lastKey()! + 1;
+      tempId = _tempRecipeSteps.lastKey()! + 1;
     }
-    Note newNote = Note(
+    RecipeStep newRecipeStep = RecipeStep(
       id: tempId,
       recipeEntryId: recipeEntryId,
-      time: tempNoteTime!,
-      text: recipeNotesFormKey.currentState!.fields["noteText"]!.value,
+      time: tempRecipeStepTime!,
+      text: recipeRecipeStepsFormKey
+          .currentState!.fields["recipeStepText"]!.value,
     );
-    _tempNotes.addAll({tempId: newNote});
+    _tempRecipeSteps.addAll({tempId: newRecipeStep});
     notifyListeners();
   }
 
-  /// Deletes a note from [_tempNotes] associated with the recipe setting id
-  /// [settingId]
-  Future<void> tempDeleteNote(int settingId) async {
-    _tempNotes.remove(settingId);
+  /// Deletes a recipe step from [_tempRecipeSteps] associated with the recipe
+  /// setting id [settingId]
+  Future<void> tempDeleteRecipeStep(int settingId) async {
+    _tempRecipeSteps.remove(settingId);
     notifyListeners();
   }
 
-  /// Sets all parameters in [_tempNotes] to ones that have been updated by the
-  /// user when editing notes
-  Future<void> editNote(Note noteData) async {
-    _tempNotes[noteData.id!] = noteData.copy(
-      text: recipeNotesFormKey.currentState!.fields["noteText"]!.value,
-      time: tempNoteTime!,
+  /// Sets all parameters in [_tempRecipeSteps] to ones that have been updated
+  /// by the user when editing recipe steps
+  Future<void> editRecipeStep(RecipeStep recipeStepData) async {
+    _tempRecipeSteps[recipeStepData.id!] = recipeStepData.copy(
+      text: recipeRecipeStepsFormKey
+          .currentState!.fields["recipeStepText"]!.value,
+      time: tempRecipeStepTime!,
     );
     notifyListeners();
   }
 
-  /// Clears all temporary note parameters by setting them to null
-  void clearTempNoteParameters() {
-    tempNoteText = null;
-    tempNoteTime = null;
+  /// Clears all temporary recipe step parameters by setting them to null
+  void clearTempRecipeStepParameters() {
+    tempRecipeStepText = null;
+    tempRecipeStepTime = null;
   }
 
-  /// Saves data in [_tempNotes] to [_notes] after edits and updates the notes
-  /// database accordingly
+  /// Saves data in [_tempRecipeSteps] to [_recipeSteps] after edits and
+  /// updates the recipe steps database accordingly
   ///
   /// First makes updates to the database and [associatedSettingsCount], then
-  /// populates [_notes] with the all data from [_tempNotes] sorted by time
-  Future<void> saveEditedNotes(int recipeEntryId) async {
-    /// If [_tempNotes] doesn't contain a note that is in [_notes], delete that
-    ///note from the database
-    for (var id in notes[recipeEntryId]?.keys ?? const Iterable.empty()) {
-      if (!tempNotes.containsKey(id)) {
+  /// populates [_recipeSteps] with the all data from [_tempRecipeSteps] sorted
+  /// by time
+  Future<void> saveEditedRecipeSteps(int recipeEntryId) async {
+    /// If [_tempRecipeSteps] doesn't contain a recipe step that is in
+    /// [_recipeSteps], delete that recipe step from the database
+    for (var id in recipeSteps[recipeEntryId]?.keys ?? const Iterable.empty()) {
+      if (!tempRecipeSteps.containsKey(id)) {
         await RecipeSettingsDatabase.instance.delete(id);
       }
     }
 
-    /// If [_tempNotes] contains a note that is not in [_notes], add that note
-    /// to the database or make updates to the note if there are discrepencies
-    /// etween it and [_tempNotes]
-    for (var id in tempNotes.keys.toList()) {
+    /// If [_tempRecipeSteps] contains a recipe step that is not in
+    /// [_recipeSteps], add that recipe step to the database or make updates to
+    /// the recipe step if there are discrepencies between it and
+    /// [_tempRecipeSteps]
+    for (var id in tempRecipeSteps.keys.toList()) {
       /// New id -> add
-      bool containsKey = notes[recipeEntryId]?.containsKey(id) ?? false;
+      bool containsKey = recipeSteps[recipeEntryId]?.containsKey(id) ?? false;
       if (!containsKey) {
-        /// Populate the note with a proper id from the database
-        Note newNote = Note(
-          recipeEntryId: tempNotes[id]!.recipeEntryId,
-          time: tempNotes[id]!.time,
-          text: tempNotes[id]!.text,
+        /// Populate the recipe step with a proper id from the database
+        RecipeStep newRecipeStep = RecipeStep(
+          recipeEntryId: tempRecipeSteps[id]!.recipeEntryId,
+          time: tempRecipeSteps[id]!.time,
+          text: tempRecipeSteps[id]!.text,
         );
 
-        int newId = await NotesDatabase.instance.create(newNote);
+        int newId = await RecipeStepsDatabase.instance.create(newRecipeStep);
 
-        _tempNotes.addAll({newId: _tempNotes.remove(id)!.copy(id: newId)});
+        _tempRecipeSteps
+            .addAll({newId: _tempRecipeSteps.remove(id)!.copy(id: newId)});
       }
 
-      /// Id exists in [notes] but entry in [notes] is different from
-      /// [tempNotes]
-      else if (notes[recipeEntryId]![id] != tempNotes[id]) {
-        await NotesDatabase.instance.update(tempNotes[id]!);
+      /// Id exists in [recipeSteps] but entry in [recipeSteps] is different
+      /// from [tempRecipeSteps]
+      else if (recipeSteps[recipeEntryId]![id] != tempRecipeSteps[id]) {
+        await RecipeStepsDatabase.instance.update(tempRecipeSteps[id]!);
       }
       // else do nothing
     }
 
-    /// Commit data from [_tempNotes] to [_notes]
-    _notes[recipeEntryId] = SplayTreeMap.from(_tempNotes);
+    /// Commit data from [_tempRecipeSteps] to [_recipeSteps]
+    _recipeSteps[recipeEntryId] = SplayTreeMap.from(_tempRecipeSteps);
     notifyListeners();
   }
 

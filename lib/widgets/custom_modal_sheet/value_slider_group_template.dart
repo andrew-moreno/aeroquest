@@ -9,7 +9,7 @@ import 'package:aeroquest/providers/recipes_provider.dart';
 class ValueSliderGroupTemplate extends StatelessWidget {
   /// Defines the widget that contains all sliders and slider values
   ///
-  /// Can be used for editing notes or recipe settings
+  /// Can be used for editing recipe steps or recipe settings
   const ValueSliderGroupTemplate({
     Key? key,
     required this.maxWidth,
@@ -20,7 +20,7 @@ class ValueSliderGroupTemplate extends StatelessWidget {
   final double maxWidth;
 
   /// Whether the modal sheet being displayed is used for editing recipe
-  /// settings or notes
+  /// settings or recipe steps
   final ModalType modalType;
 
   /// Returns a list of the appropriate parameter types based on [modalType]
@@ -35,7 +35,7 @@ class ValueSliderGroupTemplate extends StatelessWidget {
         ParameterType.none,
       ];
     } else {
-      return [ParameterType.noteTime, ParameterType.none];
+      return [ParameterType.recipeStepTime, ParameterType.none];
     }
   }
 
@@ -53,7 +53,7 @@ class ValueSliderGroupTemplate extends StatelessWidget {
                 // does not include Parameter.none
                 parameterType.length - 1,
 
-                /// notes modal cannot have an interactive value container
+                /// recipe steps modal cannot have an interactive value container
                 /// see [isClickable]
                 (modalType == ModalType.settings)
                     ? (index) => ModalSliderValueContainer(
@@ -97,5 +97,5 @@ class ValueSliderGroupTemplate extends StatelessWidget {
 /// Describes the type of modal sheet to be displayed
 enum ModalType {
   settings,
-  notes,
+  recipeSteps,
 }

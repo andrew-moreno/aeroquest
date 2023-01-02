@@ -1,7 +1,7 @@
-import 'package:aeroquest/models/note.dart';
+import 'package:aeroquest/models/recipe_step.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/providers/settings_slider_provider.dart';
-import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/recipe_method_widgets/notes_value_slider_group.dart';
+import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/recipe_method_widgets/recipe_steps_value_slider_group.dart';
 import 'package:aeroquest/widgets/custom_form_field.dart';
 import 'package:flutter/material.dart';
 
@@ -9,13 +9,13 @@ import 'package:aeroquest/widgets/custom_button.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 
-class NotesModalSheet extends StatefulWidget {
+class RecipeStepsModalSheet extends StatefulWidget {
   /// Defines the modal sheet used for editing recipe settings
-  const NotesModalSheet({
+  const RecipeStepsModalSheet({
     Key? key,
     required this.submitAction,
     this.deleteAction,
-    this.notesData,
+    this.recipeStepsData,
   }) : super(key: key);
 
   /// Function to execute when submitting the modal sheet
@@ -24,14 +24,14 @@ class NotesModalSheet extends StatefulWidget {
   /// Function to execute when pressing the delete button on the modal sheet
   final Function()? deleteAction;
 
-  /// Notes data being passed
-  final Note? notesData;
+  /// Recipe steps data being passed
+  final RecipeStep? recipeStepsData;
 
   @override
-  State<NotesModalSheet> createState() => _NotesModalSheetState();
+  State<RecipeStepsModalSheet> createState() => _RecipeStepsModalSheetState();
 }
 
-class _NotesModalSheetState extends State<NotesModalSheet> {
+class _RecipeStepsModalSheetState extends State<RecipeStepsModalSheet> {
   late final RecipesProvider _recipesProvider;
   late final SettingsSliderProvider _settingsSliderProvider;
 
@@ -47,8 +47,8 @@ class _NotesModalSheetState extends State<NotesModalSheet> {
 
   @override
   void dispose() {
-    _recipesProvider.clearTempNoteParameters();
-    _settingsSliderProvider.clearTempNoteParameters();
+    _recipesProvider.clearTempRecipeStepParameters();
+    _settingsSliderProvider.clearTempRecipeStepParameters();
     super.dispose();
   }
 
@@ -65,20 +65,20 @@ class _NotesModalSheetState extends State<NotesModalSheet> {
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              NotesValueSlider(
+              RecipeStepsValueSlider(
                 maxWidth: constraints.maxWidth,
-                notesData: widget.notesData,
+                recipeStepsData: widget.recipeStepsData,
               ),
               const SizedBox(height: 20),
               FormBuilder(
                 key: Provider.of<RecipesProvider>(context, listen: false)
-                    .recipeNotesFormKey,
+                    .recipeRecipeStepsFormKey,
                 child: CustomFormField(
-                  formName: "noteText",
-                  hint: "Note",
-                  initialValue: widget.notesData?.text,
+                  formName: "recipeStepText",
+                  hint: "Step",
+                  initialValue: widget.recipeStepsData?.text,
                   validate: true,
-                  validateText: "Please enter a note",
+                  validateText: "Please enter a recipeStep",
                   textCapitalization: TextCapitalization.sentences,
                 ),
               ),
