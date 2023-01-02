@@ -69,8 +69,10 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
                     padding: const EdgeInsets.all(20),
                     itemCount: coffeeBeanProvider.coffeeBeans.length,
                     itemBuilder: (_, int index) {
-                      int coffeeBeanId =
-                          coffeeBeanProvider.coffeeBeans.keys.elementAt(index);
+                      int coffeeBeanId = coffeeBeanProvider.coffeeBeans.keys
+                          .elementAt(coffeeBeanProvider.coffeeBeans.length -
+                              index -
+                              1);
 
                       return BeansContainer(
                         formKey: _formKey,

@@ -62,30 +62,31 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
           backgroundColor: kLightSecondary,
           elevation: 10,
           action: SnackBarAction(
-              label: "Add",
-              textColor: kAccent,
-              onPressed: () {
-                showCustomCoffeeBeanModalSheet(
-                  submitAction: () async {
-                    if (!_formKey.currentState!.validate()) {
-                      return;
-                    }
-                    String beanName =
-                        _formKey.currentState!.fields["beanName"]!.value;
-                    String? description =
-                        _formKey.currentState!.fields["description"]?.value;
+            label: "Add",
+            textColor: kAccent,
+            onPressed: () {
+              showCustomCoffeeBeanModalSheet(
+                submitAction: () async {
+                  if (!_formKey.currentState!.validate()) {
+                    return;
+                  }
+                  String beanName =
+                      _formKey.currentState!.fields["beanName"]!.value;
+                  String? description =
+                      _formKey.currentState!.fields["description"]?.value;
 
-                    _recipesProvider.addBean(
-                      beanName,
-                      description,
-                    );
-                    Navigator.of(context).pop();
-                  },
-                  autoFocusTitleField: true,
-                  context: context,
-                  formKey: _formKey,
-                );
-              }),
+                  _recipesProvider.addBean(
+                    beanName,
+                    description,
+                  );
+                  Navigator.of(context).pop();
+                },
+                autoFocusTitleField: true,
+                context: context,
+                formKey: _formKey,
+              );
+            },
+          ),
         ),
       );
     } else {
@@ -157,7 +158,8 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
               itemCount: recipeSettingsData.length,
               shrinkWrap: true,
               itemBuilder: (context, int index) {
-                int id = recipeSettingsData.keys.elementAt(index);
+                int id = recipeSettingsData.keys
+                    .elementAt(recipeSettingsData.length - index - 1);
 
                 return GestureDetector(
                   onTap: () {

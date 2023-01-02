@@ -39,7 +39,8 @@ class _CoffeeBeanDropdownState extends State<CoffeeBeanDropdown> {
               items: List.generate(
                 _recipesProvider.coffeeBeans.length,
                 (index) {
-                  int key = _recipesProvider.coffeeBeans.keys.elementAt(index);
+                  int key = _recipesProvider.coffeeBeans.keys.elementAt(
+                      _recipesProvider.coffeeBeans.length - index - 1);
                   return DropdownMenuItem(
                     child: Text(
                       _recipesProvider.coffeeBeans[key]!.beanName,

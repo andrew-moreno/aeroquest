@@ -80,8 +80,8 @@ class _RecipesState extends State<Recipes> {
                       padding: const EdgeInsets.all(20),
                       itemCount: recipesProvider.recipes.length,
                       itemBuilder: (context, index) {
-                        int recipeId =
-                            recipesProvider.recipes.keys.elementAt(index);
+                        int recipeId = recipesProvider.recipes.keys.elementAt(
+                            recipesProvider.recipes.length - index - 1);
                         return RecipeCard(
                           recipeData: recipesProvider.recipes[recipeId]!,
                         );
