@@ -1,7 +1,9 @@
+import 'package:aeroquest/models/recipe_note.dart';
 import 'package:aeroquest/models/recipe_step.dart';
 import 'package:aeroquest/models/recipe_settings.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/bean_settings_group_widgets/settings_modal_sheet.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/recipe_method_widgets/recipe_steps_modal_sheet.dart';
+import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/recipe_notes_widgets/recipe_notes_modal_sheet.dart';
 import 'package:aeroquest/widgets/custom_modal_sheet/value_slider_group_template.dart';
 import 'package:flutter/material.dart';
 
@@ -65,6 +67,7 @@ void showCustomModalSheet({
   required ModalType modalType,
   RecipeSettings? recipeSettingsData,
   RecipeStep? recipeStepsData,
+  RecipeNote? recipeNotesData,
 }) {
   showModalBottomSheet(
     context: context,
@@ -75,18 +78,32 @@ void showCustomModalSheet({
     backgroundColor: kDarkSecondary,
     isScrollControlled: true,
     builder: (_) {
-      if (modalType == ModalType.settings) {
-        return SettingsModalSheet(
-          submitAction: submitAction,
-          deleteAction: deleteAction,
-          recipeSettingsData: recipeSettingsData,
-        );
-      } else {
-        return RecipeStepsModalSheet(
-          submitAction: submitAction,
-          deleteAction: deleteAction,
-          recipeStepsData: recipeStepsData,
-        );
+      switch (modalType) {
+        case ModalType.settings:
+          {
+            return SettingsModalSheet(
+              submitAction: submitAction,
+              deleteAction: deleteAction,
+              recipeSettingsData: recipeSettingsData,
+            );
+          }
+
+        case ModalType.steps:
+          {
+            return RecipeStepsModalSheet(
+              submitAction: submitAction,
+              deleteAction: deleteAction,
+              recipeStepsData: recipeStepsData,
+            );
+          }
+        case ModalType.notes:
+          {
+            return RecipeNotesModalSheet(
+              submitAction: submitAction,
+              deleteAction: deleteAction,
+              recipeNotesData: recipeNotesData,
+            );
+          }
       }
     },
   );

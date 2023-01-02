@@ -95,7 +95,4 @@ class ValueSliderGroupTemplate extends StatelessWidget {
 }
 
 /// Describes the type of modal sheet to be displayed
-enum ModalType {
-  settings,
-  recipeSteps,
-}
+enum ModalType { settings, steps, notes }

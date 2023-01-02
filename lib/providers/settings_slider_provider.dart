@@ -21,6 +21,8 @@ class SettingsSliderProvider extends ChangeNotifier {
   int? tempRecipeStepTime;
   String? tempRecipeStepText;
 
+  String? tempRecipeNoteText;
+
   /// Defines which value is getting changed when sliding the slider and
   /// assigns the appropriate settings value to [value]
   void sliderOnChanged(double value, ParameterType parameterType) {
@@ -64,5 +66,10 @@ class SettingsSliderProvider extends ChangeNotifier {
   void clearTempRecipeStepParameters() {
     tempRecipeStepText = null;
     tempRecipeStepTime = null;
+  }
+
+  /// Clears all temporary recipe step parameters by setting them to null
+  void clearTempRecipeNoteParameters() {
+    tempRecipeNoteText = null;
   }
 }

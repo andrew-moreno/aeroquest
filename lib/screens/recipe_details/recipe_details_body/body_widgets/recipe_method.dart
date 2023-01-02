@@ -28,9 +28,6 @@ class RecipeMethod extends StatefulWidget {
 }
 
 class _RecipeMethodState extends State<RecipeMethod> {
-  /// Padding to use between method elements
-  static const double _methodPadding = 15;
-
   late Recipe _recipeData;
 
   late final RecipesProvider _recipesProvider =
@@ -61,7 +58,7 @@ class _RecipeMethodState extends State<RecipeMethod> {
   /// Function to execute when pressing the "Add Step" button
   void addRecipeStep() {
     showCustomModalSheet(
-      modalType: ModalType.recipeSteps,
+      modalType: ModalType.steps,
       submitAction: () {
         if (!Provider.of<RecipesProvider>(context, listen: false)
             .recipeRecipeStepsFormKey
@@ -106,7 +103,7 @@ class _RecipeMethodState extends State<RecipeMethod> {
                   ),
                 ],
               ),
-              const SizedBox(height: _methodPadding),
+              const SizedBox(height: kRecipeDetailsVerticalPadding),
               ListView.separated(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
@@ -116,7 +113,7 @@ class _RecipeMethodState extends State<RecipeMethod> {
                       recipeStep: _recipeStepsData[index]);
                 },
                 separatorBuilder: (context, index) {
-                  return const SizedBox(height: _methodPadding);
+                  return const SizedBox(height: kRecipeDetailsVerticalPadding);
                 },
               ),
               Padding(
@@ -262,7 +259,7 @@ class _RecipeMethodRecipeStepsState extends State<RecipeMethodRecipeSteps> {
   void showEditingModal() {
     if (_recipesProvider.editMode == EditMode.enabled) {
       showCustomModalSheet(
-          modalType: ModalType.recipeSteps,
+          modalType: ModalType.steps,
           submitAction: () {
             if (!Provider.of<RecipesProvider>(context, listen: false)
                 .recipeRecipeStepsFormKey

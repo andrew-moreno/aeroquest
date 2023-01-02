@@ -42,7 +42,7 @@ class _RecipeStepsValueSliderState extends State<RecipeStepsValueSlider> {
   Widget build(BuildContext context) {
     return ValueSliderGroupTemplate(
       maxWidth: widget.maxWidth,
-      modalType: ModalType.recipeSteps,
+      modalType: ModalType.steps,
     );
   }
 }

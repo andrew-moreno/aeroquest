@@ -1,5 +1,6 @@
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/bean_settings_group.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/recipe_method.dart';
+import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/recipe_notes.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_header.dart';
 import 'package:aeroquest/widgets/appbar/appbar_button.dart';
 import 'package:flutter/material.dart';
@@ -159,7 +160,7 @@ class _RecipeDetailsState extends State<RecipeDetails> {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> tabs = <String>['Settings', 'Method'];
+    final List<String> tabs = <String>['Settings', 'Method', "Notes"];
     return DefaultTabController(
       length: tabs.length,
       child: Scaffold(
@@ -259,14 +260,17 @@ class _RecipeDetailsState extends State<RecipeDetails> {
                   child: TabBarView(
                     children: [
                       RecipeDetailsBodyChild(
-                        header: "Bean Settings",
                         child: BeanSettingsGroup(
                           recipeEntryId: widget.recipeData.id!,
                         ),
                       ),
                       RecipeDetailsBodyChild(
-                        header: "Method",
                         child: RecipeMethod(
+                          recipeEntryId: widget.recipeData.id!,
+                        ),
+                      ),
+                      RecipeDetailsBodyChild(
+                        child: RecipeNotes(
                           recipeEntryId: widget.recipeData.id!,
                         ),
                       ),
@@ -285,38 +289,38 @@ class _RecipeDetailsState extends State<RecipeDetails> {
 class RecipeDetailsBodyChild extends StatelessWidget {
   const RecipeDetailsBodyChild({
     Key? key,
-    required this.header,
     required this.child,
   }) : super(key: key);
 
-  final String header;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 35),
-      child: Builder(builder: (context) {
-        return CustomScrollView(
-          slivers: [
-            SliverOverlapInjector(
-                handle:
-                    NestedScrollView.sliverOverlapAbsorberHandleFor(context)),
-            SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  Column(
-                    children: [
-                      const SizedBox(height: 20),
-                      child,
-                    ],
-                  ),
-                ],
+      child: Builder(
+        builder: (context) {
+          return CustomScrollView(
+            slivers: [
+              SliverOverlapInjector(
+                  handle:
+                      NestedScrollView.sliverOverlapAbsorberHandleFor(context)),
+              SliverList(
+                delegate: SliverChildListDelegate(
+                  [
+                    Column(
+                      children: [
+                        const SizedBox(height: 20),
+                        child,
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
-        );
-      }),
+            ],
+          );
+        },
+      ),
     );
   }
 }

@@ -10,6 +10,7 @@ const kDeleteRed = Color(0xFFF64353);
 
 const kInputDecorationHorizontalPadding = 15.0;
 const kRecipeSettingsVerticalPadding = 7.0;
+const kRecipeDetailsVerticalPadding = 15.0;
 const kCornerRadius = 8.0;
 const kModalCornerRadius = 25.0;
 final kBoxShadow = BoxShadow(
