@@ -66,6 +66,19 @@ class RecipeSettings {
     required this.visibility,
   });
 
+  /// Initializes a RecipeSettings object using its default values
+  RecipeSettings.initial({
+    this.id,
+    required this.recipeEntryId,
+    required this.beanId,
+    this.grindSetting = 0,
+    this.coffeeAmount = 0,
+    this.waterAmount = 0,
+    this.waterTemp = 100,
+    this.brewTime = 0,
+    this.visibility = "shown",
+  });
+
   /// Copies a RecipeSettings object
   ///
   /// The copied object will use any parameters passed into this method

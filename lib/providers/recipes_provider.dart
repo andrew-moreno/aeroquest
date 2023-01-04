@@ -756,12 +756,12 @@ class RecipesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Adds a coffee bean to the database and [_coffeeBeans]
+  /// Adds a coffee bean to the database and [_coffeeBeans] and returns its id
   ///
   /// Used for when adding a bean via the snackbar on the recipe details screen
   /// that is activated when adding recipe settings with no coffee beans in
   /// the database
-  Future<void> addBean(String beanName, String? description) async {
+  Future<int> addBean(String beanName, String? description) async {
     final newCoffeeBean = await CoffeeBeansDatabase.instance.create(
       CoffeeBean(
         beanName: beanName,
@@ -770,6 +770,7 @@ class RecipesProvider extends ChangeNotifier {
       ),
     );
     _coffeeBeans.addAll({newCoffeeBean.id!: newCoffeeBean});
+    return newCoffeeBean.id!;
   }
 
   /// Either increments or decrements the AssociatedSettingsCount property of

@@ -76,11 +76,17 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
                   String? description =
                       _formKey.currentState!.fields["description"]?.value;
 
-                  _recipesProvider.addBean(
+                  int newBeanId = await _recipesProvider.addBean(
                     beanName,
                     description,
                   );
                   Navigator.of(context).pop();
+                  showAddModal(
+                    recipeSettingsData: RecipeSettings.initial(
+                      recipeEntryId: widget.recipeEntryId,
+                      beanId: newBeanId,
+                    ),
+                  );
                 },
                 autoFocusTitleField: true,
                 context: context,
@@ -91,20 +97,26 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
         ),
       );
     } else {
-      showCustomModalSheet(
-        modalType: ModalType.settings,
-        submitAction: () {
-          if (!_recipesProvider.settingsBeanFormKey.currentState!.validate()) {
-            return;
-          }
-          setRecipesProviderTempSettingParameters();
-          _recipesProvider.tempAddSetting(
-              widget.recipeEntryId); // index doesn't matter for recipe entry id
-          Navigator.of(context).pop();
-        },
-        context: context,
-      );
+      showAddModal();
     }
+  }
+
+  /// Displays the modal sheet for adding recipe settings
+  void showAddModal({RecipeSettings? recipeSettingsData}) {
+    showCustomModalSheet(
+      modalType: ModalType.settings,
+      submitAction: () {
+        if (!_recipesProvider.settingsBeanFormKey.currentState!.validate()) {
+          return;
+        }
+        setRecipesProviderTempSettingParameters();
+        _recipesProvider.tempAddSetting(
+            widget.recipeEntryId); // index doesn't matter for recipe entry id
+        Navigator.of(context).pop();
+      },
+      recipeSettingsData: recipeSettingsData,
+      context: context,
+    );
   }
 
   /// Displays the modal sheet for editing recipe settings
