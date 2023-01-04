@@ -3,6 +3,7 @@ import 'package:aeroquest/screens/coffee_beans/coffee_beans.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/recipe_details_body.dart';
 import 'package:aeroquest/widgets/add_to_recipe_button.dart';
 import 'package:aeroquest/widgets/custom_modal_sheet/value_slider_group_template.dart';
+import 'package:aeroquest/widgets/empty_details_text.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 import 'dart:core';
@@ -153,58 +154,64 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
             selectRecipeSettingsData();
         return Column(
           children: [
-            ListView.separated(
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: recipeSettingsData.length,
-              shrinkWrap: true,
-              itemBuilder: (context, int index) {
-                int id = recipeSettingsData.keys
-                    .elementAt(recipeSettingsData.length - index - 1);
+            (recipeSettingsData.isNotEmpty)
+                ? ListView.separated(
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: recipeSettingsData.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, int index) {
+                      int id = recipeSettingsData.keys
+                          .elementAt(recipeSettingsData.length - index - 1);
 
-                return GestureDetector(
-                  onTap: () {
-                    if (_recipesProvider.editMode == EditMode.enabled) {
-                      showEditingModal(id);
-                    }
-                  },
-                  child: Visibility(
-                    visible: (_recipesProvider.editMode == EditMode.disabled &&
-                            RecipeSettings.stringToSettingVisibility(
-                                    recipeSettingsData[id]!.visibility) ==
-                                SettingVisibility.hidden)
-                        ? false
-                        : true,
-                    child: Opacity(
-                      opacity: (_recipesProvider.editMode == EditMode.enabled &&
-                              RecipeSettings.stringToSettingVisibility(
-                                      recipeSettingsData[id]!.visibility) ==
-                                  SettingVisibility.hidden)
-                          ? 0.5
-                          : 1,
-                      child: Container(
-                        padding:
-                            const EdgeInsets.only(left: 5, right: 5, bottom: 5),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: kDarkSecondary,
-                          borderRadius: BorderRadius.circular(kCornerRadius),
-                          boxShadow:
-                              (_recipesProvider.editMode == EditMode.enabled)
-                                  ? [kSettingsBoxShadow]
-                                  : [],
+                      return GestureDetector(
+                        onTap: () {
+                          if (_recipesProvider.editMode == EditMode.enabled) {
+                            showEditingModal(id);
+                          }
+                        },
+                        child: Visibility(
+                          visible: (_recipesProvider.editMode ==
+                                      EditMode.disabled &&
+                                  RecipeSettings.stringToSettingVisibility(
+                                          recipeSettingsData[id]!.visibility) ==
+                                      SettingVisibility.hidden)
+                              ? false
+                              : true,
+                          child: Opacity(
+                            opacity: (_recipesProvider.editMode ==
+                                        EditMode.enabled &&
+                                    RecipeSettings.stringToSettingVisibility(
+                                            recipeSettingsData[id]!
+                                                .visibility) ==
+                                        SettingVisibility.hidden)
+                                ? 0.5
+                                : 1,
+                            child: Container(
+                              padding: const EdgeInsets.only(
+                                  left: 5, right: 5, bottom: 5),
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: kDarkSecondary,
+                                borderRadius:
+                                    BorderRadius.circular(kCornerRadius),
+                                boxShadow: (_recipesProvider.editMode ==
+                                        EditMode.enabled)
+                                    ? [kSettingsBoxShadow]
+                                    : [],
+                              ),
+                              child: BeanSettings(
+                                recipeSetting: recipeSettingsData[id]!,
+                              ),
+                            ),
+                          ),
                         ),
-                        child: BeanSettings(
-                          recipeSetting: recipeSettingsData[id]!,
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-              separatorBuilder: (_, index) {
-                return const SizedBox(height: 10);
-              },
-            ),
+                      );
+                    },
+                    separatorBuilder: (_, index) {
+                      return const SizedBox(height: 10);
+                    },
+                  )
+                : const EmptyDetailsText(dataType: RecipeDetailsText.setting),
             const SizedBox(height: 20),
             (_recipesProvider.editMode == EditMode.enabled)
                 ? AddToRecipeButton(

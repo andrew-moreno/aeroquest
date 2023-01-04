@@ -4,6 +4,7 @@ import 'package:aeroquest/providers/settings_slider_provider.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/recipe_details_body.dart';
 import 'package:aeroquest/widgets/add_to_recipe_button.dart';
 import 'package:aeroquest/widgets/custom_modal_sheet/value_slider_group_template.dart';
+import 'package:aeroquest/widgets/empty_details_text.dart';
 import 'package:flutter/material.dart';
 
 import 'package:aeroquest/models/recipe.dart';
@@ -82,19 +83,22 @@ class _RecipeNotesState extends State<RecipeNotes> {
               _selectRecipeNotesData().values.toList();
           return Column(
             children: [
-              ListView.separated(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: _recipeNotesData.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return RecipeMethodRecipeNotes(
-                      recipeNote: _recipeNotesData[
-                          _recipeNotesData.length - index - 1]);
-                },
-                separatorBuilder: (context, index) {
-                  return const SizedBox(height: kRecipeDetailsVerticalPadding);
-                },
-              ),
+              (_recipeNotesData.isNotEmpty)
+                  ? ListView.separated(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: _recipeNotesData.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return RecipeMethodRecipeNotes(
+                            recipeNote: _recipeNotesData[
+                                _recipeNotesData.length - index - 1]);
+                      },
+                      separatorBuilder: (context, index) {
+                        return const SizedBox(
+                            height: kRecipeDetailsVerticalPadding);
+                      },
+                    )
+                  : const EmptyDetailsText(dataType: RecipeDetailsText.note),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 child: (recipesProvider.editMode == EditMode.enabled)

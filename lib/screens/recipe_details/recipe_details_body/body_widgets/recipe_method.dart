@@ -4,6 +4,7 @@ import 'package:aeroquest/screens/recipe_details/recipe_details_body/recipe_deta
 import 'package:aeroquest/widgets/add_to_recipe_button.dart';
 import 'package:aeroquest/widgets/animated_toggle.dart';
 import 'package:aeroquest/widgets/custom_modal_sheet/value_slider_group_template.dart';
+import 'package:aeroquest/widgets/empty_details_text.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -103,19 +104,22 @@ class _RecipeMethodState extends State<RecipeMethod> {
                   ),
                 ],
               ),
-              const SizedBox(height: kRecipeDetailsVerticalPadding),
-              ListView.separated(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: _recipeStepsData.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return RecipeMethodRecipeSteps(
-                      recipeStep: _recipeStepsData[index]);
-                },
-                separatorBuilder: (context, index) {
-                  return const SizedBox(height: kRecipeDetailsVerticalPadding);
-                },
-              ),
+              const SizedBox(height: 30),
+              (_recipeStepsData.isNotEmpty)
+                  ? ListView.separated(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: _recipeStepsData.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return RecipeMethodRecipeSteps(
+                            recipeStep: _recipeStepsData[index]);
+                      },
+                      separatorBuilder: (context, index) {
+                        return const SizedBox(
+                            height: kRecipeDetailsVerticalPadding);
+                      },
+                    )
+                  : const EmptyDetailsText(dataType: RecipeDetailsText.step),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 child: (recipesProvider.editMode == EditMode.enabled)
