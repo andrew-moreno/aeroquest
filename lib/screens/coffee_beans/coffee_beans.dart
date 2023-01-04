@@ -3,15 +3,16 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 
 import 'package:aeroquest/screens/coffee_beans/widgets/beans_container.dart';
-import 'package:aeroquest/screens/coffee_beans/widgets/custom_modal_sheet.dart';
-import 'package:aeroquest/widgets/appbar/appbar_addButton.dart';
+import 'package:aeroquest/screens/coffee_beans/widgets/custom_beans_modal_sheet.dart';
+import 'package:aeroquest/widgets/appbar/appbar_button.dart';
 import 'package:aeroquest/widgets/appbar/appbar_leading.dart';
 import 'package:aeroquest/widgets/appbar/appbar_text.dart';
 import 'package:aeroquest/widgets/custom_drawer.dart';
-import 'package:aeroquest/models/beans_provider.dart';
+import 'package:aeroquest/providers/coffee_bean_provider.dart';
 import 'package:aeroquest/constraints.dart';
 
 class CoffeeBeans extends StatefulWidget {
+  /// The screen used for displaying all coffee beans
   const CoffeeBeans({Key? key}) : super(key: key);
 
   static const routeName = "/manageBeans";
@@ -21,84 +22,93 @@ class CoffeeBeans extends StatefulWidget {
 }
 
 class _CoffeeBeansState extends State<CoffeeBeans> {
+  /// Form key used for validation of coffee bean names
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => BeansProvider(),
-      builder: (builderContext, child) {
-        return Scaffold(
-          appBar: AppBar(
-            backgroundColor: kPrimary,
-            elevation: 0,
-            centerTitle: true,
-            leading: const AppBarLeading(function: LeadingFunction.menu),
-            title: const AppBarText(text: "BEANS"),
-            actions: [
-              AppBarAddButton(
-                onTap: () {
-                  showCustomModalSheet(
-                    submitAction: () {
-                      if (!_formKey.currentState!.validate()) {
-                        return;
-                      }
-                      String beanName =
-                          _formKey.currentState!.fields["beanName"]!.value;
-                      String? description =
-                          _formKey.currentState!.fields["description"]?.value;
-                      Provider.of<BeansProvider>(builderContext, listen: false)
-                          .addBean(beanName, description);
-                      Navigator.of(context).pop();
+    return Scaffold(
+      appBar: AppBar(
+        leading: const AppBarLeading(leadingFunction: LeadingFunction.menu),
+        title: const AppBarText(text: "BEANS"),
+        actions: [
+          AppBarButton(
+            onTap: () {
+              showCustomCoffeeBeanModalSheet(
+                submitAction: () {
+                  if (!_formKey.currentState!.validate()) {
+                    return;
+                  }
+                  String beanName =
+                      _formKey.currentState!.fields["beanName"]!.value;
+                  String? description =
+                      _formKey.currentState!.fields["description"]?.value;
+                  Provider.of<CoffeeBeanProvider>(context, listen: false)
+                      .addBean(beanName, description);
+                  Navigator.of(context).pop();
+                },
+                autoFocusTitleField: true,
+                context: context,
+                formKey: _formKey,
+              );
+            },
+            icon: Icons.add,
+          ),
+        ],
+      ),
+      drawer: const CustomDrawer(),
+      body: SafeArea(
+        child: FutureBuilder(
+          future: Provider.of<CoffeeBeanProvider>(context, listen: false)
+              .cacheCoffeeBeans(),
+          builder: (_, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return Consumer<CoffeeBeanProvider>(
+                builder: (_, coffeeBeanProvider, ___) {
+                  return ListView.separated(
+                    padding: const EdgeInsets.all(20),
+                    itemCount: coffeeBeanProvider.coffeeBeans.length,
+                    itemBuilder: (_, int index) {
+                      int coffeeBeanId = coffeeBeanProvider.coffeeBeans.keys
+                          .elementAt(coffeeBeanProvider.coffeeBeans.length -
+                              index -
+                              1);
+
+                      return BeansContainer(
+                        formKey: _formKey,
+                        beanData: coffeeBeanProvider.coffeeBeans[coffeeBeanId]!,
+                      );
                     },
-                    context: context,
-                    formKey: _formKey,
+                    separatorBuilder: (_, __) {
+                      return const SizedBox(height: 20);
+                    },
                   );
                 },
-                icon: Icons.add,
-              ),
-            ],
-          ),
-          drawer: const CustomDrawer(),
-          body: SafeArea(
-            child: Consumer<BeansProvider>(
-              builder: (context, data, child) => ListView.separated(
-                physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.all(20),
-                itemCount: data.beans.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return BeansContainer(
-                    formKey: _formKey,
-                    beanName: data.beans[index].beanName,
-                    description: data.beans[index].description,
-                    index: index,
-                  );
-                },
-                separatorBuilder: (context, index) {
-                  return const Divider(
-                    color: Color(0x00000000),
-                    height: 20,
-                  );
-                },
-              ),
-            ),
-          ),
-        );
-      },
+              );
+            } else {
+              return const CircularProgressIndicator(
+                color: kAccent,
+              );
+            }
+          },
+        ),
+      ),
     );
   }
 }
 
-// template for the modal bottom sheet when editing or adding bean entries
-// if beanName and description are input, they are set as the initial value in the text field
-void showCustomModalSheet({
-  required dynamic submitAction,
+/// Template for the modal bottom sheet when editing or adding bean entries
+///
+/// If [beanName] and [description] are input, they are set as the initial value
+/// in the text fields
+void showCustomCoffeeBeanModalSheet({
   required BuildContext context,
   required GlobalKey<FormBuilderState> formKey,
-  dynamic deleteAction,
+  required Function() submitAction,
+  Function()? deleteAction,
   String? beanName,
   String? description,
-  int? index,
+  required bool autoFocusTitleField,
 }) {
   showModalBottomSheet(
     context: context,
@@ -109,12 +119,13 @@ void showCustomModalSheet({
     backgroundColor: kDarkSecondary,
     isScrollControlled: true,
     builder: (_) {
-      return CustomModalSheet(
+      return CustomBeansModalSheet(
         formKey: formKey,
         submitAction: submitAction,
         deleteAction: deleteAction,
         beanName: beanName,
         description: description,
+        autoFocusTitleField: autoFocusTitleField,
       );
     },
   );

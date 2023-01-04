@@ -1,5 +1,7 @@
-import 'package:aeroquest/models/beans_provider.dart';
+import 'package:aeroquest/models/coffee_bean.dart';
+import 'package:aeroquest/providers/coffee_bean_provider.dart';
 import 'package:aeroquest/widgets/card_header.dart';
+import 'package:aeroquest/widgets/custom_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:aeroquest/constraints.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -7,35 +9,48 @@ import 'package:provider/provider.dart';
 
 import '../coffee_beans.dart';
 
-// template for the each coffee bean entry
-// layout builder required for provider use
-class BeansContainer extends StatefulWidget {
+class BeansContainer extends StatelessWidget {
+  /// Container for each coffee bean entry
   const BeansContainer({
     Key? key,
-    required formKey,
-    required beanName,
-    description,
-    required index,
-  })  : _formKey = formKey,
-        _beanName = beanName,
-        _description = description,
-        _index = index,
-        super(key: key);
+    required this.formKey,
+    required this.beanData,
+  }) : super(key: key);
 
-  final GlobalKey<FormBuilderState> _formKey;
-  final String _beanName;
-  final String? _description;
-  final int _index;
+  /// Form key passed from [CoffeeBeans] that handles validation
+  final GlobalKey<FormBuilderState> formKey;
 
-  @override
-  State<BeansContainer> createState() => _BeansContainerState();
-}
+  /// Coffee bean data associated with this entry
+  final CoffeeBean beanData;
 
-class _BeansContainerState extends State<BeansContainer> {
   @override
   Widget build(BuildContext context) {
+    /// Used to warn the user that this coffee bean is associated with
+    /// recipe settings
+    ///
+    /// Deletes all associated settings if the user confirms
+    Future<void> _showDeleteDialog() async {
+      return await showDialog(
+        context: context,
+        builder: (context) => CustomDialog(
+          titleText: "Delete Associated Settings?",
+          description:
+              "This bean is associated with recipe settings. Do you want to delete these settings as well?",
+          leftAction: () => Navigator.of(context).pop(false),
+          rightAction: () {
+            Provider.of<CoffeeBeanProvider>(context, listen: false).deleteBean(
+              id: beanData.id!,
+              deleteAssociatedSettings: true,
+            );
+            Navigator.of(context).pop();
+          },
+        ),
+      );
+    }
+
+    /// Layout builder required for provider use
     return LayoutBuilder(
-      builder: (builderContext, constraints) => GestureDetector(
+      builder: (_, __) => GestureDetector(
         child: Container(
           padding: const EdgeInsets.symmetric(
             vertical: 7,
@@ -47,34 +62,41 @@ class _BeansContainerState extends State<BeansContainer> {
             boxShadow: [kBoxShadow],
           ),
           child: CardHeader(
-            title: widget._beanName,
-            description: widget._description,
+            title: beanData.beanName,
+            description: beanData.description,
           ),
         ),
         onTap: () {
-          showCustomModalSheet(
+          showCustomCoffeeBeanModalSheet(
             submitAction: () {
-              if (!widget._formKey.currentState!.validate()) {
+              if (!formKey.currentState!.validate()) {
                 return;
               }
-              String beanName =
-                  widget._formKey.currentState!.fields["beanName"]!.value;
+              String beanName = formKey.currentState!.fields["beanName"]!.value;
               String? description =
-                  widget._formKey.currentState!.fields["description"]?.value;
-              Provider.of<BeansProvider>(builderContext, listen: false)
-                  .editBean(beanName, description, widget._index);
+                  formKey.currentState!.fields["description"]?.value;
+              Provider.of<CoffeeBeanProvider>(context, listen: false).editBean(
+                beanData.id!,
+                beanName,
+                description,
+                beanData.associatedSettingsCount,
+              );
               Navigator.of(context).pop();
             },
             deleteAction: () {
-              Provider.of<BeansProvider>(builderContext, listen: false)
-                  .deleteBean(widget._index);
               Navigator.of(context).pop();
+              if (beanData.associatedSettingsCount > 0) {
+                _showDeleteDialog();
+              } else {
+                Provider.of<CoffeeBeanProvider>(context, listen: false)
+                    .deleteBean(id: beanData.id!);
+              }
             },
-            context: builderContext,
-            formKey: widget._formKey,
-            beanName: widget._beanName,
-            description: widget._description,
-            index: widget._index,
+            context: context,
+            formKey: formKey,
+            beanName: beanData.beanName,
+            description: beanData.description,
+            autoFocusTitleField: false,
           );
         },
       ),

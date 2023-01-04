@@ -1,15 +1,21 @@
-import 'package:aeroquest/models/recipe_entry.dart';
-import 'package:aeroquest/widgets/recipe_settings/widgets/settings_value.dart';
+import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:flutter/material.dart';
+
+import 'package:aeroquest/models/recipe_settings.dart';
+import 'package:aeroquest/widgets/recipe_parameters_value.dart';
 import 'package:aeroquest/constraints.dart';
+import 'package:provider/provider.dart';
 
-// template for the settings of a single coffee bean
 class BeanSettings extends StatelessWidget {
-  const BeanSettings({Key? key, required coffeeSetting})
-      : _coffeeSetting = coffeeSetting,
-        super(key: key);
+  /// Defines the widget used to display recipe settings for a single
+  /// coffee bean
+  const BeanSettings({
+    Key? key,
+    required this.recipeSetting,
+  }) : super(key: key);
 
-  final CoffeeSettings _coffeeSetting;
+  /// The recipe setting data to use
+  final RecipeSettings recipeSetting;
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +24,14 @@ class BeanSettings extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 5,
-            vertical: 0,
+            vertical: 1,
           ),
           child: Text(
-            _coffeeSetting.beanName,
+            Provider.of<RecipesProvider>(context, listen: true)
+                .coffeeBeans[recipeSetting.beanId]!
+                .beanName,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: Theme.of(context)
                 .textTheme
                 .subtitle1!
@@ -37,25 +47,25 @@ class BeanSettings extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              SettingsValue(
-                setting: _coffeeSetting.grindSetting.toString(),
-                settingType: "Grind",
+              RecipeParameterValue(
+                parameterValue: recipeSetting.grindSetting,
+                parameterType: ParameterType.grindSetting,
               ),
-              SettingsValue(
-                setting: _coffeeSetting.coffeeAmount.toString() + "g",
-                settingType: "Coffee",
+              RecipeParameterValue(
+                parameterValue: recipeSetting.coffeeAmount,
+                parameterType: ParameterType.coffeeAmount,
               ),
-              SettingsValue(
-                setting: _coffeeSetting.waterAmount.toString() + "g",
-                settingType: "Water",
+              RecipeParameterValue(
+                parameterValue: recipeSetting.waterAmount,
+                parameterType: ParameterType.waterAmount,
               ),
-              SettingsValue(
-                setting: _coffeeSetting.waterTemp.toString(),
-                settingType: "Temp",
+              RecipeParameterValue(
+                parameterValue: recipeSetting.waterTemp,
+                parameterType: ParameterType.waterTemp,
               ),
-              SettingsValue(
-                setting: _coffeeSetting.brewTime.toString(),
-                settingType: "Time",
+              RecipeParameterValue(
+                parameterValue: recipeSetting.brewTime,
+                parameterType: ParameterType.brewTime,
               ),
             ],
           ),
