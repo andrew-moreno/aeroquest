@@ -82,13 +82,17 @@ class RecipeDetailsHeader extends StatelessWidget {
                   ),
                   // 5*2 used to match padding of text form fields
                   const SizedBox(height: _sizedBoxHeight + (5 * 2)),
-                  (descriptionValue != null && descriptionValue != "")
-                      ? Text(
-                          descriptionValue!,
-                          style: _descriptionTextStyle,
-                          textAlign: TextAlign.center,
-                        )
-                      : Container(),
+                  Opacity(
+                    opacity:
+                        (descriptionValue != null && descriptionValue != "")
+                            ? 1
+                            : 0,
+                    child: Text(
+                      descriptionValue!,
+                      style: _descriptionTextStyle,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                 ],
               ),
             ),
