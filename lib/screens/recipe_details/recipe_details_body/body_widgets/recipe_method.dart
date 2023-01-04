@@ -40,6 +40,8 @@ class _RecipeMethodState extends State<RecipeMethod> {
     _recipeData = _selectRecipeData();
   }
 
+  /// Returns either [tempRecipe] or [recipes] data depending on whether recipe
+  /// is being edited or not
   Recipe _selectRecipeData() {
     if (_recipesProvider.editMode == EditMode.enabled) {
       return _recipesProvider.tempRecipe;
@@ -48,6 +50,8 @@ class _RecipeMethodState extends State<RecipeMethod> {
     }
   }
 
+  /// Returns either [tempRecipeSteps] or [recipeSteps] depending on whether
+  /// recipe is being edited or not
   Map<int, RecipeStep> _selectRecipeStepsData() {
     if (_recipesProvider.editMode == EditMode.enabled) {
       return _recipesProvider.tempRecipeSteps;
@@ -82,7 +86,6 @@ class _RecipeMethodState extends State<RecipeMethod> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Consumer<RecipesProvider>(
         builder: (_, recipesProvider, __) {
-          /// TODO: sorting of [_recipeStepsData] could be more efficient
           List<RecipeStep> _recipeStepsData =
               _selectRecipeStepsData().values.toList();
           _recipeStepsData.sort((a, b) => a.time.compareTo(b.time));

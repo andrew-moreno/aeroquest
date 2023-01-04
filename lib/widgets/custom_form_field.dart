@@ -54,7 +54,6 @@ class CustomFormField extends StatelessWidget {
           }
           return validateText;
         } else if (validateUniqueness) {
-          // TODO: make more efficient
           if (value != initialValue &&
               Provider.of<CoffeeBeanProvider>(context, listen: false)
                   .coffeeBeans

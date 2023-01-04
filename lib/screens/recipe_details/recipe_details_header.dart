@@ -53,7 +53,7 @@ class RecipeDetailsHeader extends StatelessWidget {
                     name: "recipeTitle",
                     initialValue: titleValue,
                     hintText: "Title",
-                    textStyle: _titleTextStyle,
+                    hintStyle: _titleTextStyle,
                     validate: true,
                     textCapitalization: TextCapitalization.words,
                     validateUniqueness: true,
@@ -63,7 +63,7 @@ class RecipeDetailsHeader extends StatelessWidget {
                     name: "recipeDescription",
                     initialValue: descriptionValue,
                     hintText: "Description",
-                    textStyle: _descriptionTextStyle,
+                    hintStyle: _descriptionTextStyle,
                     validate: false,
                     textCapitalization: TextCapitalization.sentences,
                     validateUniqueness: false,
@@ -107,19 +107,20 @@ class CustomHeaderFormField extends StatelessWidget {
     required this.name,
     required this.initialValue,
     required this.hintText,
-    required this.textStyle,
+    required this.hintStyle,
     required this.validate,
     required this.textCapitalization,
     required this.validateUniqueness,
   }) : super(key: key);
 
-  // TODO: comments
   final String name;
   final String? initialValue;
   final String hintText;
-  final TextStyle textStyle;
-  final bool validate;
+  final TextStyle hintStyle;
   final TextCapitalization textCapitalization;
+
+  /// Whether input should be validated before submission or not
+  final bool validate;
 
   /// Whether to check if the entered text already exists within the app
   final bool validateUniqueness;
@@ -133,12 +134,12 @@ class CustomHeaderFormField extends StatelessWidget {
       maxLines: null,
       textAlign: TextAlign.center,
       initialValue: initialValue,
-      style: textStyle,
+      style: hintStyle,
       decoration: InputDecoration(
         isDense: true,
         contentPadding: const EdgeInsets.all(5),
         hintText: hintText,
-        hintStyle: textStyle,
+        hintStyle: hintStyle,
         fillColor: kPrimary,
         border: DecoratedInputBorder(
           shadow: [kBoxShadow],
@@ -152,7 +153,6 @@ class CustomHeaderFormField extends StatelessWidget {
         if (validate && (value == null || value.isEmpty)) {
           return "Please enter a title";
         } else if (validateUniqueness) {
-          // TODO: make more efficient
           if (value != initialValue &&
               Provider.of<RecipesProvider>(context, listen: false)
                   .recipes
