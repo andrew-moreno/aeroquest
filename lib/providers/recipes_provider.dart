@@ -92,24 +92,23 @@ class RecipesProvider extends ChangeNotifier {
 
   /// Reflects the recipe notes information from the recipe notes database
   ///
-  /// Mapped by their associated recipe id fist, then the recipe note id
+  /// Mapped by their associated recipe id
   ///
   /// RecipeNotes objects must be updated in this map at the same time as
   /// they're updated in the database to reflect changes properly
-  late Map<int, SplayTreeMap<int, RecipeNote>> _recipeNotes;
+  late Map<int, List<RecipeNote>> _recipeNotes;
 
-  /// Holds a temporary map of the recipe notes associated with a particular
-  /// recipe
-  var _tempRecipeNotes = SplayTreeMap<int, RecipeNote>();
+  /// Holds a temporary list of the recipe notes for a particular recipe
+  List<RecipeNote> _tempRecipeNotes = [];
 
   /// Returns an unmodifaible version of [_recipeNotes]
-  UnmodifiableMapView<int, Map<int, RecipeNote>> get recipeNotes {
+  UnmodifiableMapView<int, List<RecipeNote>> get recipeNotes {
     return UnmodifiableMapView(_recipeNotes);
   }
 
   /// Returns an unmodifiable version of [_tempRecipeNotes]
-  UnmodifiableMapView<int, RecipeNote> get tempRecipeNotes {
-    return UnmodifiableMapView(_tempRecipeNotes);
+  List<RecipeNote> get tempRecipeNotes {
+    return UnmodifiableListView(_tempRecipeNotes);
   }
 
   /// Reflects coffee bean information from the coffee bean database mapped by
@@ -594,16 +593,12 @@ class RecipesProvider extends ChangeNotifier {
 
   /// Saves data in [_tempRecipeSteps] to [_recipeSteps] after edits and
   /// updates the recipe steps database accordingly
-  ///
-  /// First makes updates to the database and [associatedSettingsCount], then
-  /// populates [_recipeSteps] with the all data from [_tempRecipeSteps] sorted
-  /// by time
   Future<void> saveEditedRecipeSteps(int recipeEntryId) async {
     /// If [_tempRecipeSteps] doesn't contain a recipe step that is in
     /// [_recipeSteps], delete that recipe step from the database
     for (var id in recipeSteps[recipeEntryId]?.keys ?? const Iterable.empty()) {
       if (!tempRecipeSteps.containsKey(id)) {
-        await RecipeSettingsDatabase.instance.delete(id);
+        await RecipeStepsDatabase.instance.delete(id);
       }
     }
 
@@ -641,6 +636,19 @@ class RecipesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Returns the index of the item in a list of RecipeNotes that has [id]
+  int getNoteIndexById(List<RecipeNote> data, int id) {
+    return data.indexWhere((note) => note.id == id);
+  }
+
+  void reorderRecipeNotes(int oldIndex, int newIndex) {
+    if (oldIndex < newIndex) {
+      newIndex -= 1;
+    }
+    final RecipeNote recipeNote = _tempRecipeNotes.removeAt(oldIndex);
+    _tempRecipeNotes.insert(newIndex, recipeNote);
+  }
+
   /// Sets [_tempRecipeNotes] to the recipe notes in [_recipeNotes] associated
   /// with [recipeEntryId]
   ///
@@ -649,8 +657,7 @@ class RecipesProvider extends ChangeNotifier {
   /// - possibility that [recipeEntryId] doesn't exist in [_recipeNotes] when
   /// adding a new recipe
   void setTempRecipeNotes(int? recipeEntryId) {
-    _tempRecipeNotes = SplayTreeMap<int, RecipeNote>.from(
-        _recipeNotes[recipeEntryId] ?? SplayTreeMap<int, RecipeNote>());
+    _tempRecipeNotes = List<RecipeNote>.from(_recipeNotes[recipeEntryId] ?? []);
   }
 
   /// Checks if the recipe notes associated with [recipeEntryId] have been
@@ -665,16 +672,23 @@ class RecipesProvider extends ChangeNotifier {
   Future<void> tempAddRecipeNote(int recipeEntryId) async {
     /// Setting tempId to a unique number for this recipe
     int tempId;
+
     if (tempRecipeNotes.isEmpty) {
       /// [tempId] set to 0 if no recipe notes exist in the database for this
       /// recipe
       if (recipeNotes[recipeEntryId]?.isEmpty ?? true) {
         tempId = 0;
       } else {
-        tempId = _recipeNotes[recipeEntryId]!.lastKey()! + 1;
+        int recipeNotesMaxId = _recipeNotes[recipeEntryId]!
+            .reduce((note1, note2) => note1.id! > note2.id! ? note1 : note2)
+            .id!;
+        tempId = recipeNotesMaxId + 1;
       }
     } else {
-      tempId = _tempRecipeNotes.lastKey()! + 1;
+      int tempRecipeNotesMaxId = _tempRecipeNotes
+          .reduce((note1, note2) => note1.id! > note2.id! ? note1 : note2)
+          .id!;
+      tempId = tempRecipeNotesMaxId + 1;
     }
     RecipeNote newRecipeNote = RecipeNote(
       id: tempId,
@@ -682,14 +696,14 @@ class RecipesProvider extends ChangeNotifier {
       text: recipeRecipeNotesFormKey
           .currentState!.fields["recipeNoteText"]!.value,
     );
-    _tempRecipeNotes.addAll({tempId: newRecipeNote});
+    _tempRecipeNotes.add(newRecipeNote);
     notifyListeners();
   }
 
   /// Deletes a recipe note from [_tempRecipeNotes] associated with the recipe
   /// setting id [settingId]
   Future<void> tempDeleteRecipeNote(int settingId) async {
-    _tempRecipeNotes.remove(settingId);
+    _tempRecipeNotes.removeAt(getNoteIndexById(_tempRecipeNotes, settingId));
     notifyListeners();
   }
 
@@ -710,16 +724,12 @@ class RecipesProvider extends ChangeNotifier {
 
   /// Saves data in [_tempRecipeNotes] to [_recipeNotes] after edits and
   /// updates the recipe notes database accordingly
-  ///
-  /// First makes updates to the database and [associatedSettingsCount], then
-  /// populates [_recipeNotes] with the all data from [_tempRecipeNotes] sorted
-  /// by time
   Future<void> saveEditedRecipeNotes(int recipeEntryId) async {
     /// If [_tempRecipeNotes] doesn't contain a recipe note that is in
     /// [_recipeNotes], delete that recipe note from the database
-    for (var id in recipeNotes[recipeEntryId]?.keys ?? const Iterable.empty()) {
-      if (!tempRecipeNotes.containsKey(id)) {
-        await RecipeSettingsDatabase.instance.delete(id);
+    for (var note in recipeNotes[recipeEntryId] ?? const Iterable.empty()) {
+      if (!tempRecipeNotes.contains(note)) {
+        await RecipeNotesDatabase.instance.delete(note.id);
       }
     }
 
@@ -727,32 +737,36 @@ class RecipesProvider extends ChangeNotifier {
     /// [_recipeNotes], add that recipe note to the database or make updates to
     /// the recipe note if there are discrepencies between it and
     /// [_tempRecipeNotes]
-    for (var id in tempRecipeNotes.keys.toList()) {
+    for (var note in tempRecipeNotes) {
       /// New id -> add
-      bool containsKey = recipeNotes[recipeEntryId]?.containsKey(id) ?? false;
-      if (!containsKey) {
+      bool containsNote = recipeNotes[recipeEntryId]?.contains(note) ?? false;
+      int tempNoteIndex = getNoteIndexById(tempRecipeNotes, note.id!);
+      if (!containsNote) {
         /// Populate the recipe note with a proper id from the database
         RecipeNote newRecipeNote = RecipeNote(
-          recipeEntryId: tempRecipeNotes[id]!.recipeEntryId,
-          text: tempRecipeNotes[id]!.text,
+          recipeEntryId: tempRecipeNotes[tempNoteIndex].recipeEntryId,
+          text: tempRecipeNotes[tempNoteIndex].text,
         );
 
         int newId = await RecipeNotesDatabase.instance.create(newRecipeNote);
 
         _tempRecipeNotes
-            .addAll({newId: _tempRecipeNotes.remove(id)!.copy(id: newId)});
+            .add(_tempRecipeNotes.removeAt(tempNoteIndex).copy(id: newId));
       }
 
       /// Id exists in [recipeNotes] but entry in [recipeNotes] is different
       /// from [tempRecipeNotes]
-      else if (recipeNotes[recipeEntryId]![id] != tempRecipeNotes[id]) {
-        await RecipeNotesDatabase.instance.update(tempRecipeNotes[id]!);
+      else if (recipeNotes[recipeEntryId]![
+              getNoteIndexById(recipeNotes[recipeEntryId]!, note.id!)] !=
+          tempRecipeNotes[tempNoteIndex]) {
+        await RecipeNotesDatabase.instance
+            .update(tempRecipeNotes[tempNoteIndex]);
       }
       // else do nothing
     }
 
     /// Commit data from [_tempRecipeNotes] to [_recipeNotes]
-    _recipeNotes[recipeEntryId] = SplayTreeMap.from(_tempRecipeNotes);
+    _recipeNotes[recipeEntryId] = _tempRecipeNotes;
     notifyListeners();
   }
 

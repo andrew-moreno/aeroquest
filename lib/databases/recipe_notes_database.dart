@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:aeroquest/models/recipe_note.dart';
@@ -49,25 +47,21 @@ class RecipeNotesDatabase {
 
   /// Returns all recipe notes in the database
   ///
-  /// RecipeNotes are mapped by their associated recipe id first,
-  /// then their recipe note id
-  Future<Map<int, SplayTreeMap<int, RecipeNote>>> readAllRecipeNotes() async {
+  /// RecipeNotes are grouped by their associated recipe id
+  Future<Map<int, List<RecipeNote>>> readAllRecipeNotes() async {
     final db = await instance.database;
 
     final result = await db.query(tableRecipeNotes);
 
     final recipeNotesList =
         result.map((json) => RecipeNote.fromJson(json)).toList();
-    final recipeNotesMap = <int, SplayTreeMap<int, RecipeNote>>{};
+    final recipeNotesMap = <int, List<RecipeNote>>{};
     for (var recipeNote in recipeNotesList) {
       if (recipeNotesMap.containsKey(recipeNote.recipeEntryId)) {
-        recipeNotesMap[recipeNote.recipeEntryId]!
-            .addAll({recipeNote.id!: recipeNote});
+        recipeNotesMap[recipeNote.recipeEntryId]!.add(recipeNote);
       } else {
-        recipeNotesMap.addAll(
-            {recipeNote.recipeEntryId: SplayTreeMap<int, RecipeNote>()});
-        recipeNotesMap[recipeNote.recipeEntryId]!
-            .addAll({recipeNote.id!: recipeNote});
+        recipeNotesMap.addAll({recipeNote.recipeEntryId: []});
+        recipeNotesMap[recipeNote.recipeEntryId]!.add(recipeNote);
       }
     }
 
