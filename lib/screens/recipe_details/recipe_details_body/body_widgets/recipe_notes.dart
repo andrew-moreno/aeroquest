@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:aeroquest/models/recipe_note.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/providers/settings_slider_provider.dart';
@@ -11,7 +9,6 @@ import 'package:flutter/material.dart';
 
 import 'package:aeroquest/models/recipe.dart';
 import 'package:aeroquest/constraints.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class RecipeNotes extends StatefulWidget {
@@ -87,74 +84,20 @@ class _RecipeNotesState extends State<RecipeNotes> {
           return Column(
             children: [
               (_recipeNotesData.isNotEmpty)
-                  ? (_recipesProvider.editMode == EditMode.enabled)
-                      ? ReorderableListView.builder(
-                          onReorderStart: (index) =>
-                              HapticFeedback.lightImpact(),
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: _recipeNotesData.length,
-                          itemBuilder: (_, int index) {
-                            return Padding(
-                              key: ValueKey(index),
-                              padding: const EdgeInsets.only(
-                                  bottom: kRecipeDetailsVerticalPadding),
-                              child: RecipeMethodRecipeNotes(
-                                recipeNote: _recipeNotesData[_recipeNotesData
-                                    .indexWhere((note) => note.index == index)],
-                              ),
-                            );
-                          },
-                          onReorder: (oldIndex, newIndex) {
-                            recipesProvider.reorderRecipeNotes(
-                              recipeNoteToMove: _recipeNotesData[oldIndex],
-                              oldIndex: oldIndex,
-                              newIndex: newIndex,
-                            );
-                          },
-                          proxyDecorator: (child, index, animation) => Material(
-                            elevation: 0,
-                            color: Colors.transparent,
-                            child: Stack(
-                              children: [
-                                AnimatedBuilder(
-                                  child: child,
-                                  animation: animation,
-                                  builder: (_, child) {
-                                    final animValue = Curves.easeInOut
-                                        .transform(animation.value);
-                                    final scale =
-                                        lerpDouble(1, 1.05, animValue)!;
-                                    final elevation =
-                                        lerpDouble(0, 6, animValue)!;
-                                    return Transform.scale(
-                                      scale: scale,
-                                      child: Material(
-                                        elevation: elevation,
-                                        borderRadius: BorderRadius.circular(0),
-                                        color: Colors.transparent,
-                                        child: child,
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      : ListView.separated(
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: _recipeNotesData.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return RecipeMethodRecipeNotes(
-                                recipeNote: _recipeNotesData[index]);
-                          },
-                          separatorBuilder: (context, index) {
-                            return const SizedBox(
-                                height: kRecipeDetailsVerticalPadding);
-                          },
-                        )
+                  ? ListView.separated(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: _recipeNotesData.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return RecipeMethodRecipeNotes(
+                            recipeNote: _recipeNotesData[
+                                _recipeNotesData.length - index - 1]);
+                      },
+                      separatorBuilder: (context, index) {
+                        return const SizedBox(
+                            height: kRecipeDetailsVerticalPadding);
+                      },
+                    )
                   : const EmptyDetailsText(dataType: RecipeDetailsText.note),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20),
@@ -229,7 +172,6 @@ class _RecipeMethodRecipeNotesState extends State<RecipeMethodRecipeNotes> {
           color: kLightSecondary,
           borderRadius: BorderRadius.circular(kCornerRadius),
         ),
-        width: double.infinity,
         child: IntrinsicHeight(
           child: Text(
             widget.recipeNote.text,
