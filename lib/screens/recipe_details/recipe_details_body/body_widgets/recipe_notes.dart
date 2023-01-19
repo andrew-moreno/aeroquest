@@ -48,11 +48,11 @@ class _RecipeNotesState extends State<RecipeNotes> {
     }
   }
 
-  List<RecipeNote> _selectRecipeNotesData() {
+  Map<int, RecipeNote> _selectRecipeNotesData() {
     if (_recipesProvider.editMode == EditMode.enabled) {
       return _recipesProvider.tempRecipeNotes;
     } else {
-      return _recipesProvider.recipeNotes[widget.recipeEntryId] ?? [];
+      return _recipesProvider.recipeNotes[widget.recipeEntryId] ?? {};
     }
   }
 
@@ -82,7 +82,8 @@ class _RecipeNotesState extends State<RecipeNotes> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Consumer<RecipesProvider>(
         builder: (_, recipesProvider, __) {
-          List<RecipeNote> _recipeNotesData = _selectRecipeNotesData();
+          List<RecipeNote> _recipeNotesData =
+              _selectRecipeNotesData().values.toList();
           return Column(
             children: [
               (_recipeNotesData.isNotEmpty)
@@ -99,12 +100,18 @@ class _RecipeNotesState extends State<RecipeNotes> {
                               padding: const EdgeInsets.only(
                                   bottom: kRecipeDetailsVerticalPadding),
                               child: RecipeMethodRecipeNotes(
-                                recipeNote: _recipeNotesData[index],
+                                recipeNote: _recipeNotesData[_recipeNotesData
+                                    .indexWhere((note) => note.index == index)],
                               ),
                             );
                           },
-                          onReorder: (oldIndex, newIndex) => recipesProvider
-                              .reorderRecipeNotes(oldIndex, newIndex),
+                          onReorder: (oldIndex, newIndex) {
+                            recipesProvider.reorderRecipeNotes(
+                              recipeNoteToMove: _recipeNotesData[oldIndex],
+                              oldIndex: oldIndex,
+                              newIndex: newIndex,
+                            );
+                          },
                           proxyDecorator: (child, index, animation) => Material(
                             elevation: 0,
                             color: Colors.transparent,

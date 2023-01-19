@@ -1,3 +1,6 @@
+import 'dart:collection';
+import 'dart:developer';
+
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:aeroquest/models/recipe_note.dart';
@@ -32,6 +35,7 @@ class RecipeNotesDatabase {
       CREATE TABLE $tableRecipeNotes (
         ${RecipeNoteFields.id} $idType,
         ${RecipeNoteFields.recipeEntryId} $integerType,
+        ${RecipeNoteFields.index} $integerType,
         ${RecipeNoteFields.text} $textType
       ) 
     ''');
@@ -47,21 +51,25 @@ class RecipeNotesDatabase {
 
   /// Returns all recipe notes in the database
   ///
-  /// RecipeNotes are grouped by their associated recipe id
-  Future<Map<int, List<RecipeNote>>> readAllRecipeNotes() async {
+  /// RecipeNotes are mapped by their associated recipe id first,
+  /// then their recipe note id
+  Future<Map<int, SplayTreeMap<int, RecipeNote>>> readAllRecipeNotes() async {
     final db = await instance.database;
 
     final result = await db.query(tableRecipeNotes);
 
     final recipeNotesList =
         result.map((json) => RecipeNote.fromJson(json)).toList();
-    final recipeNotesMap = <int, List<RecipeNote>>{};
+    final recipeNotesMap = <int, SplayTreeMap<int, RecipeNote>>{};
     for (var recipeNote in recipeNotesList) {
       if (recipeNotesMap.containsKey(recipeNote.recipeEntryId)) {
-        recipeNotesMap[recipeNote.recipeEntryId]!.add(recipeNote);
+        recipeNotesMap[recipeNote.recipeEntryId]!
+            .addAll({recipeNote.id!: recipeNote});
       } else {
-        recipeNotesMap.addAll({recipeNote.recipeEntryId: []});
-        recipeNotesMap[recipeNote.recipeEntryId]!.add(recipeNote);
+        recipeNotesMap.addAll(
+            {recipeNote.recipeEntryId: SplayTreeMap<int, RecipeNote>()});
+        recipeNotesMap[recipeNote.recipeEntryId]!
+            .addAll({recipeNote.id!: recipeNote});
       }
     }
 
@@ -103,5 +111,12 @@ class RecipeNotesDatabase {
   Future close() async {
     final db = await instance.database;
     db.close();
+  }
+
+  Future<void> deleteDB() async {
+    final dbPath = await getDatabasesPath();
+    final path = join(dbPath, "recipeNotes.db");
+    log("deleted");
+    deleteDatabase(path);
   }
 }
