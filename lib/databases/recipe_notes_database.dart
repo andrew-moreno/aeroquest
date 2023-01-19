@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:developer';
 
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -34,6 +35,7 @@ class RecipeNotesDatabase {
       CREATE TABLE $tableRecipeNotes (
         ${RecipeNoteFields.id} $idType,
         ${RecipeNoteFields.recipeEntryId} $integerType,
+        ${RecipeNoteFields.index} $integerType,
         ${RecipeNoteFields.text} $textType
       ) 
     ''');
@@ -109,5 +111,12 @@ class RecipeNotesDatabase {
   Future close() async {
     final db = await instance.database;
     db.close();
+  }
+
+  Future<void> deleteDB() async {
+    final dbPath = await getDatabasesPath();
+    final path = join(dbPath, "recipeNotes.db");
+    log("deleted");
+    deleteDatabase(path);
   }
 }

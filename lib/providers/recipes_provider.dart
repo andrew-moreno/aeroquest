@@ -641,6 +641,30 @@ class RecipesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void reorderRecipeNotes({
+    required RecipeNote recipeNoteToMove,
+    required int oldIndex,
+    required int newIndex,
+  }) {
+    if (oldIndex < newIndex) {
+      for (int i = oldIndex + 1; i < newIndex; i++) {
+        _tempRecipeNotes[_tempRecipeNotes.values
+                .firstWhere((note) => note.index == i)
+                .id]!
+            .index--;
+      }
+    } else {
+      for (int i = newIndex; i < oldIndex; i++) {
+        _tempRecipeNotes[_tempRecipeNotes.values
+                .firstWhere((note) => note.index == i)
+                .id]!
+            .index++;
+      }
+    }
+    _tempRecipeNotes[recipeNoteToMove.id]!.index = newIndex;
+    log(tempRecipeNotes.values.toList().toString());
+  }
+
   /// Sets [_tempRecipeNotes] to the recipe notes in [_recipeNotes] associated
   /// with [recipeEntryId]
   ///
@@ -678,6 +702,7 @@ class RecipesProvider extends ChangeNotifier {
     }
     RecipeNote newRecipeNote = RecipeNote(
       id: tempId,
+      index: tempRecipeNotes.length,
       recipeEntryId: recipeEntryId,
       text: recipeRecipeNotesFormKey
           .currentState!.fields["recipeNoteText"]!.value,
@@ -733,6 +758,7 @@ class RecipesProvider extends ChangeNotifier {
       if (!containsKey) {
         /// Populate the recipe note with a proper id from the database
         RecipeNote newRecipeNote = RecipeNote(
+          index: tempRecipeNotes[id]!.index,
           recipeEntryId: tempRecipeNotes[id]!.recipeEntryId,
           text: tempRecipeNotes[id]!.text,
         );
