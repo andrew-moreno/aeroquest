@@ -1,14 +1,14 @@
-import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/providers/settings_slider_provider.dart';
+import 'package:aeroquest/widgets/custom_modal_sheet/modal_value_container.dart';
 import 'package:aeroquest/widgets/recipe_parameters_value.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ModalSliderValueContainer extends StatefulWidget {
-  /// Defines the widget used to display the recipe setting value inside
+class ModalSliderValue extends StatefulWidget {
+  /// Defines the widget used to display the recipe setting text inside
   /// the editing modal sheet
-  const ModalSliderValueContainer({
+  const ModalSliderValue({
     Key? key,
     required this.parameterType,
     this.isClickable = true,
@@ -23,11 +23,10 @@ class ModalSliderValueContainer extends StatefulWidget {
   final bool isClickable;
 
   @override
-  State<ModalSliderValueContainer> createState() =>
-      _ModalSliderValueContainerState();
+  State<ModalSliderValue> createState() => _ModalSliderValueState();
 }
 
-class _ModalSliderValueContainerState extends State<ModalSliderValueContainer> {
+class _ModalSliderValueState extends State<ModalSliderValue> {
   /// Used for setting the appropriate setting value to the widget
   ///
   /// Values won't be null because they are set in [ValueSliderGroupTemplate]
@@ -52,35 +51,23 @@ class _ModalSliderValueContainerState extends State<ModalSliderValueContainer> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return ModalValueContainer(
+      child: Padding(
+        padding: const EdgeInsets.all(7.0),
+        child: RecipeParameterValue(
+          parameterValue: _settingValue(widget.parameterType),
+          parameterType: widget.parameterType,
+        ),
+      ),
       onTap: () {
         if (widget.isClickable) {
           Provider.of<RecipesProvider>(context, listen: false)
               .selectSliderType(widget.parameterType);
         }
       },
-      child: Container(
-        padding: const EdgeInsets.all(7),
-        margin:
-            Provider.of<RecipesProvider>(context, listen: false).activeSlider !=
-                    widget.parameterType
-                ? const EdgeInsets.all(2)
-                : null,
-        decoration: BoxDecoration(
-          color: kLightSecondary,
-          borderRadius: BorderRadius.circular(kCornerRadius),
-          boxShadow: [kBoxShadow],
-          border: Provider.of<RecipesProvider>(context, listen: false)
-                      .activeSlider ==
-                  widget.parameterType
-              ? Border.all(color: kAccent, width: 2)
-              : null,
-        ),
-        child: RecipeParameterValue(
-          parameterValue: _settingValue(widget.parameterType),
-          parameterType: widget.parameterType,
-        ),
-      ),
+      displayBorder:
+          Provider.of<RecipesProvider>(context, listen: false).activeSlider ==
+              widget.parameterType,
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:aeroquest/constraints.dart';
+import 'package:aeroquest/providers/app_settings_provider.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/providers/settings_slider_provider.dart';
 import 'package:aeroquest/widgets/recipe_parameters_value.dart';
@@ -78,7 +79,8 @@ class _SettingValueSliderState extends State<SettingValueSlider> {
       case ParameterType.grindSetting:
         return WeightSliderController(
           initialWeight: _settingsSliderProvider.tempGrindSetting!,
-          interval: 0.25,
+          interval: Provider.of<AppSettingsProvider>(context, listen: false)
+              .grindInterval!,
         );
       case ParameterType.coffeeAmount:
         return WeightSliderController(

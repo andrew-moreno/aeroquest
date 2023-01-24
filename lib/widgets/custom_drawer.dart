@@ -1,3 +1,4 @@
+import 'package:aeroquest/screens/app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 
 import 'package:aeroquest/constraints.dart';
@@ -36,11 +37,19 @@ class CustomDrawer extends StatelessWidget {
               MenuItem(
                 icon: Image.asset(
                   "assets/images/coffee_bean.png",
-                  scale: 25,
+                  scale: 26,
                   color: kLightSecondary,
                 ),
                 route: CoffeeBeans.routeName,
                 text: "Coffee Beans",
+              ),
+              const MenuItem(
+                icon: Icon(
+                  Icons.settings,
+                  size: 23,
+                ),
+                text: "Settings",
+                route: AppSettings.routeName,
               ),
               const Spacer(),
               const MenuItem(

@@ -1,4 +1,4 @@
-import 'package:aeroquest/widgets/custom_modal_sheet/modal_slider_value_container.dart';
+import 'package:aeroquest/widgets/custom_modal_sheet/modal_slider_value.dart';
 import 'package:aeroquest/widgets/custom_modal_sheet/custom_vertical_weight_slider.dart';
 import 'package:aeroquest/widgets/recipe_parameters_value.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +48,7 @@ class ValueSliderGroupTemplate extends StatelessWidget {
         return Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: List.generate(
                 // does not include Parameter.none
                 parameterType.length - 1,
@@ -56,13 +56,13 @@ class ValueSliderGroupTemplate extends StatelessWidget {
                 /// recipe steps modal cannot have an interactive value container
                 /// see [isClickable]
                 (modalType == ModalType.settings)
-                    ? (index) => ModalSliderValueContainer(
+                    ? (index) => ModalSliderValue(
                           parameterType: parameterType
                               .where((sliderType) =>
                                   sliderType != ParameterType.none)
                               .toList()[index],
                         )
-                    : (index) => ModalSliderValueContainer(
+                    : (index) => ModalSliderValue(
                           parameterType: parameterType
                               .where((sliderType) =>
                                   sliderType != ParameterType.none)

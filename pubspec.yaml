@@ -45,6 +45,7 @@ dependencies:
   sqflite: ^2.0.2+1
   tuple: ^2.0.1
   sliver_tools: ^0.2.8
+  shared_preferences: ^2.0.17
 
 dev_dependencies:
   flutter_test:

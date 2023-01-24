@@ -1,4 +1,5 @@
 import 'package:aeroquest/constraints.dart';
+import 'package:aeroquest/providers/app_settings_provider.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,14 @@ class _RecipesState extends State<Recipes> {
           ),
         ) ??
         false; //if showDialog had returned null, then return false
+  }
+
+  /// Handles all all futures used in the FutureBuilder
+  Future<void> cacheRecipeDataAndSetInterval() async {
+    await Provider.of<RecipesProvider>(context, listen: false)
+        .cacheRecipeData();
+    await Provider.of<AppSettingsProvider>(context, listen: false)
+        .setGrindInterval();
   }
 
   @override
@@ -71,8 +80,7 @@ class _RecipesState extends State<Recipes> {
         ),
         body: SafeArea(
           child: FutureBuilder(
-            future: Provider.of<RecipesProvider>(context, listen: false)
-                .cacheRecipeData(),
+            future: cacheRecipeDataAndSetInterval(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 return Consumer<RecipesProvider>(

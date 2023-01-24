@@ -1,7 +1,9 @@
+import 'package:aeroquest/providers/app_settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:aeroquest/constraints.dart';
+import 'package:provider/provider.dart';
 
-class RecipeParameterValue extends StatelessWidget {
+class RecipeParameterValue extends StatefulWidget {
   /// Defines the widget for displaying recipe setting values
   ///
   /// eg. Grind: 17, Water Amount: 200, etc.
@@ -19,38 +21,57 @@ class RecipeParameterValue extends StatelessWidget {
   /// eg. grind, water amount, etc.
   final ParameterType parameterType;
 
+  @override
+  State<RecipeParameterValue> createState() => _RecipeParameterValueState();
+}
+
+class _RecipeParameterValueState extends State<RecipeParameterValue> {
   /// Generates the string representation of the parameter value based on
   /// the [parameterType]
-  ///
-  /// Throws an exception is [ParameterType.none] is passed
   String _parameterValue(ParameterType parameterType) {
     switch (parameterType) {
-      case ParameterType.grindSetting: // double
-        return parameterValue.toString();
-      case ParameterType.coffeeAmount: // double
-        return (parameterValue).toString() + "g";
+      case ParameterType.grindSetting:
+        {
+          int decimalPlaces;
+          double grindInterval =
+              Provider.of<AppSettingsProvider>(context, listen: false)
+                  .grindInterval!;
+          if (grindInterval == 1.0 || widget.parameterValue == 100) {
+            decimalPlaces = 0;
+          } else if (grindInterval == 0.25 || grindInterval == 0.33) {
+            decimalPlaces = 2;
+          } else {
+            decimalPlaces = 1;
+          }
+
+          return widget.parameterValue.toStringAsFixed(decimalPlaces);
+        } // double
+
+      case ParameterType.coffeeAmount:
+        // double
+        return (widget.parameterValue)
+                .toStringAsFixed((widget.parameterValue == 100) ? 0 : 1) +
+            "g";
       case ParameterType.waterAmount: // int
-        return (parameterValue).toString() + "g";
+        return (widget.parameterValue).toString() + "g";
       case ParameterType.waterTemp: // int
-        return parameterValue.toString();
+        return widget.parameterValue.toString();
       case ParameterType.brewTime: // int
-        return (parameterValue ~/ 6).toString() +
+        return (widget.parameterValue ~/ 6).toString() +
             ":" +
-            (parameterValue % 6).toString() +
+            (widget.parameterValue % 6).toString() +
             "0";
       case ParameterType.recipeStepTime:
-        return (parameterValue ~/ 6).toString() +
+        return (widget.parameterValue ~/ 6).toString() +
             ":" +
-            (parameterValue % 6).toString() +
+            (widget.parameterValue % 6).toString() +
             "0";
       case ParameterType.none:
-        throw Exception("ParameterType.none passed incorrectly");
+        return widget.parameterValue.toString();
     }
   }
 
   /// Converts the enum passed to [parameterType] to a string
-  ///
-  /// Throws an exception if [ParameterType.none] is passed
   String _parameterType(ParameterType parameterType) {
     switch (parameterType) {
       case ParameterType.grindSetting:
@@ -66,7 +87,7 @@ class RecipeParameterValue extends StatelessWidget {
       case ParameterType.recipeStepTime:
         return "Time";
       case ParameterType.none:
-        throw Exception("ParameterType.none passed incorrectly");
+        return "";
     }
   }
 
@@ -75,21 +96,18 @@ class RecipeParameterValue extends StatelessWidget {
     return Column(
       children: [
         Text(
-          _parameterValue(parameterType),
-          style: const TextStyle(
-            color: kAccent,
-            fontFamily: "Poppins",
-            fontSize: 19,
-            fontWeight: FontWeight.w600,
-          ),
+          _parameterValue(widget.parameterType),
+          style: Theme.of(context).textTheme.bodyText1,
         ),
-        Text(
-          _parameterType(parameterType),
-          style: Theme.of(context)
-              .textTheme
-              .subtitle1!
-              .copyWith(color: kAccentTransparent),
-        ),
+        (widget.parameterType != ParameterType.none)
+            ? Text(
+                _parameterType(widget.parameterType),
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle1!
+                    .copyWith(color: kAccentTransparent),
+              )
+            : Container(),
       ],
     );
   }
@@ -99,11 +117,11 @@ class RecipeParameterValue extends StatelessWidget {
 ///
 /// eg. water amount, grind setting, recipe step time
 enum ParameterType {
-  recipeStepTime,
   grindSetting,
   coffeeAmount,
   waterAmount,
   waterTemp,
   brewTime,
+  recipeStepTime,
   none
 }
