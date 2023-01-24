@@ -1,9 +1,9 @@
 import 'package:aeroquest/models/coffee_bean.dart';
 import 'package:aeroquest/providers/coffee_bean_provider.dart';
 import 'package:aeroquest/widgets/card_header.dart';
+import 'package:aeroquest/widgets/custom_card.dart';
 import 'package:aeroquest/widgets/custom_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:aeroquest/constraints.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 
@@ -51,16 +51,7 @@ class BeansContainer extends StatelessWidget {
     /// Layout builder required for provider use
     return LayoutBuilder(
       builder: (_, __) => GestureDetector(
-        child: Container(
-          padding: const EdgeInsets.symmetric(
-            vertical: 7,
-            horizontal: 15,
-          ),
-          decoration: BoxDecoration(
-            color: kPrimary,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [kBoxShadow],
-          ),
+        child: CustomCard(
           child: CardHeader(
             title: beanData.beanName,
             description: beanData.description,

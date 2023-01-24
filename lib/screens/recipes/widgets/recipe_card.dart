@@ -1,8 +1,8 @@
 import 'package:aeroquest/providers/recipes_provider.dart';
+import 'package:aeroquest/widgets/custom_card.dart';
 import 'package:aeroquest/widgets/recipe_settings/recipe_settings_container.dart';
 import 'package:flutter/material.dart';
 
-import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/widgets/card_header.dart';
 import 'package:aeroquest/models/recipe_settings.dart';
 import 'package:aeroquest/models/recipe.dart';
@@ -27,8 +27,6 @@ class RecipeCard extends StatelessWidget {
             {};
     return GestureDetector(
       onTap: () {
-        // Provider.of<RecipesProvider>(context, listen: false)
-        //     .setTempRecipe(recipeData.id!);
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -39,16 +37,7 @@ class RecipeCard extends StatelessWidget {
           ),
         );
       },
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          vertical: kRecipeSettingsVerticalPadding,
-          horizontal: 15,
-        ),
-        decoration: BoxDecoration(
-          color: kPrimary,
-          borderRadius: BorderRadius.circular(kCornerRadius),
-          boxShadow: [kBoxShadow],
-        ),
+      child: CustomCard(
         child: Column(
           children: [
             CardHeader(
