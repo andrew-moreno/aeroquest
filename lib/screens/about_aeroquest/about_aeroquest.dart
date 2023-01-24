@@ -25,7 +25,7 @@ class AboutAeroquest extends StatelessWidget {
       drawer: const CustomDrawer(),
       body: const SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(20.0),
+          padding: EdgeInsets.all(kRoutePagePadding),
           child: Text(
             "Hope u like my app and make great coffee :)",
             style: TextStyle(

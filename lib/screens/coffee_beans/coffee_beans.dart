@@ -66,7 +66,7 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
               return Consumer<CoffeeBeanProvider>(
                 builder: (_, coffeeBeanProvider, ___) {
                   return ListView.separated(
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(kRoutePagePadding),
                     itemCount: coffeeBeanProvider.coffeeBeans.length,
                     itemBuilder: (_, int index) {
                       int coffeeBeanId = coffeeBeanProvider.coffeeBeans.keys

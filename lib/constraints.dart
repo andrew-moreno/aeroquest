@@ -11,7 +11,12 @@ const kDeleteRed = Color(0xFFF64353);
 const kInputDecorationHorizontalPadding = 15.0;
 const kRecipeSettingsVerticalPadding = 7.0;
 const kRecipeDetailsVerticalPadding = 15.0;
-const kCornerRadius = 8.0;
+
+/// Defines padding for main pages
+///
+/// eg. Recipes, Coffee Beans, Settings
+const kRoutePagePadding = 20.0;
+const kCornerRadius = 10.0;
 const kModalCornerRadius = 25.0;
 final kBoxShadow = BoxShadow(
   color: Colors.black.withOpacity(0.2),

@@ -1,3 +1,4 @@
+import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -77,7 +78,7 @@ class _RecipesState extends State<Recipes> {
                 return Consumer<RecipesProvider>(
                   builder: (context, recipesProvider, ___) {
                     return ListView.separated(
-                      padding: const EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(kRoutePagePadding),
                       itemCount: recipesProvider.recipes.length,
                       itemBuilder: (context, index) {
                         int recipeId = recipesProvider.recipes.keys.elementAt(
