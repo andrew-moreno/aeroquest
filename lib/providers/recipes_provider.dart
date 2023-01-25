@@ -168,7 +168,7 @@ class RecipesProvider extends ChangeNotifier {
   double? tempGrindSetting;
   double? tempCoffeeAmount;
   int? tempWaterAmount;
-  int? tempWaterTemp;
+  double? tempWaterTemp;
   int? tempBrewTime;
 
   int? tempRecipeStepTime;
@@ -179,6 +179,7 @@ class RecipesProvider extends ChangeNotifier {
   /// Populates [_recipes], [_recipeSettings], [_recipeSteps], [_recipeNotes],
   /// and [_coffeeBeans] with data from their respective databases
   Future<void> cacheRecipeData() async {
+    //await RecipeSettingsDatabase.instance.deleteDB();
     _recipes = await RecipesDatabase.instance.readAllRecipes();
     _recipeSettings =
         await RecipeSettingsDatabase.instance.readAllRecipeSettings();

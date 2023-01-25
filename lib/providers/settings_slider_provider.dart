@@ -15,7 +15,7 @@ class SettingsSliderProvider extends ChangeNotifier {
   double? tempGrindSetting;
   double? tempCoffeeAmount;
   int? tempWaterAmount;
-  int? tempWaterTemp;
+  double? tempWaterTemp;
   int? tempBrewTime;
 
   int? tempRecipeStepTime;
@@ -37,7 +37,7 @@ class SettingsSliderProvider extends ChangeNotifier {
         tempWaterAmount = value.toInt();
         break;
       case ParameterType.waterTemp:
-        tempWaterTemp = value.toInt();
+        tempWaterTemp = value;
         break;
       case ParameterType.brewTime:
         tempBrewTime = value.toInt();

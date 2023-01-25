@@ -91,7 +91,7 @@ class _VerticalWeightSliderState extends State<VerticalWeightSlider> {
               ),
               onSelectedItemChanged: (index) {
                 widget.onChanged(
-                  (index / widget.controller.getIntervalToInt()) +
+                  (index / widget.controller.interval) +
                       widget.controller.minWeight,
                 );
               },

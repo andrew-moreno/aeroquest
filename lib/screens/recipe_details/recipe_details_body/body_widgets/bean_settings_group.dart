@@ -71,22 +71,9 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
                   if (!_formKey.currentState!.validate()) {
                     return;
                   }
-                  String beanName =
-                      _formKey.currentState!.fields["beanName"]!.value;
-                  String? description =
-                      _formKey.currentState!.fields["description"]?.value;
 
-                  int newBeanId = await _recipesProvider.addBean(
-                    beanName,
-                    description,
-                  );
                   Navigator.of(context).pop();
-                  showAddModal(
-                    recipeSettingsData: RecipeSettings.initial(
-                      recipeEntryId: widget.recipeEntryId,
-                      beanId: newBeanId,
-                    ),
-                  );
+                  showAddModal();
                 },
                 autoFocusTitleField: true,
                 context: context,

@@ -60,7 +60,7 @@ class _RecipeParameterValueState extends State<RecipeParameterValue> {
               Provider.of<AppSettingsProvider>(context, listen: false)
                   .temperatureUnit!;
           if (temperatureUnit == TemperatureUnit.celsius) {
-            return widget.parameterValue.toString();
+            return widget.parameterValue.toStringAsFixed(0);
           } else {
             num fahrenheit = (widget.parameterValue * 9 / 5) + 32;
             return fahrenheit.toStringAsFixed(0);

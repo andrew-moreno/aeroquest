@@ -60,7 +60,19 @@ class _SettingValueSliderState extends State<SettingValueSlider> {
       case ParameterType.waterAmount:
         return 300; // roughly max amount of water possible in aeropress
       case ParameterType.waterTemp:
-        return 100;
+        {
+          int maxValue;
+          TemperatureUnit temperatureUnit =
+              Provider.of<AppSettingsProvider>(context, listen: false)
+                  .temperatureUnit!;
+          if (temperatureUnit == TemperatureUnit.celsius) {
+            maxValue = 100;
+          } else {
+            // Subtract 32 because idk why :(
+            maxValue = 212 - 32;
+          }
+          return maxValue;
+        }
       case ParameterType.brewTime:
         return 180; // 30 minutes
       case ParameterType.recipeStepTime:
@@ -92,9 +104,22 @@ class _SettingValueSliderState extends State<SettingValueSlider> {
           initialWeight: _settingsSliderProvider.tempWaterAmount!.toDouble(),
         );
       case ParameterType.waterTemp:
-        return WeightSliderController(
-          initialWeight: _settingsSliderProvider.tempWaterTemp!.toDouble(),
-        );
+        {
+          double interval;
+          TemperatureUnit temperatureUnit =
+              Provider.of<AppSettingsProvider>(context, listen: false)
+                  .temperatureUnit!;
+          if (temperatureUnit == TemperatureUnit.celsius) {
+            interval = 1.0;
+          } else {
+            interval = 5 / 9;
+          }
+          return WeightSliderController(
+            initialWeight: _settingsSliderProvider.tempWaterTemp!,
+            interval: interval,
+          );
+        }
+
       case ParameterType.brewTime:
         return WeightSliderController(
           initialWeight: _settingsSliderProvider.tempBrewTime!.toDouble(),

@@ -43,7 +43,7 @@ class RecipeSettings {
   int waterAmount;
 
   /// Temperature of the water used for this recipe setting in celsius
-  int waterTemp;
+  double waterTemp;
 
   /// Time used for brewing for this recipe setting in 10 second intervals
   int brewTime;
@@ -66,19 +66,6 @@ class RecipeSettings {
     required this.visibility,
   });
 
-  /// Initializes a RecipeSettings object using its default values
-  RecipeSettings.initial({
-    this.id,
-    required this.recipeEntryId,
-    required this.beanId,
-    this.grindSetting = 0,
-    this.coffeeAmount = 0,
-    this.waterAmount = 0,
-    this.waterTemp = 100,
-    this.brewTime = 0,
-    this.visibility = "shown",
-  });
-
   /// Copies a RecipeSettings object
   ///
   /// The copied object will use any parameters passed into this method
@@ -89,7 +76,7 @@ class RecipeSettings {
     double? grindSetting,
     double? coffeeAmount,
     int? waterAmount,
-    int? waterTemp,
+    double? waterTemp,
     int? brewTime,
     String? visibility,
   }) =>
@@ -124,7 +111,7 @@ class RecipeSettings {
         recipeEntryId: json[RecipeSettingsFields.recipeEntryId] as int,
         beanId: json[RecipeSettingsFields.beanId] as int,
         waterAmount: json[RecipeSettingsFields.waterAmount] as int,
-        waterTemp: json[RecipeSettingsFields.waterTemp] as int,
+        waterTemp: json[RecipeSettingsFields.waterTemp] as double,
         brewTime: json[RecipeSettingsFields.brewTime] as int,
         coffeeAmount: json[RecipeSettingsFields.coffeeAmount] as double,
         grindSetting: json[RecipeSettingsFields.grindSetting] as double,
