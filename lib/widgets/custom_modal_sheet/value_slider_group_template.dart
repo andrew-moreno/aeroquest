@@ -48,7 +48,7 @@ class ValueSliderGroupTemplate extends StatelessWidget {
         return Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: List.generate(
                 // does not include Parameter.none
                 parameterType.length - 1,

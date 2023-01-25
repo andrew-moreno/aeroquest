@@ -84,7 +84,7 @@ class _SettingValueSliderState extends State<SettingValueSlider> {
         );
       case ParameterType.coffeeAmount:
         return WeightSliderController(
-          initialWeight: _settingsSliderProvider.tempCoffeeAmount!.toDouble(),
+          initialWeight: _settingsSliderProvider.tempCoffeeAmount!,
           interval: 0.1,
         );
       case ParameterType.waterAmount:

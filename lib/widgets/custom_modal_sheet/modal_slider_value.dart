@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ModalSliderValue extends StatefulWidget {
-  /// Defines the widget used to display the recipe setting text inside
-  /// the editing modal sheet
+  /// Defines the widget used to display the recipe setting container and value
+  /// inside the editing modal sheet
   const ModalSliderValue({
     Key? key,
     required this.parameterType,

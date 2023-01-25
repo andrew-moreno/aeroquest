@@ -55,7 +55,17 @@ class _RecipeParameterValueState extends State<RecipeParameterValue> {
       case ParameterType.waterAmount: // int
         return (widget.parameterValue).toString() + "g";
       case ParameterType.waterTemp: // int
-        return widget.parameterValue.toString();
+        {
+          TemperatureUnit temperatureUnit =
+              Provider.of<AppSettingsProvider>(context, listen: false)
+                  .temperatureUnit!;
+          if (temperatureUnit == TemperatureUnit.celsius) {
+            return widget.parameterValue.toString();
+          } else {
+            num fahrenheit = (widget.parameterValue * 9 / 5) + 32;
+            return fahrenheit.toStringAsFixed(0);
+          }
+        }
       case ParameterType.brewTime: // int
         return (widget.parameterValue ~/ 6).toString() +
             ":" +

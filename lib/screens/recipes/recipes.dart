@@ -42,6 +42,8 @@ class _RecipesState extends State<Recipes> {
         .cacheRecipeData();
     await Provider.of<AppSettingsProvider>(context, listen: false)
         .setGrindInterval();
+    await Provider.of<AppSettingsProvider>(context, listen: false)
+        .setTemperatureUnit();
   }
 
   @override
