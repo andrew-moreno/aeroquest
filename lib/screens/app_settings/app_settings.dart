@@ -116,12 +116,12 @@ class _AppSettingsState extends State<AppSettings> {
           padding: const EdgeInsets.all(kRoutePagePadding),
           child: Column(
             children: [
-              Consumer<AppSettingsProvider>(
-                //TODO: make changes specific to variable
-                builder: (_, appSettingsProvider, __) {
+              Selector<AppSettingsProvider, double>(
+                selector: (_, provider) => provider.grindInterval!,
+                builder: (_, grindInterval, __) {
                   return SettingCard(
                       text: AppSettingsProvider.getGrindIntervalText(
-                          appSettingsProvider.grindInterval),
+                          grindInterval),
                       onTap: () =>
                           showGrindIntervalModalSheet(context: context),
                       title: "Grind Size Interval",
@@ -131,12 +131,11 @@ class _AppSettingsState extends State<AppSettings> {
                 },
               ),
               const SizedBox(height: 20),
-              Consumer<AppSettingsProvider>(
-                //TODO: make changes specific to variable
-                builder: (_, appSettingsProvider, __) {
+              Selector<AppSettingsProvider, TemperatureUnit>(
+                selector: (_, provider) => provider.temperatureUnit!,
+                builder: (_, temperatureUnit, __) {
                   return SettingCard(
-                      text: _temperatureUnitTextSelector(
-                          appSettingsProvider.temperatureUnit!),
+                      text: _temperatureUnitTextSelector(temperatureUnit),
                       onTap: () =>
                           showTemperatureUnitModalSheet(context: context),
                       title: "Temperature Unit",
@@ -145,12 +144,11 @@ class _AppSettingsState extends State<AppSettings> {
                 },
               ),
               const SizedBox(height: 20),
-              Consumer<AppSettingsProvider>(
-                //TODO: make changes specific to variable
-                builder: (_, appSettingsProvider, __) {
+              Selector<AppSettingsProvider, MassUnit>(
+                selector: (_, provider) => provider.massUnit!,
+                builder: (_, massUnit, __) {
                   return SettingCard(
-                      text:
-                          _massUnitTextSelector(appSettingsProvider.massUnit!),
+                      text: _massUnitTextSelector(massUnit),
                       onTap: () => showMassUnitModalSheet(context: context),
                       title: "Mass Unit",
                       description: "Whether to use grams or ounces for "
