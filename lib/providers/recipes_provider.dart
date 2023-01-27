@@ -167,7 +167,7 @@ class RecipesProvider extends ChangeNotifier {
   int? tempBeanId;
   double? tempGrindSetting;
   double? tempCoffeeAmount;
-  int? tempWaterAmount;
+  double? tempWaterAmount;
   double? tempWaterTemp;
   int? tempBrewTime;
 

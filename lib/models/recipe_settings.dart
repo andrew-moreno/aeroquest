@@ -40,7 +40,7 @@ class RecipeSettings {
   double coffeeAmount;
 
   /// Amount of water used for this recipe setting in grams
-  int waterAmount;
+  double waterAmount;
 
   /// Temperature of the water used for this recipe setting in celsius
   double waterTemp;
@@ -75,7 +75,7 @@ class RecipeSettings {
     int? beanId,
     double? grindSetting,
     double? coffeeAmount,
-    int? waterAmount,
+    double? waterAmount,
     double? waterTemp,
     int? brewTime,
     String? visibility,
@@ -110,7 +110,7 @@ class RecipeSettings {
         id: json[RecipeSettingsFields.id] as int?,
         recipeEntryId: json[RecipeSettingsFields.recipeEntryId] as int,
         beanId: json[RecipeSettingsFields.beanId] as int,
-        waterAmount: json[RecipeSettingsFields.waterAmount] as int,
+        waterAmount: json[RecipeSettingsFields.waterAmount] as double,
         waterTemp: json[RecipeSettingsFields.waterTemp] as double,
         brewTime: json[RecipeSettingsFields.brewTime] as int,
         coffeeAmount: json[RecipeSettingsFields.coffeeAmount] as double,

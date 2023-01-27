@@ -36,10 +36,11 @@ class SettingCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(kCornerRadius),
                 boxShadow: [kBoxShadow],
               ),
-              child: Text(
-                text,
-                style: Theme.of(context).textTheme.bodyText1,
-              ),
+              child: Text(text,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1!
+                      .copyWith(fontSize: 17)),
             ),
           ],
         ),

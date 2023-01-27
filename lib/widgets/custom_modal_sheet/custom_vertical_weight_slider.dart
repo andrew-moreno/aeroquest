@@ -62,10 +62,10 @@ class _SettingValueSliderState extends State<SettingValueSlider> {
       case ParameterType.waterTemp:
         {
           int maxValue;
-          TemperatureUnit temperatureUnit =
+          UnitSystem temperatureUnit =
               Provider.of<AppSettingsProvider>(context, listen: false)
-                  .temperatureUnit!;
-          if (temperatureUnit == TemperatureUnit.celsius) {
+                  .unitSystem!;
+          if (temperatureUnit == UnitSystem.metric) {
             maxValue = 100;
           } else {
             // Subtract 32 because idk why :(
@@ -100,16 +100,29 @@ class _SettingValueSliderState extends State<SettingValueSlider> {
           interval: 0.1,
         );
       case ParameterType.waterAmount:
-        return WeightSliderController(
-          initialWeight: _settingsSliderProvider.tempWaterAmount!.toDouble(),
-        );
+        {
+          double interval;
+          UnitSystem unitSystem =
+              Provider.of<AppSettingsProvider>(context, listen: false)
+                  .unitSystem!;
+          if (unitSystem == UnitSystem.metric) {
+            interval = 1.0;
+          } else {
+            interval = 0.1;
+          }
+          return WeightSliderController(
+            initialWeight: _settingsSliderProvider.tempWaterAmount!,
+            interval: interval,
+          );
+        }
+
       case ParameterType.waterTemp:
         {
           double interval;
-          TemperatureUnit temperatureUnit =
+          UnitSystem unitSystem =
               Provider.of<AppSettingsProvider>(context, listen: false)
-                  .temperatureUnit!;
-          if (temperatureUnit == TemperatureUnit.celsius) {
+                  .unitSystem!;
+          if (unitSystem == UnitSystem.metric) {
             interval = 1.0;
           } else {
             interval = 5 / 9;
@@ -119,7 +132,6 @@ class _SettingValueSliderState extends State<SettingValueSlider> {
             interval: interval,
           );
         }
-
       case ParameterType.brewTime:
         return WeightSliderController(
           initialWeight: _settingsSliderProvider.tempBrewTime!.toDouble(),

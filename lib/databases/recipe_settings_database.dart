@@ -39,7 +39,7 @@ class RecipeSettingsDatabase {
         ${RecipeSettingsFields.beanId} $integerType,
         ${RecipeSettingsFields.grindSetting} $realType,
         ${RecipeSettingsFields.coffeeAmount} $realType,
-        ${RecipeSettingsFields.waterAmount} $integerType,
+        ${RecipeSettingsFields.waterAmount} $realType,
         ${RecipeSettingsFields.waterTemp} $realType,
         ${RecipeSettingsFields.brewTime} $integerType,
         ${RecipeSettingsFields.visibility} $textType

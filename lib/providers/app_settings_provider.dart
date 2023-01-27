@@ -5,8 +5,8 @@ class AppSettingsProvider extends ChangeNotifier {
   /// Name of the grind interval setting in the Shared Preferences db
   static const grindIntervalPref = "grindInterval";
 
-  /// Name of the temperature unit setting in the Shared Preferences db
-  static const temperatureUnitPref = "temperatureUnitPref";
+  /// Name of the measurement system in the Shared Preferences db
+  static const unitsPref = "unitsPref";
 
   /// Temporary grind interval value
   ///
@@ -16,13 +16,13 @@ class AppSettingsProvider extends ChangeNotifier {
   /// async operations
   double? grindInterval;
 
-  /// Temporary temperature unit value
+  /// Temporary unit system value
   ///
-  /// Value set by [setTemperatureUnit()]
+  /// Value set by [setUnitSystem()]
   ///
   /// Used instead of directly pulling from the Shared Preferences db to avoid
   /// async operations
-  TemperatureUnit? temperatureUnit;
+  UnitSystem? unitSystem;
 
   /// Sets [value] as the grind interval in the Shared Preferences db and sets
   /// the new value to [grindInterval]
@@ -45,26 +45,38 @@ class AppSettingsProvider extends ChangeNotifier {
     grindInterval = await getGrindInterval();
   }
 
-  void updateTemperatureUnit(String value) async {
+  static String getGrindIntervalText(var number) {
+    /// Get number of fraction digits from [number]
+    int decimals = 0;
+    List<String> substr = number.toString().split('.');
+    if (substr.isNotEmpty) decimals = int.tryParse(substr[1])!;
+
+    /// Determine output
+    if (decimals > 2) {
+      return number.toStringAsFixed(2);
+    }
+    return number.toString();
+  }
+
+  void updateUnitSystem(String value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(temperatureUnitPref, value);
-    setTemperatureUnit();
+    prefs.setString(unitsPref, value);
+    setUnitSystem();
     notifyListeners();
   }
 
-  Future<String> getTemperatureUnit() async {
+  Future<String> getUnitSystem() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString(temperatureUnitPref) ??
-        describeEnum(TemperatureUnit.celsius);
+    return prefs.getString(unitsPref) ?? describeEnum(UnitSystem.metric);
   }
 
-  Future<void> setTemperatureUnit() async {
-    if (await getTemperatureUnit() == describeEnum(TemperatureUnit.celsius)) {
-      temperatureUnit = TemperatureUnit.celsius;
+  Future<void> setUnitSystem() async {
+    if (await getUnitSystem() == describeEnum(UnitSystem.metric)) {
+      unitSystem = UnitSystem.metric;
     } else {
-      temperatureUnit = TemperatureUnit.fahrenheit;
+      unitSystem = UnitSystem.imperial;
     }
   }
 }
 
-enum TemperatureUnit { celsius, fahrenheit }
+enum UnitSystem { metric, imperial }

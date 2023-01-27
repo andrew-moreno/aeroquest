@@ -1,7 +1,7 @@
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/providers/app_settings_provider.dart';
 import 'package:aeroquest/screens/app_settings/widgets/modal_sheet_types/grind_interval_modal_sheet.dart';
-import 'package:aeroquest/screens/app_settings/widgets/modal_sheet_types/temperature_modal_sheet.dart';
+import 'package:aeroquest/screens/app_settings/widgets/modal_sheet_types/unit_system_modal_sheet.dart';
 import 'package:aeroquest/screens/app_settings/widgets/setting_card.dart';
 import 'package:aeroquest/widgets/appbar/appbar_leading.dart';
 import 'package:aeroquest/widgets/appbar/appbar_text.dart';
@@ -41,7 +41,7 @@ class _AppSettingsState extends State<AppSettings> {
   }
 
   /// Template for the modal bottom sheet when changing the temperature unit
-  void showTemperatureModalSheet({required BuildContext context}) {
+  void showUnitsModalSheet({required BuildContext context}) {
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -51,20 +51,20 @@ class _AppSettingsState extends State<AppSettings> {
       backgroundColor: kDarkSecondary,
       isScrollControlled: true,
       builder: (_) {
-        return TemperatureModalSheet(
-            initialTemperatureUnit:
+        return UnitSystemModalSheet(
+            initialUnitSystem:
                 Provider.of<AppSettingsProvider>(context, listen: false)
-                    .temperatureUnit!);
+                    .unitSystem!);
       },
     );
   }
 
-  String temperatureUnitSymbolSelector(TemperatureUnit temperatureUnit) {
-    switch (temperatureUnit) {
-      case TemperatureUnit.celsius:
-        return "°C";
-      case TemperatureUnit.fahrenheit:
-        return "°F";
+  String unitSystemTextSelector(UnitSystem unitSystem) {
+    switch (unitSystem) {
+      case UnitSystem.metric:
+        return "g/°C";
+      case UnitSystem.imperial:
+        return "oz/°F";
     }
   }
 
@@ -88,7 +88,8 @@ class _AppSettingsState extends State<AppSettings> {
                 //TODO: make changes specific to variable
                 builder: (_, appSettingsProvider, __) {
                   return SettingCard(
-                      text: appSettingsProvider.grindInterval!.toString(),
+                      text: AppSettingsProvider.getGrindIntervalText(
+                          appSettingsProvider.grindInterval),
                       onTap: () =>
                           showGrindIntervalModalSheet(context: context),
                       title: "Grind Size Interval",
@@ -102,12 +103,12 @@ class _AppSettingsState extends State<AppSettings> {
                 //TODO: make changes specific to variable
                 builder: (_, appSettingsProvider, __) {
                   return SettingCard(
-                      text: temperatureUnitSymbolSelector(
-                          appSettingsProvider.temperatureUnit!),
-                      onTap: () => showTemperatureModalSheet(context: context),
-                      title: "Temperature Unit",
-                      description: "Whether to use Celsius or Fahrenheit for "
-                          "the temperature setting for a recipe");
+                      text: unitSystemTextSelector(
+                          appSettingsProvider.unitSystem!),
+                      onTap: () => showUnitsModalSheet(context: context),
+                      title: "Measurement Units",
+                      description: "Whether to use metric or imperial units "
+                          "for recipe setting measurements");
                 },
               ),
             ],

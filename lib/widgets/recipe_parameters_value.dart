@@ -38,35 +38,44 @@ class _RecipeParameterValueState extends State<RecipeParameterValue> {
                   .grindInterval!;
           if (grindInterval == 1.0 || widget.parameterValue == 100) {
             decimalPlaces = 0;
-          } else if (grindInterval == 0.25 || grindInterval == 0.33) {
+          } else if (grindInterval == 0.25 || grindInterval == 1 / 3) {
             decimalPlaces = 2;
           } else {
             decimalPlaces = 1;
           }
 
           return widget.parameterValue.toStringAsFixed(decimalPlaces);
-        } // double
+        }
 
       case ParameterType.coffeeAmount:
-        // double
         return (widget.parameterValue)
-                .toStringAsFixed((widget.parameterValue == 100) ? 0 : 1) +
-            "g";
-      case ParameterType.waterAmount: // int
-        return (widget.parameterValue).toString() + "g";
-      case ParameterType.waterTemp: // int
+            .toStringAsFixed((widget.parameterValue == 100) ? 0 : 1);
+      case ParameterType.waterAmount:
         {
-          TemperatureUnit temperatureUnit =
+          int fractionDigits;
+          UnitSystem unitSystem =
               Provider.of<AppSettingsProvider>(context, listen: false)
-                  .temperatureUnit!;
-          if (temperatureUnit == TemperatureUnit.celsius) {
+                  .unitSystem!;
+          if (unitSystem == UnitSystem.metric) {
+            fractionDigits = 0;
+          } else {
+            fractionDigits = 1;
+          }
+          return (widget.parameterValue).toStringAsFixed(fractionDigits);
+        }
+      case ParameterType.waterTemp:
+        {
+          UnitSystem unitSystem =
+              Provider.of<AppSettingsProvider>(context, listen: false)
+                  .unitSystem!;
+          if (unitSystem == UnitSystem.metric) {
             return widget.parameterValue.toStringAsFixed(0);
           } else {
             num fahrenheit = (widget.parameterValue * 9 / 5) + 32;
             return fahrenheit.toStringAsFixed(0);
           }
         }
-      case ParameterType.brewTime: // int
+      case ParameterType.brewTime:
         return (widget.parameterValue ~/ 6).toString() +
             ":" +
             (widget.parameterValue % 6).toString() +
@@ -101,17 +110,82 @@ class _RecipeParameterValueState extends State<RecipeParameterValue> {
     }
   }
 
+  String _unitType(ParameterType parameterType) {
+    switch (parameterType) {
+      case ParameterType.grindSetting:
+        return "";
+      case ParameterType.coffeeAmount:
+        {
+          String units;
+          UnitSystem unitSystem =
+              Provider.of<AppSettingsProvider>(context, listen: false)
+                  .unitSystem!;
+          if (unitSystem == UnitSystem.metric) {
+            units = "g";
+          } else {
+            units = "oz";
+          }
+          return units;
+        }
+      case ParameterType.waterAmount:
+        {
+          String units;
+          UnitSystem unitSystem =
+              Provider.of<AppSettingsProvider>(context, listen: false)
+                  .unitSystem!;
+          if (unitSystem == UnitSystem.metric) {
+            units = "g";
+          } else {
+            units = "oz";
+          }
+          return units;
+        }
+      case ParameterType.waterTemp:
+        {
+          String units;
+          UnitSystem unitSystem =
+              Provider.of<AppSettingsProvider>(context, listen: false)
+                  .unitSystem!;
+          if (unitSystem == UnitSystem.metric) {
+            units = "°C";
+          } else {
+            units = "°F";
+          }
+          return units;
+        }
+      case ParameterType.brewTime:
+        return "";
+      case ParameterType.recipeStepTime:
+        return "";
+      case ParameterType.none:
+        return "";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(
-          _parameterValue(widget.parameterType),
-          style: Theme.of(context).textTheme.bodyText1,
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              _parameterValue(widget.parameterType),
+              style: Theme.of(context).textTheme.bodyText1!.copyWith(height: 0),
+            ),
+            Text(
+              _unitType(widget.parameterType),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyText1!
+                  .copyWith(color: kAccentTransparent),
+            ),
+          ],
         ),
         (widget.parameterType != ParameterType.none)
             ? Text(
                 _parameterType(widget.parameterType),
+                textAlign: TextAlign.center,
                 style: Theme.of(context)
                     .textTheme
                     .subtitle1!

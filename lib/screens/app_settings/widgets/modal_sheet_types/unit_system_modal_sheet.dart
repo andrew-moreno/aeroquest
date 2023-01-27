@@ -6,51 +6,50 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-class TemperatureModalSheet extends StatefulWidget {
+class UnitSystemModalSheet extends StatefulWidget {
   /// Defines the modal sheet used for editing the grind setting interval
-  const TemperatureModalSheet({
+  const UnitSystemModalSheet({
     Key? key,
-    required this.initialTemperatureUnit,
+    required this.initialUnitSystem,
   }) : super(key: key);
 
   /// Initial value of the grind interval to display in the modal sheet
-  final TemperatureUnit initialTemperatureUnit;
+  final UnitSystem initialUnitSystem;
 
   @override
-  State<TemperatureModalSheet> createState() => _TemperatureModalSheetState();
+  State<UnitSystemModalSheet> createState() => _UnitSystemModalSheetState();
 }
 
-class _TemperatureModalSheetState extends State<TemperatureModalSheet> {
-  late TemperatureUnit _tempTemperatureUnit;
+class _UnitSystemModalSheetState extends State<UnitSystemModalSheet> {
+  late UnitSystem _tempUnitSystem;
 
-  static const _temperatureUnitValues = ["°C", "°F"];
+  static const _unitSystemValues = ["g/°C", "oz/°F"];
 
   @override
   void initState() {
     super.initState();
-    _tempTemperatureUnit = widget.initialTemperatureUnit;
+    _tempUnitSystem = widget.initialUnitSystem;
   }
 
   @override
   Widget build(BuildContext context) {
     return AppSettingsModalSheet(
-      text: "Temperature unit selection:",
+      text: "Measurement unit selection:",
       editor: AnimatedToggle(
-        values: _temperatureUnitValues,
+        values: _unitSystemValues,
         onToggleCallback: (index) {
           index == 0
-              ? _tempTemperatureUnit = TemperatureUnit.celsius
-              : _tempTemperatureUnit = TemperatureUnit.fahrenheit;
+              ? _tempUnitSystem = UnitSystem.metric
+              : _tempUnitSystem = UnitSystem.imperial;
         },
-        initialPosition:
-            (widget.initialTemperatureUnit == TemperatureUnit.celsius)
-                ? Position.first
-                : Position.last,
+        initialPosition: (widget.initialUnitSystem == UnitSystem.metric)
+            ? Position.first
+            : Position.last,
         toggleType: ToggleType.horizontal,
       ),
       onTap: () {
         Provider.of<AppSettingsProvider>(context, listen: false)
-            .updateTemperatureUnit(describeEnum(_tempTemperatureUnit));
+            .updateUnitSystem(describeEnum(_tempUnitSystem));
         Navigator.of(context).pop();
       },
     );

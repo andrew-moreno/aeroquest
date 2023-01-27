@@ -1,7 +1,6 @@
 import 'package:aeroquest/providers/app_settings_provider.dart';
 import 'package:aeroquest/screens/app_settings/widgets/app_settings_modal_sheet.dart';
 import 'package:aeroquest/widgets/custom_modal_sheet/modal_value_container.dart';
-import 'package:aeroquest/widgets/recipe_parameters_value.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -27,7 +26,7 @@ class _GrindIntervalModalSheetState extends State<GrindIntervalModalSheet> {
   late double _tempGrindInterval;
 
   /// Possible grind interval values that can be set
-  static const List<double> _intervalValues = [0.1, 0.2, 0.25, 0.33, 0.5, 1];
+  static const List<double> _intervalValues = [0.1, 0.2, 0.25, 1 / 3, 0.5, 1.0];
 
   @override
   void initState() {
@@ -49,9 +48,10 @@ class _GrindIntervalModalSheetState extends State<GrindIntervalModalSheet> {
                   horizontal: 7,
                   vertical: 10,
                 ),
-                child: RecipeParameterValue(
-                  parameterValue: _intervalValues[index],
-                  parameterType: ParameterType.none,
+                child: Text(
+                  AppSettingsProvider.getGrindIntervalText(
+                      _intervalValues[index]),
+                  style: Theme.of(context).textTheme.bodyText1,
                 ),
               ),
               onTap: () {

@@ -85,7 +85,7 @@ class MyApp extends StatelessWidget {
                   bodyText1: TextStyle(
                     color: kAccent,
                     fontFamily: "Poppins",
-                    fontSize: 19,
+                    fontSize: 18,
                     fontWeight: FontWeight.w600,
                   )),
               inputDecorationTheme: InputDecorationTheme(
