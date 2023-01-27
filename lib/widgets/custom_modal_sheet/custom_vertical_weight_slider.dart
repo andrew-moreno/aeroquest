@@ -62,10 +62,10 @@ class _SettingValueSliderState extends State<SettingValueSlider> {
       case ParameterType.waterTemp:
         {
           int maxValue;
-          UnitSystem temperatureUnit =
+          TemperatureUnit temperatureUnit =
               Provider.of<AppSettingsProvider>(context, listen: false)
-                  .unitSystem!;
-          if (temperatureUnit == UnitSystem.metric) {
+                  .temperatureUnit!;
+          if (temperatureUnit == TemperatureUnit.celsius) {
             maxValue = 100;
           } else {
             // Subtract 32 because idk why :(
@@ -102,10 +102,10 @@ class _SettingValueSliderState extends State<SettingValueSlider> {
       case ParameterType.waterAmount:
         {
           double interval;
-          UnitSystem unitSystem =
+          MassUnit unitSystem =
               Provider.of<AppSettingsProvider>(context, listen: false)
-                  .unitSystem!;
-          if (unitSystem == UnitSystem.metric) {
+                  .massUnit!;
+          if (unitSystem == MassUnit.gram) {
             interval = 1.0;
           } else {
             interval = 0.1;
@@ -115,14 +115,13 @@ class _SettingValueSliderState extends State<SettingValueSlider> {
             interval: interval,
           );
         }
-
       case ParameterType.waterTemp:
         {
           double interval;
-          UnitSystem unitSystem =
+          TemperatureUnit temperatureUnit =
               Provider.of<AppSettingsProvider>(context, listen: false)
-                  .unitSystem!;
-          if (unitSystem == UnitSystem.metric) {
+                  .temperatureUnit!;
+          if (temperatureUnit == TemperatureUnit.celsius) {
             interval = 1.0;
           } else {
             interval = 5 / 9;

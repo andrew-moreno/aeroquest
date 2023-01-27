@@ -6,50 +6,50 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-class UnitSystemModalSheet extends StatefulWidget {
+class MassUnitModalSheet extends StatefulWidget {
   /// Defines the modal sheet used for editing the grind setting interval
-  const UnitSystemModalSheet({
+  const MassUnitModalSheet({
     Key? key,
-    required this.initialUnitSystem,
+    required this.initialMassUnit,
   }) : super(key: key);
 
   /// Initial value of the grind interval to display in the modal sheet
-  final UnitSystem initialUnitSystem;
+  final MassUnit initialMassUnit;
 
   @override
-  State<UnitSystemModalSheet> createState() => _UnitSystemModalSheetState();
+  State<MassUnitModalSheet> createState() => _MassUnitModalSheetState();
 }
 
-class _UnitSystemModalSheetState extends State<UnitSystemModalSheet> {
-  late UnitSystem _tempUnitSystem;
+class _MassUnitModalSheetState extends State<MassUnitModalSheet> {
+  late MassUnit _tempMassUnit;
 
-  static const _unitSystemValues = ["g/°C", "oz/°F"];
+  static const _massUnitValues = ["g", "oz"];
 
   @override
   void initState() {
     super.initState();
-    _tempUnitSystem = widget.initialUnitSystem;
+    _tempMassUnit = widget.initialMassUnit;
   }
 
   @override
   Widget build(BuildContext context) {
     return AppSettingsModalSheet(
-      text: "Measurement unit selection:",
+      text: "Temperature unit selection:",
       editor: AnimatedToggle(
-        values: _unitSystemValues,
+        values: _massUnitValues,
         onToggleCallback: (index) {
           index == 0
-              ? _tempUnitSystem = UnitSystem.metric
-              : _tempUnitSystem = UnitSystem.imperial;
+              ? _tempMassUnit = MassUnit.gram
+              : _tempMassUnit = MassUnit.ounce;
         },
-        initialPosition: (widget.initialUnitSystem == UnitSystem.metric)
+        initialPosition: (widget.initialMassUnit == MassUnit.gram)
             ? Position.first
             : Position.last,
         toggleType: ToggleType.horizontal,
       ),
       onTap: () {
         Provider.of<AppSettingsProvider>(context, listen: false)
-            .updateUnitSystem(describeEnum(_tempUnitSystem));
+            .updateMassUnit(describeEnum(_tempMassUnit));
         Navigator.of(context).pop();
       },
     );

@@ -1,7 +1,8 @@
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/providers/app_settings_provider.dart';
 import 'package:aeroquest/screens/app_settings/widgets/modal_sheet_types/grind_interval_modal_sheet.dart';
-import 'package:aeroquest/screens/app_settings/widgets/modal_sheet_types/unit_system_modal_sheet.dart';
+import 'package:aeroquest/screens/app_settings/widgets/modal_sheet_types/mass_unit_modal_sheet.dart';
+import 'package:aeroquest/screens/app_settings/widgets/modal_sheet_types/temperature_unit_modal_sheet.dart';
 import 'package:aeroquest/screens/app_settings/widgets/setting_card.dart';
 import 'package:aeroquest/widgets/appbar/appbar_leading.dart';
 import 'package:aeroquest/widgets/appbar/appbar_text.dart';
@@ -41,7 +42,7 @@ class _AppSettingsState extends State<AppSettings> {
   }
 
   /// Template for the modal bottom sheet when changing the temperature unit
-  void showUnitsModalSheet({required BuildContext context}) {
+  void showTemperatureUnitModalSheet({required BuildContext context}) {
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -51,20 +52,51 @@ class _AppSettingsState extends State<AppSettings> {
       backgroundColor: kDarkSecondary,
       isScrollControlled: true,
       builder: (_) {
-        return UnitSystemModalSheet(
-            initialUnitSystem:
+        return TemperatureUnitModalSheet(
+            initialTemperatureUnit:
                 Provider.of<AppSettingsProvider>(context, listen: false)
-                    .unitSystem!);
+                    .temperatureUnit!);
       },
     );
   }
 
-  String unitSystemTextSelector(UnitSystem unitSystem) {
-    switch (unitSystem) {
-      case UnitSystem.metric:
-        return "g/°C";
-      case UnitSystem.imperial:
-        return "oz/°F";
+  /// Template for the modal bottom sheet when changing the mass unit
+  void showMassUnitModalSheet({required BuildContext context}) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius:
+            BorderRadius.vertical(top: Radius.circular(kModalCornerRadius)),
+      ),
+      backgroundColor: kDarkSecondary,
+      isScrollControlled: true,
+      builder: (_) {
+        return MassUnitModalSheet(
+            initialMassUnit:
+                Provider.of<AppSettingsProvider>(context, listen: false)
+                    .massUnit!);
+      },
+    );
+  }
+
+  /// Selects the correct temperature unit text to return based on the
+  /// [tempUnit]
+  String _temperatureUnitTextSelector(TemperatureUnit tempUnit) {
+    switch (tempUnit) {
+      case TemperatureUnit.celsius:
+        return "°C";
+      case TemperatureUnit.fahrenheit:
+        return "°F";
+    }
+  }
+
+  /// Selects the correct mass unit text to return based on the [massUnit]
+  String _massUnitTextSelector(MassUnit massUnit) {
+    switch (massUnit) {
+      case MassUnit.gram:
+        return "g";
+      case MassUnit.ounce:
+        return "oz";
     }
   }
 
@@ -103,12 +135,26 @@ class _AppSettingsState extends State<AppSettings> {
                 //TODO: make changes specific to variable
                 builder: (_, appSettingsProvider, __) {
                   return SettingCard(
-                      text: unitSystemTextSelector(
-                          appSettingsProvider.unitSystem!),
-                      onTap: () => showUnitsModalSheet(context: context),
-                      title: "Measurement Units",
-                      description: "Whether to use metric or imperial units "
-                          "for recipe setting measurements");
+                      text: _temperatureUnitTextSelector(
+                          appSettingsProvider.temperatureUnit!),
+                      onTap: () =>
+                          showTemperatureUnitModalSheet(context: context),
+                      title: "Temperature Unit",
+                      description: "Whether to use Celsius or Fahrenheit for "
+                          "the temperature setting for a recipe");
+                },
+              ),
+              const SizedBox(height: 20),
+              Consumer<AppSettingsProvider>(
+                //TODO: make changes specific to variable
+                builder: (_, appSettingsProvider, __) {
+                  return SettingCard(
+                      text:
+                          _massUnitTextSelector(appSettingsProvider.massUnit!),
+                      onTap: () => showMassUnitModalSheet(context: context),
+                      title: "Mass Unit",
+                      description: "Whether to use grams or ounces for "
+                          "the mass setting for a recipe");
                 },
               ),
             ],

@@ -46,17 +46,16 @@ class _RecipeParameterValueState extends State<RecipeParameterValue> {
 
           return widget.parameterValue.toStringAsFixed(decimalPlaces);
         }
-
       case ParameterType.coffeeAmount:
         return (widget.parameterValue)
             .toStringAsFixed((widget.parameterValue == 100) ? 0 : 1);
       case ParameterType.waterAmount:
         {
           int fractionDigits;
-          UnitSystem unitSystem =
+          MassUnit massUnit =
               Provider.of<AppSettingsProvider>(context, listen: false)
-                  .unitSystem!;
-          if (unitSystem == UnitSystem.metric) {
+                  .massUnit!;
+          if (massUnit == MassUnit.gram) {
             fractionDigits = 0;
           } else {
             fractionDigits = 1;
@@ -65,10 +64,10 @@ class _RecipeParameterValueState extends State<RecipeParameterValue> {
         }
       case ParameterType.waterTemp:
         {
-          UnitSystem unitSystem =
+          TemperatureUnit unitSystem =
               Provider.of<AppSettingsProvider>(context, listen: false)
-                  .unitSystem!;
-          if (unitSystem == UnitSystem.metric) {
+                  .temperatureUnit!;
+          if (unitSystem == TemperatureUnit.celsius) {
             return widget.parameterValue.toStringAsFixed(0);
           } else {
             num fahrenheit = (widget.parameterValue * 9 / 5) + 32;
@@ -110,30 +109,19 @@ class _RecipeParameterValueState extends State<RecipeParameterValue> {
     }
   }
 
+  /// Selects the correct unit to display next to recipe setting values
   String _unitType(ParameterType parameterType) {
     switch (parameterType) {
       case ParameterType.grindSetting:
         return "";
       case ParameterType.coffeeAmount:
-        {
-          String units;
-          UnitSystem unitSystem =
-              Provider.of<AppSettingsProvider>(context, listen: false)
-                  .unitSystem!;
-          if (unitSystem == UnitSystem.metric) {
-            units = "g";
-          } else {
-            units = "oz";
-          }
-          return units;
-        }
       case ParameterType.waterAmount:
         {
           String units;
-          UnitSystem unitSystem =
+          MassUnit massUnit =
               Provider.of<AppSettingsProvider>(context, listen: false)
-                  .unitSystem!;
-          if (unitSystem == UnitSystem.metric) {
+                  .massUnit!;
+          if (massUnit == MassUnit.gram) {
             units = "g";
           } else {
             units = "oz";
@@ -143,10 +131,10 @@ class _RecipeParameterValueState extends State<RecipeParameterValue> {
       case ParameterType.waterTemp:
         {
           String units;
-          UnitSystem unitSystem =
+          TemperatureUnit unitSystem =
               Provider.of<AppSettingsProvider>(context, listen: false)
-                  .unitSystem!;
-          if (unitSystem == UnitSystem.metric) {
+                  .temperatureUnit!;
+          if (unitSystem == TemperatureUnit.celsius) {
             units = "°C";
           } else {
             units = "°F";
@@ -154,9 +142,7 @@ class _RecipeParameterValueState extends State<RecipeParameterValue> {
           return units;
         }
       case ParameterType.brewTime:
-        return "";
       case ParameterType.recipeStepTime:
-        return "";
       case ParameterType.none:
         return "";
     }
