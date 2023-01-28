@@ -107,11 +107,14 @@ class _RecipeDetailsState extends State<RecipeDetails> {
   Future<bool> _onWillPop() async {
     if (_recipesProvider.editMode == EditMode.enabled) {
       if (_isRecipeChanged()) {
-        _showDiscardChangesPopup(true);
+        await _showDiscardChangesPopup(true);
       } else {
         if (widget.isAdding) {
           return Future.value(true);
         }
+        _recipesProvider.setEditMode(EditMode.disabled);
+        _recipesProvider.clearTempData();
+        setState(() {});
         return Future.value(false);
       }
     }
