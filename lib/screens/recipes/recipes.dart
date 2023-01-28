@@ -102,7 +102,12 @@ class _RecipesState extends State<Recipes> {
                   },
                 );
               } else {
-                return const CircularProgressIndicator();
+                return const Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 3,
+                    color: kAccent,
+                  ),
+                );
               }
             },
           ),

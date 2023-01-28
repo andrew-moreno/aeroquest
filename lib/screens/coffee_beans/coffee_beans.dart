@@ -86,8 +86,11 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
                 },
               );
             } else {
-              return const CircularProgressIndicator(
-                color: kAccent,
+              return const Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 3,
+                  color: kAccent,
+                ),
               );
             }
           },
