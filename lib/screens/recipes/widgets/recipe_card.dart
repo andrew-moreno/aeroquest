@@ -47,13 +47,12 @@ class RecipeCard extends StatelessWidget {
             Visibility(
               visible: recipeSettings.isNotEmpty,
               child: Column(
-                children: [
-                  const SizedBox(height: 10),
-                  (recipeSettings.values.any((recipeSetting) =>
-                          RecipeSettings.stringToSettingVisibility(
-                              recipeSetting.visibility) ==
-                          SettingVisibility.shown))
-                      ? RecipeSettingsContainer(
+                children: (recipeSettings.values.any((recipeSetting) =>
+                        RecipeSettings.stringToSettingVisibility(
+                            recipeSetting.visibility) ==
+                        SettingVisibility.shown))
+                    ? [
+                        RecipeSettingsContainer(
                           recipeSettings: recipeSettings.values
                               .where((recipeSetting) =>
                                   RecipeSettings.stringToSettingVisibility(
@@ -61,8 +60,8 @@ class RecipeCard extends StatelessWidget {
                                   SettingVisibility.shown)
                               .toList(),
                         )
-                      : Container(),
-                ],
+                      ]
+                    : [Container()],
               ),
             ),
           ],
