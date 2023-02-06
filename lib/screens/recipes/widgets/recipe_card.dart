@@ -52,6 +52,7 @@ class RecipeCard extends StatelessWidget {
                             recipeSetting.visibility) ==
                         SettingVisibility.shown))
                     ? [
+                        const SizedBox(height: 10),
                         RecipeSettingsContainer(
                           recipeSettings: recipeSettings.values
                               .where((recipeSetting) =>
