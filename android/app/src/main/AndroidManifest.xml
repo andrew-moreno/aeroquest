@@ -7,7 +7,7 @@
         </intent>
     </queries>
    <application
-        android:label="aeroquest"
+        android:label="AeroQuest"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
