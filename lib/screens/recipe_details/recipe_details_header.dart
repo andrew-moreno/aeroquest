@@ -40,62 +40,48 @@ class RecipeDetailsHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isEditModeEnabled() {
+      return (Provider.of<RecipesProvider>(context, listen: false).editMode ==
+          EditMode.enabled);
+    }
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 40),
-      child: (Provider.of<RecipesProvider>(context, listen: false).editMode ==
-              EditMode.enabled)
-          ? FormBuilder(
-              key: Provider.of<RecipesProvider>(context, listen: false)
-                  .recipeIdentifiersFormKey,
-              child: Column(
-                children: [
-                  CustomHeaderFormField(
-                    name: "recipeTitle",
-                    initialValue: titleValue,
-                    hintText: "Title",
-                    hintStyle: _titleTextStyle,
-                    validate: true,
-                    textCapitalization: TextCapitalization.words,
-                    validateUniqueness: true,
-                  ),
-                  const SizedBox(height: _sizedBoxHeight),
-                  CustomHeaderFormField(
-                    name: "recipeDescription",
-                    initialValue: descriptionValue,
-                    hintText: "Description",
-                    hintStyle: _descriptionTextStyle,
-                    validate: false,
-                    textCapitalization: TextCapitalization.sentences,
-                    validateUniqueness: false,
-                  ),
-                ],
-              ),
-            )
-          : Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: Column(
-                children: [
-                  Text(
-                    titleValue,
-                    style: _titleTextStyle,
-                    textAlign: TextAlign.center,
-                  ),
-                  // 5*2 used to match padding of text form fields
-                  const SizedBox(height: _sizedBoxHeight + (5 * 2)),
-                  Opacity(
-                    opacity:
-                        (descriptionValue != null && descriptionValue != "")
-                            ? 1
-                            : 0,
-                    child: Text(
-                      descriptionValue!,
-                      style: _descriptionTextStyle,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ],
+      child: FormBuilder(
+        key: Provider.of<RecipesProvider>(context, listen: false)
+            .recipeIdentifiersFormKey,
+        child: Column(
+          children: [
+            CustomHeaderFormField(
+              name: "recipeTitle",
+              initialValue: titleValue,
+              hintText: "Title",
+              hintStyle: _titleTextStyle,
+              validate: true,
+              textCapitalization: TextCapitalization.words,
+              validateUniqueness: true,
+              enabled: isEditModeEnabled(),
+            ),
+            const SizedBox(height: _sizedBoxHeight),
+            Opacity(
+              opacity: (isEditModeEnabled() ||
+                      (descriptionValue != null && descriptionValue != ""))
+                  ? 1
+                  : 0,
+              child: CustomHeaderFormField(
+                name: "recipeDescription",
+                initialValue: descriptionValue,
+                hintText: "Description",
+                hintStyle: _descriptionTextStyle,
+                validate: false,
+                textCapitalization: TextCapitalization.sentences,
+                validateUniqueness: false,
+                enabled: isEditModeEnabled(),
               ),
             ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -111,6 +97,7 @@ class CustomHeaderFormField extends StatelessWidget {
     required this.validate,
     required this.textCapitalization,
     required this.validateUniqueness,
+    required this.enabled,
   }) : super(key: key);
 
   final String name;
@@ -118,6 +105,7 @@ class CustomHeaderFormField extends StatelessWidget {
   final String hintText;
   final TextStyle hintStyle;
   final TextCapitalization textCapitalization;
+  final bool enabled;
 
   /// Whether input should be validated before submission or not
   final bool validate;
@@ -128,6 +116,7 @@ class CustomHeaderFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FormBuilderTextField(
+      enabled: enabled,
       name: name,
       textCapitalization: textCapitalization,
       cursorColor: kLightSecondary,
@@ -137,12 +126,12 @@ class CustomHeaderFormField extends StatelessWidget {
       style: hintStyle,
       decoration: InputDecoration(
         isDense: true,
-        contentPadding: const EdgeInsets.all(5),
+        contentPadding: const EdgeInsets.all(6),
         hintText: hintText,
         hintStyle: hintStyle,
         fillColor: kPrimary,
         border: DecoratedInputBorder(
-          shadow: [kBoxShadow],
+          shadow: (enabled) ? [kBoxShadow] : [],
           child: OutlineInputBorder(
             borderRadius: BorderRadius.circular(kCornerRadius),
             borderSide: BorderSide.none,
