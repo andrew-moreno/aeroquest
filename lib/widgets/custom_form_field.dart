@@ -59,7 +59,7 @@ class CustomFormField extends StatelessWidget {
                   .coffeeBeans
                   .values
                   .any((coffeeBean) => coffeeBean.beanName == value)) {
-            return "Please select a unique coffee bean name";
+            return "Please enter a unique coffee bean name";
           }
         }
         return null;

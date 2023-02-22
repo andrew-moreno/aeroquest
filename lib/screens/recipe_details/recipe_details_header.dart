@@ -158,7 +158,7 @@ class CustomHeaderFormField extends StatelessWidget {
                   .recipes
                   .values
                   .any((recipe) => recipe.title == value)) {
-            return "Please select a unique recipe title";
+            return "Please enter a unique recipe title";
           }
         }
         return null;

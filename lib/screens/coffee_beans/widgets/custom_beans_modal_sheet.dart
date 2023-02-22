@@ -57,7 +57,7 @@ class CustomBeansModalSheet extends StatelessWidget {
                 autoFocus: autoFocusTitleField,
                 validate: true,
                 initialValue: beanName,
-                validateText: "Please enter a name for these beans",
+                validateText: "Please enter a name for these coffee beans",
                 validateUniqueness: true,
                 textCapitalization: TextCapitalization.words,
               ),
