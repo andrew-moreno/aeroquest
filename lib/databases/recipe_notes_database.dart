@@ -7,6 +7,7 @@ import 'package:aeroquest/models/recipe_note.dart';
 class RecipeNotesDatabase {
   static final RecipeNotesDatabase instance = RecipeNotesDatabase._init();
   static Database? _database;
+  static const recipeNotesDatabaseFileName = "recipeNotes.db";
 
   RecipeNotesDatabase._init();
 
@@ -14,7 +15,7 @@ class RecipeNotesDatabase {
     if (_database != null) {
       return _database!;
     }
-    _database = await _initDB("recipeNotes.db");
+    _database = await _initDB(recipeNotesDatabaseFileName);
     return _database!;
   }
 
@@ -104,6 +105,13 @@ class RecipeNotesDatabase {
     return await db.delete(tableRecipeNotes,
         where: "${RecipeNoteFields.recipeEntryId} = ?",
         whereArgs: [recipeEntryId]);
+  }
+
+  Future<void> deleteDB() async {
+    final dbPath = await getDatabasesPath();
+    final path = join(dbPath, recipeNotesDatabaseFileName);
+
+    deleteDatabase(path);
   }
 
   Future close() async {

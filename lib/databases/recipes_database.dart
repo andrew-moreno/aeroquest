@@ -5,6 +5,7 @@ import 'package:aeroquest/models/recipe.dart';
 class RecipesDatabase {
   static final RecipesDatabase instance = RecipesDatabase._init();
   static Database? _database;
+  static const recipeNotesDatabaseFileName = "recipes.db";
 
   RecipesDatabase._init();
 
@@ -12,7 +13,7 @@ class RecipesDatabase {
     if (_database != null) {
       return _database!;
     }
-    _database = await _initDB("recipes.db");
+    _database = await _initDB(recipeNotesDatabaseFileName);
     return _database!;
   }
 
@@ -122,7 +123,7 @@ class RecipesDatabase {
 
   Future<void> deleteDB() async {
     final dbPath = await getDatabasesPath();
-    final path = join(dbPath, "recipes.db");
+    final path = join(dbPath, recipeNotesDatabaseFileName);
 
     deleteDatabase(path);
   }
