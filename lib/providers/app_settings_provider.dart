@@ -45,9 +45,9 @@ class AppSettingsProvider extends ChangeNotifier {
   /// Populates [grinInterval], [temperatureUnit] and [massUnit] with data
   /// from their respective databases
   Future<void> cacheAppSettingData() async {
-    setGrindInterval();
-    setTemperatureUnit();
-    setMassUnit();
+    await setGrindInterval();
+    await setTemperatureUnit();
+    await setMassUnit();
   }
 
   /// Sets [value] as the grind interval in the Shared Preferences db and sets
@@ -55,7 +55,7 @@ class AppSettingsProvider extends ChangeNotifier {
   void updateGrindInterval(double value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setDouble(grindIntervalPref, value);
-    setGrindInterval();
+    await setGrindInterval();
     notifyListeners();
   }
 
