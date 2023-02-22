@@ -108,6 +108,7 @@ class _RecipeDetailsState extends State<RecipeDetails> {
     if (_recipesProvider.editMode == EditMode.enabled) {
       if (_isRecipeChanged()) {
         await _showDiscardChangesPopup(true);
+        return Future.value(false);
       } else {
         if (widget.isAdding) {
           return Future.value(true);
@@ -125,9 +126,9 @@ class _RecipeDetailsState extends State<RecipeDetails> {
   ///
   /// Implementation is very similar to [_onWillPop()]. Changes made here
   /// should be reflected in that function
-  void _exitDetailsPage() {
+  Future<void> _exitDetailsPage() async {
     if (_recipesProvider.editMode == EditMode.enabled && _isRecipeChanged()) {
-      _showDiscardChangesPopup(false);
+      await _showDiscardChangesPopup(false);
     } else {
       Navigator.of(context).pop();
     }

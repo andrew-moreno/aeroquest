@@ -1,5 +1,6 @@
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/providers/app_settings_provider.dart';
+import 'package:aeroquest/providers/coffee_bean_provider.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +41,8 @@ class _RecipesState extends State<Recipes> {
   Future<void> cacheRecipeDataAndSetInterval() async {
     await Provider.of<RecipesProvider>(context, listen: false)
         .cacheRecipeData();
+    await Provider.of<CoffeeBeanProvider>(context, listen: false)
+        .cacheCoffeeBeans();
     await Provider.of<AppSettingsProvider>(context, listen: false)
         .cacheAppSettingData();
   }

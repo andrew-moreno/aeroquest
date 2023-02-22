@@ -71,7 +71,11 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
                   if (!_formKey.currentState!.validate()) {
                     return;
                   }
-
+                  String beanName =
+                      _formKey.currentState!.fields["beanName"]!.value;
+                  String? description =
+                      _formKey.currentState!.fields["description"]?.value;
+                  _recipesProvider.addBean(beanName, description);
                   Navigator.of(context).pop();
                   showAddModal();
                 },
