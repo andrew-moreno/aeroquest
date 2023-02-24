@@ -30,7 +30,7 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
     return Scaffold(
       appBar: AppBar(
         leading: const AppBarLeading(leadingFunction: LeadingFunction.menu),
-        title: const AppBarText(text: "BEANS"),
+        title: const AppBarText(text: "COFFEE BEANS"),
         actions: [
           AppBarButton(
             onTap: () {
