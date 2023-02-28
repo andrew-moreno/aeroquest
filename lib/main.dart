@@ -1,6 +1,7 @@
 import 'package:aeroquest/providers/app_settings_provider.dart';
 import 'package:aeroquest/providers/settings_slider_provider.dart';
 import 'package:aeroquest/screens/app_settings/app_settings.dart';
+import 'package:aeroquest/screens/onboarding/onboarding.dart';
 import 'package:control_style/decorated_input_border.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -47,47 +48,57 @@ class MyApp extends StatelessWidget {
                 shadowColor: Colors.black,
               ),
               scaffoldBackgroundColor: kPrimary,
+              snackBarTheme: const SnackBarThemeData(
+                contentTextStyle: TextStyle(fontFamily: "Poppins"),
+              ),
               textTheme: const TextTheme(
-                  headline1: TextStyle(
-                    color: kLightSecondary,
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: "Spectral",
-                  ),
-                  headline2: TextStyle(
-                    color: kLightSecondary,
-                    fontSize: 27,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: "Spectral",
-                  ),
-                  headline3: TextStyle(
-                    color: kLightSecondary,
-                    fontFamily: "Spectral",
-                    fontWeight: FontWeight.w700,
-                    fontSize: 24,
-                  ),
-                  headline4: TextStyle(
-                    color: kPrimary,
-                    fontFamily: "Poppins",
-                    fontWeight: FontWeight.w500,
-                    fontSize: 25,
-                  ),
-                  subtitle1: TextStyle(
-                    fontFamily: "Poppins",
-                    fontWeight: FontWeight.w500,
-                    fontSize: 13,
-                  ),
-                  subtitle2: TextStyle(
-                    fontFamily: "Poppins",
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14,
-                  ),
-                  bodyText1: TextStyle(
-                    color: kAccent,
-                    fontFamily: "Poppins",
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  )),
+                headline1: TextStyle(
+                  color: kLightSecondary,
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Spectral",
+                ),
+                headline2: TextStyle(
+                  color: kLightSecondary,
+                  fontSize: 27,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Spectral",
+                ),
+                headline3: TextStyle(
+                  color: kLightSecondary,
+                  fontFamily: "Spectral",
+                  fontWeight: FontWeight.w700,
+                  fontSize: 24,
+                ),
+                headline4: TextStyle(
+                  color: kPrimary,
+                  fontFamily: "Poppins",
+                  fontWeight: FontWeight.w500,
+                  fontSize: 25,
+                ),
+                subtitle1: TextStyle(
+                  fontFamily: "Poppins",
+                  fontWeight: FontWeight.w500,
+                  fontSize: 13,
+                ),
+                subtitle2: TextStyle(
+                  fontFamily: "Poppins",
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                ),
+                bodyText1: TextStyle(
+                  color: kAccent,
+                  fontFamily: "Poppins",
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+                bodyText2: TextStyle(
+                  color: kAccent,
+                  fontFamily: "Poppins",
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
               inputDecorationTheme: InputDecorationTheme(
                 contentPadding: const EdgeInsets.symmetric(
                   vertical: 5,
@@ -149,6 +160,7 @@ class MyApp extends StatelessWidget {
             },
             routes: {
               AboutAeroquest.routeName: (ctx) => const AboutAeroquest(),
+              Onboarding.routeName: (ctx) => const Onboarding(),
             },
           );
         },

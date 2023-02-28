@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 const kPrimary = Color(0xFFD8D4CF);
 const kDarkSecondary = Color(0xFF17233A);
@@ -18,6 +19,13 @@ const kRecipeDetailsVerticalPadding = 15.0;
 const kRoutePagePadding = 20.0;
 const kCornerRadius = 10.0;
 const kModalCornerRadius = 25.0;
+
+const kPageIndicatorEffect = WormEffect(
+  dotHeight: 6,
+  dotWidth: 6,
+  activeDotColor: kAccent,
+  dotColor: Colors.grey,
+);
 final kBoxShadow = BoxShadow(
   color: Colors.black.withOpacity(0.2),
   offset: const Offset(0, 3),

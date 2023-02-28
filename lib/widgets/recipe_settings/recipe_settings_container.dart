@@ -61,12 +61,7 @@ class RecipeSettingsContainer extends StatelessWidget {
             ? SmoothPageIndicator(
                 controller: _controller,
                 count: recipeSettings.length,
-                effect: const WormEffect(
-                  dotHeight: 6,
-                  dotWidth: 6,
-                  activeDotColor: kAccent,
-                  dotColor: Colors.grey,
-                ),
+                effect: kPageIndicatorEffect,
               )
             : Container(),
       ],

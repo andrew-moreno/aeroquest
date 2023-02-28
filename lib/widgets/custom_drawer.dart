@@ -1,4 +1,5 @@
 import 'package:aeroquest/screens/app_settings/app_settings.dart';
+import 'package:aeroquest/screens/onboarding/onboarding.dart';
 import 'package:flutter/material.dart';
 
 import 'package:aeroquest/constraints.dart';
@@ -50,6 +51,14 @@ class CustomDrawer extends StatelessWidget {
                 ),
                 text: "Settings",
                 route: AppSettings.routeName,
+              ),
+              const MenuItem(
+                icon: Icon(
+                  Icons.settings,
+                  size: 23,
+                ),
+                text: "Onboarding",
+                route: Onboarding.routeName,
               ),
               const Spacer(),
               const MenuItem(
