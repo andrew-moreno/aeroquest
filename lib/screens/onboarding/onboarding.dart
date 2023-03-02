@@ -1,31 +1,16 @@
 import 'package:aeroquest/constraints.dart';
+import 'package:aeroquest/screens/onboarding/pages/onboarding_page1.dart';
+import 'package:aeroquest/screens/onboarding/pages/onboarding_page2.dart';
+import 'package:aeroquest/screens/recipes/recipes.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class Onboarding extends StatefulWidget {
-  const Onboarding({Key? key}) : super(key: key);
+class Onboarding extends StatelessWidget {
+  Onboarding({Key? key}) : super(key: key);
 
   static const routeName = "/onboarding";
 
-  @override
-  State<Onboarding> createState() => _OnboardingState();
-}
-
-class _OnboardingState extends State<Onboarding> {
-  final PageController _controller = PageController();
-
-  int _currentPage = 1;
-
-  static const _scrollAnimationTime = 300;
-
-  void _leftButtonOnPressed() {
-    setState(() {
-      _currentPage = 1;
-    });
-    _controller.previousPage(
-        duration: const Duration(milliseconds: _scrollAnimationTime),
-        curve: Curves.ease);
-  }
+  final PageController controller = PageController();
 
   @override
   Widget build(BuildContext context) {
@@ -33,71 +18,38 @@ class _OnboardingState extends State<Onboarding> {
       body: SafeArea(
         child: Stack(
           children: [
+            /// Displays background colour scheme
             Column(
               children: [
                 Expanded(
-                  flex: 10,
+                  flex: kOnboardingTopFlex,
                   child: Container(),
                 ),
                 Expanded(
-                  flex: 9,
+                  flex: kOnboardingBottomFlex,
                   child: Container(
                     color: kDarkSecondary,
                   ),
                 ),
               ],
             ),
+
+            /// Displays onboarding page content
             Column(
               children: [
                 Expanded(
                   child: PageView(
-                    controller: _controller,
+                    controller: controller,
+                    physics: const NeverScrollableScrollPhysics(),
                     children: const [
                       OnboardingPage1(),
-                      OnboardingPage1(),
+                      OnboardingPage2(),
                     ],
                   ),
                 ),
               ],
             ),
-            Container(
-              alignment: Alignment.bottomCenter,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: (_currentPage == 1)
-                        ? null
-                        : () => _leftButtonOnPressed(),
-                    child: Text(
-                      (_currentPage == 1) ? "" : "Back",
-                      style: Theme.of(context).textTheme.bodyText2!,
-                    ),
-                  ),
-                  SmoothPageIndicator(
-                    controller: _controller,
-                    count: 2,
-                    effect: kPageIndicatorEffect,
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        _currentPage = 2;
-                      });
-                      _controller.nextPage(
-                          duration: const Duration(
-                              milliseconds: _scrollAnimationTime),
-                          curve: Curves.ease);
-                    },
-                    child: Text(
-                      (_currentPage == 1) ? "Next" : "Done",
-                      style: Theme.of(context).textTheme.bodyText2!,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            OnboardingNavigation(controller: controller),
           ],
         ),
       ),
@@ -105,128 +57,79 @@ class _OnboardingState extends State<Onboarding> {
   }
 }
 
-class OnboardingPage1 extends StatelessWidget {
-  const OnboardingPage1({Key? key}) : super(key: key);
+class OnboardingNavigation extends StatefulWidget {
+  /// Widget used for displaying page navigation buttons and indicators
+  const OnboardingNavigation({Key? key, required this.controller})
+      : super(key: key);
 
-  static const List<String> tips = [
-    "Track and optimise your AeroPress recipes and settings",
-    "Record the different coffee beans you're trying",
-    "Edit recipe settings based upon your different coffee beans"
-  ];
+  final PageController controller;
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Expanded(
-          flex: 10,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: const [
-              Icon(
-                Icons.coffee,
-                color: kDarkSecondary,
-                size: 50,
-              ),
-              SizedBox(height: 30),
-              Text(
-                "Welcome to",
-                style: TextStyle(
-                  fontFamily: "Poppins",
-                  fontSize: 33,
-                  fontWeight: FontWeight.w500,
-                  color: kDarkSecondary,
-                ),
-              ),
-              Text(
-                "AeroQuest",
-                style: TextStyle(
-                  fontFamily: "Spectral",
-                  fontSize: 50,
-                  fontWeight: FontWeight.w700,
-                  color: kDarkSecondary,
-                ),
-              ),
-              SizedBox(height: 30),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 40.0),
-                child: Text(
-                  "AeroQuest is a companion app for recording all your "
-                  "favourite AeroPress recipes",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: "Poppins",
-                    fontSize: 17,
-                    fontWeight: FontWeight.w400,
-                    color: kDarkSecondary,
-                  ),
-                ),
-              ),
-              SizedBox(height: 30),
-            ],
-          ),
-        ),
-        Expanded(
-          flex: 9,
-          child: Container(
-            padding: const EdgeInsets.symmetric(
-              vertical: 20,
-              horizontal: 40,
-            ),
-            child: Column(
-              children: [
-                const Text(
-                  "With AeroQuest, you can...",
-                  style: TextStyle(
-                    fontFamily: "Poppins",
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                    color: kPrimary,
-                  ),
-                ),
-                const SizedBox(height: 25),
-                ListView.separated(
-                  shrinkWrap: true,
-                  itemBuilder: (_, index) => TipsContainer(text: tips[index]),
-                  separatorBuilder: (_, index) => const SizedBox(height: 15),
-                  itemCount: tips.length,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  State<OnboardingNavigation> createState() => _OnboardingNavigationState();
 }
 
-class TipsContainer extends StatelessWidget {
-  const TipsContainer({Key? key, required this.text}) : super(key: key);
+class _OnboardingNavigationState extends State<OnboardingNavigation> {
+  int _currentPage = 1;
 
-  final String text;
+  static const _pageScrollDuration = Duration(milliseconds: 300);
+  static const _pageScrollCurve = Curves.ease;
+
+  void _leftButtonOnPressed() {
+    setState(() {
+      _currentPage = 1;
+    });
+    widget.controller
+        .previousPage(duration: _pageScrollDuration, curve: _pageScrollCurve);
+  }
+
+  void _rightButtonOnPressed() {
+    if (_currentPage == 1) {
+      setState(() {
+        _currentPage = 2;
+      });
+      widget.controller
+          .nextPage(duration: _pageScrollDuration, curve: _pageScrollCurve);
+    } else {
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          Recipes.routeName, (Route<dynamic> route) => false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    TextStyle _textStyle = Theme.of(context).textTheme.bodyText2!;
+    ButtonStyle _buttonStyle = TextButton.styleFrom(
+      foregroundColor: kLightSecondary,
+    );
     return Container(
-      padding: const EdgeInsets.symmetric(
-        vertical: 8,
-        horizontal: 15,
-      ),
-      decoration: BoxDecoration(
-        color: kLightSecondary,
-        borderRadius: BorderRadius.circular(kCornerRadius),
-      ),
-      child: IntrinsicHeight(
-        child: Text(
-          text,
-          style: const TextStyle(
-            fontFamily: "Poppins",
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-            color: kPrimary,
+      alignment: Alignment.bottomCenter,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          TextButton(
+            onPressed:
+                (_currentPage == 1) ? null : () => _leftButtonOnPressed(),
+            child: Text(
+              (_currentPage == 1) ? "" : "Back",
+              style: _textStyle,
+            ),
+            style: _buttonStyle,
           ),
-        ),
+          SmoothPageIndicator(
+            controller: widget.controller,
+            count: 2,
+            effect: kPageIndicatorEffect,
+          ),
+          TextButton(
+            onPressed: () => _rightButtonOnPressed(),
+            child: Text(
+              (_currentPage == 1) ? "Next" : "Done",
+              style: _textStyle,
+            ),
+            style: _buttonStyle,
+          ),
+        ],
       ),
     );
   }

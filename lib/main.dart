@@ -160,7 +160,7 @@ class MyApp extends StatelessWidget {
             },
             routes: {
               AboutAeroquest.routeName: (ctx) => const AboutAeroquest(),
-              Onboarding.routeName: (ctx) => const Onboarding(),
+              Onboarding.routeName: (ctx) => Onboarding(),
             },
           );
         },

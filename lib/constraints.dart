@@ -20,6 +20,9 @@ const kRoutePagePadding = 20.0;
 const kCornerRadius = 10.0;
 const kModalCornerRadius = 25.0;
 
+const kOnboardingTopFlex = 10;
+const kOnboardingBottomFlex = 9;
+
 const kPageIndicatorEffect = WormEffect(
   dotHeight: 6,
   dotWidth: 6,
