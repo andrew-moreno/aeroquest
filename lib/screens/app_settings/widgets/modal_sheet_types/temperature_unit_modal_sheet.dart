@@ -1,5 +1,6 @@
 import 'package:aeroquest/providers/app_settings_provider.dart';
 import 'package:aeroquest/screens/app_settings/widgets/app_settings_modal_sheet.dart';
+import 'package:aeroquest/screens/app_settings/widgets/setting_types/temperature_unit_setting.dart';
 import 'package:aeroquest/widgets/animated_toggle.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -22,36 +23,26 @@ class TemperatureUnitModalSheet extends StatefulWidget {
 }
 
 class _TemperatureUnitModalSheetState extends State<TemperatureUnitModalSheet> {
-  late TemperatureUnit _tempTemperatureUnit;
-
-  static const _temperatureUnitValues = ["°C", "°F"];
-
   @override
   void initState() {
     super.initState();
-    _tempTemperatureUnit = widget.initialTemperatureUnit;
+    Provider.of<AppSettingsProvider>(context, listen: false)
+        .tempTemperatureUnit = widget.initialTemperatureUnit;
   }
 
   @override
   Widget build(BuildContext context) {
     return AppSettingsModalSheet(
       text: "Temperature unit selection:",
-      editor: AnimatedToggle(
-        values: _temperatureUnitValues,
-        onToggleCallback: (index) {
-          index == 0
-              ? _tempTemperatureUnit = TemperatureUnit.celsius
-              : _tempTemperatureUnit = TemperatureUnit.fahrenheit;
-        },
-        initialPosition:
-            (widget.initialTemperatureUnit == TemperatureUnit.celsius)
-                ? Position.first
-                : Position.last,
+      editor: TemperatureUnitSetting(
+        initialTemperatureUnit: widget.initialTemperatureUnit,
         toggleType: ToggleType.horizontal,
       ),
-      onTap: () {
+      onSave: () {
         Provider.of<AppSettingsProvider>(context, listen: false)
-            .updateTemperatureUnit(describeEnum(_tempTemperatureUnit));
+            .updateTemperatureUnit(describeEnum(
+                Provider.of<AppSettingsProvider>(context, listen: false)
+                    .tempTemperatureUnit!));
         Navigator.of(context).pop();
       },
     );

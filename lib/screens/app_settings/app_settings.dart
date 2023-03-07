@@ -21,8 +21,10 @@ class AppSettings extends StatefulWidget {
 }
 
 class _AppSettingsState extends State<AppSettings> {
-  /// Template for the modal bottom sheet when changing grind size interval
-  void showGrindIntervalModalSheet({required BuildContext context}) {
+  void showModalSheet({
+    required BuildContext context,
+    required Widget modalContent,
+  }) {
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -32,49 +34,7 @@ class _AppSettingsState extends State<AppSettings> {
       backgroundColor: kDarkSecondary,
       isScrollControlled: true,
       builder: (_) {
-        return GrindIntervalModalSheet(
-          initialGrindInterval:
-              Provider.of<AppSettingsProvider>(context, listen: false)
-                  .grindInterval!,
-        );
-      },
-    );
-  }
-
-  /// Template for the modal bottom sheet when changing the temperature unit
-  void showTemperatureUnitModalSheet({required BuildContext context}) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius:
-            BorderRadius.vertical(top: Radius.circular(kModalCornerRadius)),
-      ),
-      backgroundColor: kDarkSecondary,
-      isScrollControlled: true,
-      builder: (_) {
-        return TemperatureUnitModalSheet(
-            initialTemperatureUnit:
-                Provider.of<AppSettingsProvider>(context, listen: false)
-                    .temperatureUnit!);
-      },
-    );
-  }
-
-  /// Template for the modal bottom sheet when changing the mass unit
-  void showMassUnitModalSheet({required BuildContext context}) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius:
-            BorderRadius.vertical(top: Radius.circular(kModalCornerRadius)),
-      ),
-      backgroundColor: kDarkSecondary,
-      isScrollControlled: true,
-      builder: (_) {
-        return MassUnitModalSheet(
-            initialMassUnit:
-                Provider.of<AppSettingsProvider>(context, listen: false)
-                    .massUnit!);
+        return modalContent;
       },
     );
   }
@@ -102,6 +62,21 @@ class _AppSettingsState extends State<AppSettings> {
 
   @override
   Widget build(BuildContext context) {
+    Widget _grindIntervalModalSheet = GrindIntervalModalSheet(
+      initialGrindInterval:
+          Provider.of<AppSettingsProvider>(context, listen: false)
+              .grindInterval!,
+    );
+
+    Widget _temperaturUnitModalSheet = TemperatureUnitModalSheet(
+        initialTemperatureUnit:
+            Provider.of<AppSettingsProvider>(context, listen: false)
+                .temperatureUnit!);
+
+    Widget _massUnitModalSheet = MassUnitModalSheet(
+        initialMassUnit:
+            Provider.of<AppSettingsProvider>(context, listen: false).massUnit!);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kPrimary,
@@ -120,14 +95,17 @@ class _AppSettingsState extends State<AppSettings> {
                 selector: (_, provider) => provider.grindInterval!,
                 builder: (_, grindInterval, __) {
                   return SettingCard(
-                      text: AppSettingsProvider.getGrindIntervalText(
-                          grindInterval),
-                      onTap: () =>
-                          showGrindIntervalModalSheet(context: context),
-                      title: "Grind Size Interval",
-                      description: "Defines the amount that "
-                          "the grind size setting for a recipe "
-                          "can be increased or decreased");
+                    text:
+                        AppSettingsProvider.getGrindIntervalText(grindInterval),
+                    onTap: () => showModalSheet(
+                      context: context,
+                      modalContent: _grindIntervalModalSheet,
+                    ),
+                    title: "Grind Size Interval",
+                    description: "Defines the amount that "
+                        "the grind size setting for a recipe "
+                        "can be increased or decreased",
+                  );
                 },
               ),
               const SizedBox(height: 20),
@@ -135,12 +113,15 @@ class _AppSettingsState extends State<AppSettings> {
                 selector: (_, provider) => provider.temperatureUnit!,
                 builder: (_, temperatureUnit, __) {
                   return SettingCard(
-                      text: _temperatureUnitTextSelector(temperatureUnit),
-                      onTap: () =>
-                          showTemperatureUnitModalSheet(context: context),
-                      title: "Temperature Unit",
-                      description: "Whether to use Celsius or Fahrenheit for "
-                          "the temperature setting for a recipe");
+                    text: _temperatureUnitTextSelector(temperatureUnit),
+                    onTap: () => showModalSheet(
+                      context: context,
+                      modalContent: _temperaturUnitModalSheet,
+                    ),
+                    title: "Temperature Unit",
+                    description: "Whether to use Celsius or Fahrenheit for "
+                        "the temperature setting for a recipe",
+                  );
                 },
               ),
               const SizedBox(height: 20),
@@ -148,11 +129,15 @@ class _AppSettingsState extends State<AppSettings> {
                 selector: (_, provider) => provider.massUnit!,
                 builder: (_, massUnit, __) {
                   return SettingCard(
-                      text: _massUnitTextSelector(massUnit),
-                      onTap: () => showMassUnitModalSheet(context: context),
-                      title: "Mass Unit",
-                      description: "Whether to use grams or ounces for "
-                          "the mass setting for a recipe");
+                    text: _massUnitTextSelector(massUnit),
+                    onTap: () => showModalSheet(
+                      context: context,
+                      modalContent: _massUnitModalSheet,
+                    ),
+                    title: "Mass Unit",
+                    description: "Whether to use grams or ounces for "
+                        "the mass setting for a recipe",
+                  );
                 },
               ),
             ],

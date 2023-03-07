@@ -8,7 +8,7 @@ class AppSettingsModalSheet extends StatelessWidget {
     Key? key,
     required this.text,
     required this.editor,
-    required this.onTap,
+    required this.onSave,
   }) : super(key: key);
 
   /// Text to be displayed above the editor widget
@@ -18,7 +18,7 @@ class AppSettingsModalSheet extends StatelessWidget {
   final Widget editor;
 
   /// Function to be executed when modal is submitted
-  final Function() onTap;
+  final Function() onSave;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class AppSettingsModalSheet extends StatelessWidget {
               editor,
               const SizedBox(height: 20),
               CustomButton(
-                onTap: () => onTap(),
+                onTap: () => onSave(),
                 buttonType: ButtonType.vibrant,
                 text: "Save",
                 width: constraints.maxWidth / 2 - 10,

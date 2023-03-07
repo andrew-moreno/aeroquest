@@ -1,5 +1,6 @@
 import 'package:aeroquest/providers/app_settings_provider.dart';
 import 'package:aeroquest/screens/app_settings/widgets/app_settings_modal_sheet.dart';
+import 'package:aeroquest/screens/app_settings/widgets/setting_types/mass_unit_setting.dart';
 import 'package:aeroquest/widgets/animated_toggle.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -21,35 +22,26 @@ class MassUnitModalSheet extends StatefulWidget {
 }
 
 class _MassUnitModalSheetState extends State<MassUnitModalSheet> {
-  late MassUnit _tempMassUnit;
-
-  static const _massUnitValues = ["g", "oz"];
-
   @override
   void initState() {
     super.initState();
-    _tempMassUnit = widget.initialMassUnit;
+    Provider.of<AppSettingsProvider>(context, listen: false).tempMassUnit =
+        widget.initialMassUnit;
   }
 
   @override
   Widget build(BuildContext context) {
     return AppSettingsModalSheet(
       text: "Temperature unit selection:",
-      editor: AnimatedToggle(
-        values: _massUnitValues,
-        onToggleCallback: (index) {
-          index == 0
-              ? _tempMassUnit = MassUnit.gram
-              : _tempMassUnit = MassUnit.ounce;
-        },
-        initialPosition: (widget.initialMassUnit == MassUnit.gram)
-            ? Position.first
-            : Position.last,
+      editor: MassUnitSetting(
+        initialMassUnit: widget.initialMassUnit,
         toggleType: ToggleType.horizontal,
       ),
-      onTap: () {
-        Provider.of<AppSettingsProvider>(context, listen: false)
-            .updateMassUnit(describeEnum(_tempMassUnit));
+      onSave: () {
+        Provider.of<AppSettingsProvider>(context, listen: false).updateMassUnit(
+            describeEnum(
+                Provider.of<AppSettingsProvider>(context, listen: false)
+                    .tempMassUnit!));
         Navigator.of(context).pop();
       },
     );

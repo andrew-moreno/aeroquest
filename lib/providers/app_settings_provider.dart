@@ -26,6 +26,10 @@ class AppSettingsProvider extends ChangeNotifier {
   /// async operations
   double? grindInterval;
 
+  /// Temporary grind interval value that is used to select a value in the
+  /// modal sheet without saving to the Shared Preferences db
+  double? tempGrindInterval;
+
   /// Temporary temperature measurement system value
   ///
   /// Value set by [setUnitSystem()]
@@ -34,6 +38,10 @@ class AppSettingsProvider extends ChangeNotifier {
   /// async operations
   TemperatureUnit? temperatureUnit;
 
+  /// Temporary temperature unit value that is used to select a value in the
+  /// modal sheet without saving to the Shared Preferences db
+  TemperatureUnit? tempTemperatureUnit;
+
   /// Temporary mass measurement system value
   ///
   /// Value set by [setUnitSystem()]
@@ -41,6 +49,10 @@ class AppSettingsProvider extends ChangeNotifier {
   /// Used instead of directly pulling from the Shared Preferences db to avoid
   /// async operations
   MassUnit? massUnit;
+
+  /// Temporary mass unit value that is used to select a value in the modal
+  /// sheet without saving to the Shared Preferences db
+  MassUnit? tempMassUnit;
 
   /// Populates [grinInterval], [temperatureUnit] and [massUnit] with data
   /// from their respective databases
