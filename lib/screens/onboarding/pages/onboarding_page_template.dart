@@ -44,7 +44,6 @@ class OnboardingPageTemplate extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(
               vertical: 20,
-              horizontal: 40,
             ),
             child: Column(
               children: [

@@ -54,11 +54,15 @@ class OnboardingPage1 extends StatelessWidget {
       bottomText: "With AeroQuest, you can...",
       bottomWidgets: [
         const SizedBox(height: 25),
-        ListView.separated(
-          shrinkWrap: true,
-          itemBuilder: (_, index) => TipsContainer(text: tips[index]),
-          separatorBuilder: (_, index) => const SizedBox(height: 15),
-          itemCount: tips.length,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 40.0),
+          child: ListView.separated(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemBuilder: (_, index) => TipsContainer(text: tips[index]),
+            separatorBuilder: (_, index) => const SizedBox(height: 15),
+            itemCount: tips.length,
+          ),
         ),
       ],
     );
