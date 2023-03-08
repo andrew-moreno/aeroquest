@@ -105,6 +105,7 @@ class _RecipeDetailsState extends State<RecipeDetails> {
   /// Implementation is very similar to [_exitDetailsPage()]. Changes made here
   /// should be reflected in that function
   Future<bool> _onWillPop() async {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     if (_recipesProvider.editMode == EditMode.enabled) {
       if (_isRecipeChanged()) {
         await _showDiscardChangesPopup(true);
@@ -127,6 +128,7 @@ class _RecipeDetailsState extends State<RecipeDetails> {
   /// Implementation is very similar to [_onWillPop()]. Changes made here
   /// should be reflected in that function
   Future<void> _exitDetailsPage() async {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     if (_recipesProvider.editMode == EditMode.enabled && _isRecipeChanged()) {
       await _showDiscardChangesPopup(false);
     } else {
