@@ -13,10 +13,14 @@ class AppSettingsProvider extends ChangeNotifier {
   /// [TemperatureUnit]
   static const temperatureUnitPref = "temperatureUnit";
 
-  /// Name of the temperature system setting in the Shared Preferences db
+  /// Name of the mass system setting in the Shared Preferences db
   ///
   /// Stores the mass system settings as a string representation of [MassUnit]
   static const massUnitPref = "massUnit";
+
+  /// Name of the setting that determines whether to display the onboarding
+  /// screen when the app is opened for the first time
+  static const isOnboardingSeen = "isOnboardingSeen";
 
   /// Temporary grind interval value
   ///

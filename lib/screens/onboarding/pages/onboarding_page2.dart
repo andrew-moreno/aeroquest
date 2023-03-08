@@ -1,6 +1,5 @@
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/providers/app_settings_provider.dart';
-import 'package:aeroquest/screens/app_settings/widgets/setting_types/grind_interval_setting.dart';
 import 'package:aeroquest/screens/app_settings/widgets/setting_types/mass_unit_setting.dart';
 import 'package:aeroquest/screens/app_settings/widgets/setting_types/temperature_unit_setting.dart';
 import 'package:aeroquest/screens/onboarding/pages/onboarding_page_template.dart';
@@ -23,19 +22,11 @@ class OnboardingPage2 extends StatelessWidget {
           color: kDarkSecondary,
         ),
       ),
-      bottomText: "Please configure your AeroQuest settings:",
+      bottomText:
+          "Before getting started, please configure your AeroQuest units:",
       bottomWidgets: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
-          child: SettingsContainer(
-            title: "Grind Size Interval",
-            description:
-                "Defines the amount that the grind size setting for a recipe can be increased or decreased",
-            setting: GrindIntervalSetting(),
-          ),
-        ),
         const SizedBox(
-          height: 20,
+          height: 30,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -86,10 +77,13 @@ class SettingsContainer extends StatelessWidget {
         (description != null)
             ? Text(
                 description!,
-                style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                      color: kSubtitle,
-                      fontWeight: FontWeight.w300,
-                    ),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: kSubtitle,
+                  fontFamily: "Poppins",
+                  fontSize: 12,
+                  fontWeight: FontWeight.w300,
+                ),
               )
             : Container(),
         setting,

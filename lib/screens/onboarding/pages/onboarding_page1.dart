@@ -53,14 +53,14 @@ class OnboardingPage1 extends StatelessWidget {
       ),
       bottomText: "With AeroQuest, you can...",
       bottomWidgets: [
-        const SizedBox(height: 25),
+        const SizedBox(height: 35),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 40.0),
           child: ListView.separated(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemBuilder: (_, index) => TipsContainer(text: tips[index]),
-            separatorBuilder: (_, index) => const SizedBox(height: 15),
+            separatorBuilder: (_, index) => const SizedBox(height: 25),
             itemCount: tips.length,
           ),
         ),
@@ -76,26 +76,52 @@ class TipsContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        vertical: 8,
-        horizontal: 15,
-      ),
-      decoration: BoxDecoration(
-        color: kLightSecondary,
-        borderRadius: BorderRadius.circular(kCornerRadius),
-      ),
-      child: IntrinsicHeight(
-        child: Text(
-          text,
-          style: const TextStyle(
-            fontFamily: "Poppins",
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-            color: kPrimary,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          const Text(
+            "• ",
+            style: TextStyle(
+              fontFamily: "Poppins",
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+              color: kAccent,
+            ),
           ),
-        ),
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(
+                fontFamily: "Poppins",
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: kPrimary,
+              ),
+            ),
+          ),
+        ],
       ),
     );
+    // return Container(
+    //   padding: const EdgeInsets.symmetric(
+    //     vertical: 8,
+    //     horizontal: 15,
+    //   ),
+    //   // decoration: BoxDecoration(
+    //   //   color: kLightSecondary,
+    //   //   borderRadius: BorderRadius.circular(kCornerRadius),
+    //   // ),
+    //   child: Text(
+    //     text,
+    //     style: const TextStyle(
+    //       fontFamily: "Poppins",
+    //       fontSize: 13,
+    //       fontWeight: FontWeight.w500,
+    //       color: kPrimary,
+    //     ),
+    //   ),
+    // );
   }
 }

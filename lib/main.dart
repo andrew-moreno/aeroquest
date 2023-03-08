@@ -1,3 +1,4 @@
+import 'package:aeroquest/home.dart';
 import 'package:aeroquest/providers/app_settings_provider.dart';
 import 'package:aeroquest/providers/settings_slider_provider.dart';
 import 'package:aeroquest/screens/app_settings/app_settings.dart';
@@ -121,7 +122,7 @@ class MyApp extends StatelessWidget {
                 ),
               ),
             ),
-            initialRoute: Recipes.routeName,
+            home: const Home(),
             onGenerateRoute: (settings) {
               if (settings.name == Recipes.routeName) {
                 return PageRouteBuilder(
