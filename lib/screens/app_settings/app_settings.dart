@@ -21,6 +21,11 @@ class AppSettings extends StatefulWidget {
 }
 
 class _AppSettingsState extends State<AppSettings> {
+  /// Function used to display the bottom modal sheet that holds the setting
+  /// widget
+  ///
+  /// modalContent refers to the settings widget being displayed within the
+  /// modal
   void showModalSheet({
     required BuildContext context,
     required Widget modalContent,

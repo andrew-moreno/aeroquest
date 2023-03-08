@@ -10,9 +10,16 @@ class OnboardingPageTemplate extends StatelessWidget {
     required this.bottomWidgets,
   }) : super(key: key);
 
+  /// Text to display at the top of the screen
   final Widget title;
+
+  /// Text to display below the title and above the bottom section
   final Widget? description;
+
+  /// Text to display at the top of the bottom section
   final String bottomText;
+
+  /// Widgets to display below [bottomText] and above navigation
   final List<Widget> bottomWidgets;
 
   @override

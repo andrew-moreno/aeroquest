@@ -3,8 +3,10 @@ import 'package:aeroquest/screens/onboarding/pages/onboarding_page_template.dart
 import "package:flutter/material.dart";
 
 class OnboardingPage1 extends StatelessWidget {
+  /// Defines the first page of the series of onboarding screens
   const OnboardingPage1({Key? key}) : super(key: key);
 
+  /// List of ways to use AeroQuest
   static const List<String> tips = [
     "Track and optimise your AeroPress recipes and settings",
     "Record the different coffee beans you're trying",
@@ -70,8 +72,10 @@ class OnboardingPage1 extends StatelessWidget {
 }
 
 class TipsContainer extends StatelessWidget {
+  /// Defines the widget used for containing the tips to show users
   const TipsContainer({Key? key, required this.text}) : super(key: key);
 
+  /// Text to display within the container
   final String text;
 
   @override
@@ -104,6 +108,9 @@ class TipsContainer extends StatelessWidget {
         ],
       ),
     );
+
+    /// TipsContainer using coloured rounded rectangle
+
     // return Container(
     //   padding: const EdgeInsets.symmetric(
     //     vertical: 8,

@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class Onboarding extends StatelessWidget {
+  /// Defines the widget for displaying the onboarding screens
   Onboarding({Key? key}) : super(key: key);
 
   static const routeName = "/onboarding";
@@ -78,6 +79,9 @@ class _OnboardingNavigationState extends State<OnboardingNavigation> {
   static const _pageScrollDuration = Duration(milliseconds: 300);
   static const _pageScrollCurve = Curves.ease;
 
+  /// Function to be executed when the left navigation button is pressed
+  ///
+  /// Corresponds to the "Back" navigation button
   void _leftButtonOnPressed() {
     setState(() {
       _currentPage = 1;
@@ -86,6 +90,9 @@ class _OnboardingNavigationState extends State<OnboardingNavigation> {
         .previousPage(duration: _pageScrollDuration, curve: _pageScrollCurve);
   }
 
+  /// Function to be executed when the right navigation button is pressed
+  ///
+  /// Corresponds to the "Next" and "Done" navigation buttons
   Future<void> _rightButtonOnPressed() async {
     if (_currentPage == 1) {
       setState(() {
