@@ -8,6 +8,7 @@ class OnboardingPageTemplate extends StatelessWidget {
     this.description,
     required this.bottomText,
     required this.bottomWidgets,
+    required this.background,
   }) : super(key: key);
 
   /// Text to display at the top of the screen
@@ -22,54 +23,60 @@ class OnboardingPageTemplate extends StatelessWidget {
   /// Widgets to display below [bottomText] and above navigation
   final List<Widget> bottomWidgets;
 
+  /// Handles background colour scheme
+  final Widget background;
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
+    return Stack(
       children: [
-        Expanded(
-          flex: kOnboardingTopFlex,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const SizedBox(height: 50),
-              const Icon(
-                Icons.coffee,
-                color: kDarkSecondary,
-                size: 50,
+        background,
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              flex: kOnboardingTopFlex,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const Spacer(),
+                  title,
+                  const SizedBox(height: 50),
+                  description ?? Container(),
+                  const SizedBox(height: 30),
+                ],
               ),
-              const SizedBox(height: 30),
-              title,
-              const Spacer(),
-              description ?? Container(),
-              const SizedBox(height: 30),
-            ],
-          ),
-        ),
-        Expanded(
-          flex: kOnboardingBottomFlex,
-          child: Container(
-            padding: const EdgeInsets.symmetric(
-              vertical: 20,
             ),
-            child: Column(
-              children: [
-                Text(
-                  bottomText,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontFamily: "Poppins",
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                    color: kPrimary,
-                  ),
+            Expanded(
+              flex: kOnboardingBottomFlex,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 20,
                 ),
-                Column(
-                  children: bottomWidgets,
+                child: Column(
+                  children: [
+                    Text(
+                      bottomText,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: kPrimary,
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: bottomWidgets,
+                      ),
+                    ),
+                    const SizedBox(height: 40),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ],
     );

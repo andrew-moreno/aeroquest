@@ -16,6 +16,20 @@ class OnboardingPage1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OnboardingPageTemplate(
+      background: Column(
+        children: [
+          Expanded(
+            flex: kOnboardingTopFlex,
+            child: Container(),
+          ),
+          Expanded(
+            flex: kOnboardingBottomFlex,
+            child: Container(
+              color: kDarkSecondary,
+            ),
+          ),
+        ],
+      ),
       title: Column(
         children: const [
           Text(
@@ -55,7 +69,6 @@ class OnboardingPage1 extends StatelessWidget {
       ),
       bottomText: "With AeroQuest, you can...",
       bottomWidgets: [
-        const SizedBox(height: 35),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 40.0),
           child: ListView.separated(

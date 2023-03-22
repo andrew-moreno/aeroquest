@@ -12,22 +12,15 @@ class OnboardingPage2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OnboardingPageTemplate(
-      title: const Text(
-        "Before getting started...",
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontFamily: "Poppins",
-          fontSize: 33,
-          fontWeight: FontWeight.w500,
-          color: kDarkSecondary,
-        ),
+      background: Container(color: kDarkSecondary),
+      title: Container(),
+      description: Image.asset(
+        "assets/images/dark_icon.png",
+        scale: 3,
       ),
       bottomText:
           "Before getting started, please configure your AeroQuest units:",
       bottomWidgets: [
-        const SizedBox(
-          height: 30,
-        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: const [

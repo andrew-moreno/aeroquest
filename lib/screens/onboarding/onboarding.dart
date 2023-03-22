@@ -23,32 +23,33 @@ class Onboarding extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            /// Displays background colour scheme
-            Column(
-              children: [
-                Expanded(
-                  flex: kOnboardingTopFlex,
-                  child: Container(),
-                ),
-                Expanded(
-                  flex: kOnboardingBottomFlex,
-                  child: Container(
-                    color: kDarkSecondary,
-                  ),
-                ),
-              ],
-            ),
-
-            /// Displays onboarding page content
             Column(
               children: [
                 Expanded(
                   child: PageView(
                     controller: controller,
                     physics: const NeverScrollableScrollPhysics(),
-                    children: const [
-                      OnboardingPage1(),
-                      OnboardingPage2(),
+                    children: [
+                      Stack(
+                        children: [
+                          Column(
+                            children: [
+                              Expanded(
+                                flex: kOnboardingTopFlex,
+                                child: Container(),
+                              ),
+                              Expanded(
+                                flex: kOnboardingBottomFlex,
+                                child: Container(
+                                  color: kDarkSecondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const OnboardingPage1(),
+                        ],
+                      ),
+                      const OnboardingPage2(),
                     ],
                   ),
                 ),
