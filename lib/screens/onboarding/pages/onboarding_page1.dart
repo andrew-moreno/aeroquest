@@ -8,9 +8,9 @@ class OnboardingPage1 extends StatelessWidget {
 
   /// List of ways to use AeroQuest
   static const List<String> tips = [
-    "Track and optimise your AeroPress recipes and settings",
-    "Record the different coffee beans you're trying",
-    "Edit recipe settings based upon your different coffee beans"
+    "Track and optimise your favourite AeroPress recipes and their brewing variables",
+    "Save the various coffee beans you're trying with each brew",
+    "Adjust recipe variables for individual coffee beans"
   ];
 
   @override
@@ -56,13 +56,13 @@ class OnboardingPage1 extends StatelessWidget {
       description: const Padding(
         padding: EdgeInsets.symmetric(horizontal: 40.0),
         child: Text(
-          "AeroQuest is a companion app for recording all your "
-          "favourite AeroPress recipes",
+          "AeroQuest is a companion app for getting the most out of each "
+          "AeroPress brew",
           textAlign: TextAlign.center,
           style: TextStyle(
             fontFamily: "Poppins",
             fontSize: 17,
-            fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.w500,
             color: kDarkSecondary,
           ),
         ),
