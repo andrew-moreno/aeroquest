@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class TemperatureUnitSetting extends StatefulWidget {
-  /// Defines the modal sheet used for editing the grind setting interval
+  /// Defines the modal sheet used for editing the temperature unit setting
   const TemperatureUnitSetting({
     Key? key,
     required this.initialTemperatureUnit,
