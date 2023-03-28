@@ -7,6 +7,7 @@ import 'package:aeroquest/models/recipe_step.dart';
 class RecipeStepsDatabase {
   static final RecipeStepsDatabase instance = RecipeStepsDatabase._init();
   static Database? _database;
+  static const recipeStepsDatabaseFileName = "recipeSteps.db";
 
   RecipeStepsDatabase._init();
 
@@ -14,7 +15,7 @@ class RecipeStepsDatabase {
     if (_database != null) {
       return _database!;
     }
-    _database = await _initDB("recipeSteps.db");
+    _database = await _initDB(recipeStepsDatabaseFileName);
     return _database!;
   }
 
@@ -105,6 +106,13 @@ class RecipeStepsDatabase {
     return await db.delete(tableRecipeSteps,
         where: "${RecipeStepFields.recipeEntryId} = ?",
         whereArgs: [recipeEntryId]);
+  }
+
+  Future<void> deleteDB() async {
+    final dbPath = await getDatabasesPath();
+    final path = join(dbPath, recipeStepsDatabaseFileName);
+
+    deleteDatabase(path);
   }
 
   Future close() async {
