@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 // used to
 class AddToRecipeButton extends StatelessWidget {
-  /// Defines the button used to add recipe settings or recipe steps to a recipe
+  /// Defines the button used to add recipe variables or recipe steps to a recipe
   const AddToRecipeButton({
     Key? key,
     required this.onTap,
@@ -24,13 +24,12 @@ class AddToRecipeButton extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(7),
         child: Ink(
-          padding: const EdgeInsets.symmetric(vertical: 5),
+          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           decoration: BoxDecoration(
             color: kLightSecondary,
             borderRadius: BorderRadius.circular(kCornerRadius),
             boxShadow: [kBoxShadow],
           ),
-          width: 150,
           child: Text(
             buttonText,
             textAlign: TextAlign.center,

@@ -1,6 +1,6 @@
 import 'package:aeroquest/models/recipe_step.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
-import 'package:aeroquest/providers/settings_slider_provider.dart';
+import 'package:aeroquest/providers/variables_slider_provider.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/recipe_method_widgets/recipe_steps_value_slider_group.dart';
 import 'package:aeroquest/widgets/custom_form_field.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +10,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 
 class RecipeStepsModalSheet extends StatefulWidget {
-  /// Defines the modal sheet used for editing recipe settings
+  /// Defines the modal sheet used for editing recipe variables
   const RecipeStepsModalSheet({
     Key? key,
     required this.submitAction,
@@ -33,7 +33,7 @@ class RecipeStepsModalSheet extends StatefulWidget {
 
 class _RecipeStepsModalSheetState extends State<RecipeStepsModalSheet> {
   late final RecipesProvider _recipesProvider;
-  late final SettingsSliderProvider _settingsSliderProvider;
+  late final VariablesSliderProvider _variablesSliderProvider;
 
   @override
   void initState() {
@@ -41,14 +41,14 @@ class _RecipeStepsModalSheetState extends State<RecipeStepsModalSheet> {
 
     /// Used to initialize providers for use in [dispose] method
     _recipesProvider = Provider.of<RecipesProvider>(context, listen: false);
-    _settingsSliderProvider =
-        Provider.of<SettingsSliderProvider>(context, listen: false);
+    _variablesSliderProvider =
+        Provider.of<VariablesSliderProvider>(context, listen: false);
   }
 
   @override
   void dispose() {
     _recipesProvider.clearTempRecipeStepParameters();
-    _settingsSliderProvider.clearTempRecipeStepParameters();
+    _variablesSliderProvider.clearTempRecipeStepParameters();
     super.dispose();
   }
 

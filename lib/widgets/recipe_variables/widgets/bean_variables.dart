@@ -1,21 +1,21 @@
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:flutter/material.dart';
 
-import 'package:aeroquest/models/recipe_settings.dart';
+import 'package:aeroquest/models/recipe_variables.dart';
 import 'package:aeroquest/widgets/recipe_parameters_value.dart';
 import 'package:aeroquest/constraints.dart';
 import 'package:provider/provider.dart';
 
-class BeanSettings extends StatelessWidget {
-  /// Defines the widget used to display recipe settings for a single
+class BeanVariables extends StatelessWidget {
+  /// Defines the widget used to display recipe variables for a single
   /// coffee bean
-  const BeanSettings({
+  const BeanVariables({
     Key? key,
-    required this.recipeSetting,
+    required this.recipeVariables,
   }) : super(key: key);
 
-  /// The recipe setting data to use
-  final RecipeSettings recipeSetting;
+  /// The recipe variables data to use
+  final RecipeVariables recipeVariables;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class BeanSettings extends StatelessWidget {
           ),
           child: Text(
             Provider.of<RecipesProvider>(context, listen: true)
-                .coffeeBeans[recipeSetting.beanId]!
+                .coffeeBeans[recipeVariables.beanId]!
                 .beanName,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -48,23 +48,23 @@ class BeanSettings extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               RecipeParameterValue(
-                parameterValue: recipeSetting.grindSetting,
+                parameterValue: recipeVariables.grindSetting,
                 parameterType: ParameterType.grindSetting,
               ),
               RecipeParameterValue(
-                parameterValue: recipeSetting.coffeeAmount,
+                parameterValue: recipeVariables.coffeeAmount,
                 parameterType: ParameterType.coffeeAmount,
               ),
               RecipeParameterValue(
-                parameterValue: recipeSetting.waterAmount,
+                parameterValue: recipeVariables.waterAmount,
                 parameterType: ParameterType.waterAmount,
               ),
               RecipeParameterValue(
-                parameterValue: recipeSetting.waterTemp,
+                parameterValue: recipeVariables.waterTemp,
                 parameterType: ParameterType.waterTemp,
               ),
               RecipeParameterValue(
-                parameterValue: recipeSetting.brewTime,
+                parameterValue: recipeVariables.brewTime,
                 parameterType: ParameterType.brewTime,
               ),
             ],

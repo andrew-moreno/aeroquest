@@ -13,10 +13,10 @@ import "package:collection/collection.dart";
 
 import 'package:aeroquest/widgets/recipe_parameters_value.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:aeroquest/databases/recipe_settings_database.dart';
+import 'package:aeroquest/databases/recipe_variables_database.dart';
 import 'package:aeroquest/databases/recipes_database.dart';
 import 'package:aeroquest/models/recipe.dart';
-import '../models/recipe_settings.dart';
+import '../models/recipe_variables.dart';
 
 class RecipesProvider extends ChangeNotifier {
   /// Reflects recipe information from the recipes database, mapped by recipe
@@ -41,30 +41,30 @@ class RecipesProvider extends ChangeNotifier {
     return _tempRecipe;
   }
 
-  /// Reflects recipe settings information from the recipe settings database
+  /// Reflects recipe variables information from the recipe variables database
   ///
-  /// Mapped by their associated recipe id first, then the recipe settings id
+  /// Mapped by their associated recipe id first, then the recipe variables id
   /// which are ordered by key for ease of assignming temporary ids in
-  /// [tempAddSetting]
+  /// [tempAddVariable]
   ///
-  /// RecipeSettings objects must be updated in this map at the same time
+  /// RecipeVariables objects must be updated in this map at the same time
   /// as they're updated in the database to reflect changes properly
-  late Map<int, SplayTreeMap<int, RecipeSettings>> _recipeSettings;
+  late Map<int, SplayTreeMap<int, RecipeVariables>> _recipeVariables;
 
-  /// Holds a temporary map of the recipe settings associated with a particular
+  /// Holds a temporary map of the recipe variables associated with a particular
   /// recipe
   ///
   /// Used in the RecipeDetails page when in edit mode
-  var _tempRecipeSettings = SplayTreeMap<int, RecipeSettings>();
+  var _tempRecipeVariables = SplayTreeMap<int, RecipeVariables>();
 
-  /// Returns an unmodifiable version of [_recipeSettings]
-  UnmodifiableMapView<int, Map<int, RecipeSettings>> get recipeSettings {
-    return UnmodifiableMapView(_recipeSettings);
+  /// Returns an unmodifiable version of [_recipeVariables]
+  UnmodifiableMapView<int, Map<int, RecipeVariables>> get recipeVariables {
+    return UnmodifiableMapView(_recipeVariables);
   }
 
-  /// Returns an unmodifiable version of [_tempRecipeSettings]
-  UnmodifiableMapView<int, RecipeSettings> get tempRecipeSettings {
-    return UnmodifiableMapView(_tempRecipeSettings);
+  /// Returns an unmodifiable version of [_tempRecipeVariables]
+  UnmodifiableMapView<int, RecipeVariables> get tempRecipeVariables {
+    return UnmodifiableMapView(_tempRecipeVariables);
   }
 
   /// Reflects the recipe steps information from the recipe steps database, but
@@ -119,12 +119,12 @@ class RecipesProvider extends ChangeNotifier {
   /// they're updated in the database to reflect changes properly
   ///
   /// Required for:
-  /// - updating the AssociatedSettingsCount property of coffee
-  ///   beans when adding or deleting recipe settings
+  /// - updating the AssociatedVariablesCount property of coffee
+  ///   beans when adding or deleting recipe variables
   /// - displaying a list of coffee beans in the drop down menu when editing a
-  ///   recipe setting
+  ///   recipe variable
   /// - adding coffee beans using the snack bar that is displayed when adding
-  ///   a recipe setting with no coffee beans in the database
+  ///   a recipe variable with no coffee beans in the database
   late Map<int, CoffeeBean> _coffeeBeans;
 
   /// Returns an unmodifiable version of [_coffeeBeans]
@@ -138,8 +138,8 @@ class RecipesProvider extends ChangeNotifier {
   GlobalKey<FormBuilderState> recipeIdentifiersFormKey =
       GlobalKey<FormBuilderState>();
 
-  /// Form key for selecting a bean in the settings modal
-  GlobalKey<FormBuilderState> settingsBeanFormKey =
+  /// Form key for selecting a bean in the variables modal
+  GlobalKey<FormBuilderState> variablesBeanFormKey =
       GlobalKey<FormBuilderState>();
 
   /// Form key for recipe step text
@@ -153,17 +153,17 @@ class RecipesProvider extends ChangeNotifier {
   late PushPressure tempPushPressure;
   late BrewMethod tempBrewMethod;
 
-  /// Currently active setting to adjust when editing/adding
+  /// Currently active variable to adjust when editing/adding
   late ParameterType activeSlider;
 
-  /// Parameters used for generating/editing recipe settings
+  /// Parameters used for generating/editing recipe variables
   ///
   /// These parameters are separate from RecipesProvider to avoid unnecessary
   /// rebuilds for widgets using RecipeProvider
   ///
   /// All values associated with each variable are set to null at all times
-  /// except when editing recipe settings values using the editing modal sheet
-  SettingVisibility? tempSettingVisibility;
+  /// except when editing recipe variables values using the editing modal sheet
+  VariablesVisibility? tempvariablesVisibility;
   int? tempBeanId;
   double? tempGrindSetting;
   double? tempCoffeeAmount;
@@ -176,13 +176,18 @@ class RecipesProvider extends ChangeNotifier {
 
   String? tempRecipeNoteText;
 
-  /// Populates [_recipes], [_recipeSettings], [_recipeSteps], [_recipeNotes],
+  /// Populates [_recipes], [_recipeVariables], [_recipeSteps], [_recipeNotes],
   /// and [_coffeeBeans] with data from their respective databases
   Future<void> cacheRecipeData() async {
-    //await RecipeSettingsDatabase.instance.deleteDB();
+    // RecipeVariablesDatabase.instance.deleteDB();
+    // CoffeeBeansDatabase.instance.deleteDB();
+    // RecipeStepsDatabase.instance.deleteDB();
+    // RecipesDatabase.instance.deleteDB();
+    // RecipeNotesDatabase.instance.deleteDB();
+
     _recipes = await RecipesDatabase.instance.readAllRecipes();
-    _recipeSettings =
-        await RecipeSettingsDatabase.instance.readAllRecipeSettings();
+    _recipeVariables =
+        await RecipeVariablesDatabase.instance.readAllRecipeVariables();
     _recipeSteps = await RecipeStepsDatabase.instance.readAllRecipeSteps();
     _recipeNotes = await RecipeNotesDatabase.instance.readAllRecipeNotes();
     _coffeeBeans = await CoffeeBeansDatabase.instance.readAllCoffeeBeans();
@@ -200,7 +205,7 @@ class RecipesProvider extends ChangeNotifier {
   /// Returns [tempRecipe]
   Future<Recipe> tempAddRecipe() async {
     await setTempRecipe(null);
-    setTempRecipeSettings(null);
+    setTempRecipeVariables(null);
     setTempRecipeSteps(null);
     setTempRecipeNotes(null);
     return tempRecipe;
@@ -215,7 +220,7 @@ class RecipesProvider extends ChangeNotifier {
   /// Sets [tempPushPressure] and [tempBrewMethod] to the values initialized
   /// in [_tempRecipe]
   ///
-  /// Prepares recipe settings, recipe steps, and recipe notes for editing
+  /// Prepares recipe variables, recipe steps, and recipe notes for editing
   Future<void> setTempRecipe(int? recipeEntryId) async {
     // Adding new recipe
     if (recipeEntryId == null) {
@@ -235,19 +240,19 @@ class RecipesProvider extends ChangeNotifier {
     tempPushPressure = Recipe.stringToPushPressure(_tempRecipe.pushPressure);
     tempBrewMethod = Recipe.stringToBrewMethod(_tempRecipe.brewMethod);
 
-    /// Preparing recipe settings, recipe steps, and recipe notes for editing
-    setTempRecipeSettings(recipeEntryId);
+    /// Preparing recipe variables, recipe steps, and recipe notes for editing
+    setTempRecipeVariables(recipeEntryId);
     setTempRecipeSteps(recipeEntryId);
     setTempRecipeNotes(recipeEntryId);
   }
 
   /// Deletes a recipe of [recipeEntryId] and its associated data
   /// - recipe of [recipeEntryId] removed from [_recipes]
-  /// - all recipe settings associated with this recipe are deleted
+  /// - all recipe variables associated with this recipe are deleted
   /// - all recipe steps associated with this recipe are deleted
   /// - all recipe notes associated with this recipe are deleted
   /// - coffee beans associated with this recipe have their
-  ///   associatedSettingsCount decreased by one
+  ///   associatedVariablesCount decreased by one
   ///
   /// Throws an exception if [recipeEntryId] does not exist in [_recipes]
   Future<void> deleteRecipe(int recipeEntryId) async {
@@ -256,20 +261,20 @@ class RecipesProvider extends ChangeNotifier {
           "recipeEntryId of $recipeEntryId does not exist in _recipes");
     }
 
-    /// Decrementing all associatedSettingsCounts for associated coffee beans
-    recipeSettings[recipeEntryId]?.forEach((recipeSettingId, value) async {
-      editAssociatedSettingsCount(
-        recipeSettings[recipeEntryId]![recipeSettingId]!.beanId,
-        AssociatedSettingsCountEditType.decrement,
+    /// Decrementing all associatedVariablesCounts for associated coffee beans
+    recipeVariables[recipeEntryId]?.forEach((recipeVariablesId, value) async {
+      editAssociatedVariablesCount(
+        recipeVariables[recipeEntryId]![recipeVariablesId]!.beanId,
+        AssociatedVariablesCountEditType.decrement,
       );
     });
     _recipes.remove(recipeEntryId);
-    _recipeSettings.remove(recipeEntryId);
+    _recipeVariables.remove(recipeEntryId);
     _recipeSteps.remove(recipeEntryId);
     _recipeNotes.remove(recipeEntryId);
     await RecipesDatabase.instance.delete(recipeEntryId);
-    await RecipeSettingsDatabase.instance
-        .deleteAllSettingsForRecipe(recipeEntryId);
+    await RecipeVariablesDatabase.instance
+        .deleteAllVariablesForRecipe(recipeEntryId);
     await RecipeStepsDatabase.instance
         .deleteAllRecipeStepsForRecipe(recipeEntryId);
     await RecipeNotesDatabase.instance
@@ -298,10 +303,10 @@ class RecipesProvider extends ChangeNotifier {
       await RecipesDatabase.instance.update(tempRecipe);
     }
 
-    /// Saving recipe settings, recipe steps, and recipe notes if changes were
+    /// Saving recipe variables, recipe steps, and recipe notes if changes were
     /// made to them while editing recipe
-    if (areSettingsChanged(tempRecipe.id!)) {
-      await saveEditedRecipeSettings(tempRecipe.id!);
+    if (areVariablesChanged(tempRecipe.id!)) {
+      await saveEditedRecipeVariables(tempRecipe.id!);
     }
     if (areRecipeStepsChanged(tempRecipe.id!)) {
       await saveEditedRecipeSteps(tempRecipe.id!);
@@ -329,9 +334,9 @@ class RecipesProvider extends ChangeNotifier {
             originalPushPressure != tempPushPressure ||
             originalBrewMethod != tempBrewMethod);
 
-    bool recipeSettingsChangedCheck = false;
-    if (_tempRecipeSettings.isNotEmpty) {
-      recipeSettingsChangedCheck = areSettingsChanged(recipeId);
+    bool recipeVariablesChangedCheck = false;
+    if (_tempRecipeVariables.isNotEmpty) {
+      recipeVariablesChangedCheck = areVariablesChanged(recipeId);
     }
 
     bool recipeStepsChangedCheck = false;
@@ -345,17 +350,17 @@ class RecipesProvider extends ChangeNotifier {
     }
 
     return (recipePropertiesChangedCheck ||
-        recipeSettingsChangedCheck ||
+        recipeVariablesChangedCheck ||
         recipeStepsChangedCheck ||
         recipeNotesChangedCheck);
   }
 
-  /// Used to activate/deactivate a particular recipe settings slider when
-  /// editing recipe setting values
+  /// Used to activate/deactivate a particular recipe variables slider when
+  /// editing recipe variable values
   ///
-  /// When a value is clicked while no other setting parameters are active,
+  /// When a value is clicked while no other variable parameters are active,
   /// that particular slider will become active (eg. water amount, grind
-  /// setting, etc.). If the value is already active, slider of
+  /// variable, etc.). If the value is already active, slider of
   /// [ParameterType.none] will be active, deactivating all other sliders
   void selectSliderType(ParameterType parameterType) {
     if (activeSlider == parameterType) {
@@ -366,50 +371,51 @@ class RecipesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Clears [_tempRecipeSettings], [_tempRecipeSteps], and [_tempRecipeNotes]
-  /// and all temp recipe setting parameters
+  /// Clears [_tempRecipeVariables], [_tempRecipeSteps], and [_tempRecipeNotes]
+  /// and all temp recipe variable parameters
   void clearTempData() {
-    _tempRecipeSettings.clear();
+    _tempRecipeVariables.clear();
     _tempRecipeSteps.clear();
     _tempRecipeNotes.clear();
   }
 
-  /// Sets [_tempRecipeSettings] to the recipe settings in [_recipeSettings]
+  /// Sets [_tempRecipeVariables] to the recipe variables in [_recipeVariables]
   /// associated with [recipeEntryId]
   ///
-  /// If [recipeEntryId] is null or doesn't exist, [_tempRecipeSettings] is set
+  /// If [recipeEntryId] is null or doesn't exist, [_tempRecipeVariables] is set
   /// to an empty SplayTreeMap object
-  /// - possibility that [recipeEntryId] doesn't exist in [_recipeSettings]
+  /// - possibility that [recipeEntryId] doesn't exist in [_recipeVariables]
   ///   when adding a new recipe.
-  void setTempRecipeSettings(int? recipeEntryId) {
-    _tempRecipeSettings = SplayTreeMap<int, RecipeSettings>.from(
-        _recipeSettings[recipeEntryId] ?? SplayTreeMap<int, RecipeSettings>());
+  void setTempRecipeVariables(int? recipeEntryId) {
+    _tempRecipeVariables = SplayTreeMap<int, RecipeVariables>.from(
+        _recipeVariables[recipeEntryId] ??
+            SplayTreeMap<int, RecipeVariables>());
   }
 
-  /// Checks if the recipe settings associated with [recipeEntryId] have been
+  /// Checks if the recipe variables associated with [recipeEntryId] have been
   /// updated since RecipeDetails page has loaded
-  bool areSettingsChanged(int recipeEntryId) {
-    return !(const DeepCollectionEquality().equals(
-        _tempRecipeSettings, _recipeSettings[recipeEntryId] ?? SplayTreeMap()));
+  bool areVariablesChanged(int recipeEntryId) {
+    return !(const DeepCollectionEquality().equals(_tempRecipeVariables,
+        _recipeVariables[recipeEntryId] ?? SplayTreeMap()));
   }
 
-  /// Adds a new recipe setting to [_tempRecipeSettings] using [recipeEntryId]
+  /// Adds a new recipe variable to [_tempRecipeVariables] using [recipeEntryId]
   /// as the key
-  void tempAddSetting(int recipeEntryId) {
-    /// Setting tempId to a unique number for this recipe
+  void tempAddVariable(int recipeEntryId) {
+    /// Variable tempId to a unique number for this recipe
     int tempId;
-    if (tempRecipeSettings.isEmpty) {
-      /// [tempId] set to 0 if no recipe settings exist in the database for
+    if (tempRecipeVariables.isEmpty) {
+      /// [tempId] set to 0 if no recipe variables exist in the database for
       /// this recipe
-      if (_recipeSettings[recipeEntryId]?.isEmpty ?? true) {
+      if (_recipeVariables[recipeEntryId]?.isEmpty ?? true) {
         tempId = 0;
       } else {
-        tempId = _recipeSettings[recipeEntryId]!.lastKey()! + 1;
+        tempId = _recipeVariables[recipeEntryId]!.lastKey()! + 1;
       }
     } else {
-      tempId = _tempRecipeSettings.lastKey()! + 1;
+      tempId = _tempRecipeVariables.lastKey()! + 1;
     }
-    RecipeSettings newRecipeSettings = RecipeSettings(
+    RecipeVariables newRecipeVariables = RecipeVariables(
       id: tempId,
       recipeEntryId: recipeEntryId,
       beanId: tempBeanId!,
@@ -418,108 +424,108 @@ class RecipesProvider extends ChangeNotifier {
       waterAmount: tempWaterAmount!,
       waterTemp: tempWaterTemp!,
       brewTime: tempBrewTime!,
-      visibility: describeEnum(tempSettingVisibility!),
+      visibility: describeEnum(tempvariablesVisibility!),
     );
-    _tempRecipeSettings.addAll({tempId: newRecipeSettings});
+    _tempRecipeVariables.addAll({tempId: newRecipeVariables});
     notifyListeners();
   }
 
-  /// Deletes a recipe setting from [_tempRecipeSettings] associated with the
-  /// recipe setting id [settingId]
-  Future<void> tempDeleteSetting(int settingId) async {
-    _tempRecipeSettings.remove(settingId);
+  /// Deletes a recipe variable from [_tempRecipeVariables] associated with the
+  /// recipe variable id [variableId]
+  Future<void> tempDeleteVariables(int variablesId) async {
+    _tempRecipeVariables.remove(variablesId);
     notifyListeners();
   }
 
-  /// Sets all parameters in [_tempRecipeSettings] to ones that have been
-  /// updated by the user when editing recipe settings
-  void editSetting(RecipeSettings recipeSettingsData) {
-    _tempRecipeSettings[recipeSettingsData.id!] = recipeSettingsData.copy(
+  /// Sets all parameters in [_tempRecipeVariables] to ones that have been
+  /// updated by the user when editing recipe variables
+  void editVariables(RecipeVariables recipeVariablesData) {
+    _tempRecipeVariables[recipeVariablesData.id!] = recipeVariablesData.copy(
       beanId: tempBeanId!,
       grindSetting: tempGrindSetting!,
       coffeeAmount: tempCoffeeAmount!,
       waterAmount: tempWaterAmount!,
       waterTemp: tempWaterTemp!,
       brewTime: tempBrewTime!,
-      visibility: describeEnum(tempSettingVisibility!),
+      visibility: describeEnum(tempvariablesVisibility!),
     );
     notifyListeners();
   }
 
-  /// Clears all temporary setting parameters by setting them to null
-  void clearTempSettingParameters() {
+  /// Clears all temporary variable parameters by setting them to null
+  void clearTempVariablesParameters() {
     tempBeanId = null;
     tempGrindSetting = null;
     tempCoffeeAmount = null;
     tempWaterAmount = null;
     tempWaterTemp = null;
     tempBrewTime = null;
-    tempSettingVisibility = null;
+    tempvariablesVisibility = null;
   }
 
-  /// Saves data in [_tempRecipeSettings] to [recipeSettings] after edits and
-  /// updates the recipe settings database accordingly
+  /// Saves data in [_tempRecipeVariables] to [recipeVariables] after edits and
+  /// updates the recipe variables database accordingly
   ///
-  /// First makes updates to the database and [associatedSettingsCount], then
-  /// populates [_recipeSettings] with the data from [_tempRecipeSettings]
+  /// First makes updates to the database and [associatedVariablesCount], then
+  /// populates [_recipeVariables] with the data from [_tempRecipeVariables]
   /// at once
-  Future<void> saveEditedRecipeSettings(int recipeEntryId) async {
-    /// If [_tempRecipeSettings] doesn't contain a recipe setting that is in
-    /// [_recipeSettings], delete that recipe setting from the database
+  Future<void> saveEditedRecipeVariables(int recipeEntryId) async {
+    /// If [_tempRecipeVariables] doesn't contain a recipe variable that is in
+    /// [_recipeVariables], delete that recipe variable from the database
     for (var id
-        in recipeSettings[recipeEntryId]?.keys ?? const Iterable.empty()) {
-      if (!tempRecipeSettings.containsKey(id)) {
-        editAssociatedSettingsCount(
-          recipeSettings[recipeEntryId]![id]!.beanId,
-          AssociatedSettingsCountEditType.decrement,
+        in recipeVariables[recipeEntryId]?.keys ?? const Iterable.empty()) {
+      if (!tempRecipeVariables.containsKey(id)) {
+        editAssociatedVariablesCount(
+          recipeVariables[recipeEntryId]![id]!.beanId,
+          AssociatedVariablesCountEditType.decrement,
         );
-        await RecipeSettingsDatabase.instance.delete(id);
+        await RecipeVariablesDatabase.instance.delete(id);
       }
     }
 
-    /// If [_tempRecipeSettings] contains a recipe setting that is not in
-    /// [_recipeSettings], add that recipe setting to the database or make
-    /// updates to the recipe settings if there are discrepencies between it
-    /// and [_tempRecipeSettings]
-    for (var id in tempRecipeSettings.keys.toList()) {
+    /// If [_tempRecipeVariables] contains a recipe variable that is not in
+    /// [_recipeVariables], add that recipe variable to the database or make
+    /// updates to the recipe variables if there are discrepencies between it
+    /// and [_tempRecipeVariables]
+    for (var id in tempRecipeVariables.keys.toList()) {
       /// New id -> add
       bool containsKey =
-          recipeSettings[recipeEntryId]?.containsKey(id) ?? false;
+          recipeVariables[recipeEntryId]?.containsKey(id) ?? false;
       if (!containsKey) {
-        /// Populate the recipe setting with a proper id from the database
-        RecipeSettings newCoffeeSettingsData = RecipeSettings(
-          recipeEntryId: tempRecipeSettings[id]!.recipeEntryId,
-          beanId: tempRecipeSettings[id]!.beanId,
-          grindSetting: tempRecipeSettings[id]!.grindSetting,
-          coffeeAmount: tempRecipeSettings[id]!.coffeeAmount,
-          waterAmount: tempRecipeSettings[id]!.waterAmount,
-          waterTemp: tempRecipeSettings[id]!.waterTemp,
-          brewTime: tempRecipeSettings[id]!.brewTime,
-          visibility: tempRecipeSettings[id]!.visibility,
+        /// Populate the recipe variable with a proper id from the database
+        RecipeVariables newCoffeeVariablesData = RecipeVariables(
+          recipeEntryId: tempRecipeVariables[id]!.recipeEntryId,
+          beanId: tempRecipeVariables[id]!.beanId,
+          grindSetting: tempRecipeVariables[id]!.grindSetting,
+          coffeeAmount: tempRecipeVariables[id]!.coffeeAmount,
+          waterAmount: tempRecipeVariables[id]!.waterAmount,
+          waterTemp: tempRecipeVariables[id]!.waterTemp,
+          brewTime: tempRecipeVariables[id]!.brewTime,
+          visibility: tempRecipeVariables[id]!.visibility,
         );
-        editAssociatedSettingsCount(
-          newCoffeeSettingsData.beanId,
-          AssociatedSettingsCountEditType.increment,
-        );
-
-        int newId = await RecipeSettingsDatabase.instance.create(
-          newCoffeeSettingsData,
+        editAssociatedVariablesCount(
+          newCoffeeVariablesData.beanId,
+          AssociatedVariablesCountEditType.increment,
         );
 
-        _tempRecipeSettings.addAll({
-          newId: _tempRecipeSettings.remove(id)!.copy(id: newId),
+        int newId = await RecipeVariablesDatabase.instance.create(
+          newCoffeeVariablesData,
+        );
+
+        _tempRecipeVariables.addAll({
+          newId: _tempRecipeVariables.remove(id)!.copy(id: newId),
         });
       }
 
-      /// Id exists in [recipeSettings] but entry in [recipeSettings] is
-      /// different from [tempRecipeSettings]
-      else if (recipeSettings[recipeEntryId]![id] != tempRecipeSettings[id]) {
-        await RecipeSettingsDatabase.instance.update(tempRecipeSettings[id]!);
+      /// Id exists in [recipeVariables] but entry in [recipeVariables] is
+      /// different from [tempRecipeVariables]
+      else if (recipeVariables[recipeEntryId]![id] != tempRecipeVariables[id]) {
+        await RecipeVariablesDatabase.instance.update(tempRecipeVariables[id]!);
       }
     }
 
-    /// Commit data from [_tempRecipeSettings] to [_recipeSettings]
-    _recipeSettings[recipeEntryId] = SplayTreeMap.from(_tempRecipeSettings);
+    /// Commit data from [_tempRecipeVariables] to [_recipeVariables]
+    _recipeVariables[recipeEntryId] = SplayTreeMap.from(_tempRecipeVariables);
     notifyListeners();
   }
 
@@ -545,7 +551,7 @@ class RecipesProvider extends ChangeNotifier {
   /// Adds a new recipe step to [_tempRecipeSteps] using [recipeEntryId]
   /// as the key
   Future<void> tempAddRecipeStep(int recipeEntryId) async {
-    /// Setting tempId to a unique number for this recipe
+    /// Variable tempId to a unique number for this recipe
     int tempId;
     if (tempRecipeSteps.isEmpty) {
       /// [tempId] set to 0 if no recipe steps exist in the database for this
@@ -570,9 +576,9 @@ class RecipesProvider extends ChangeNotifier {
   }
 
   /// Deletes a recipe step from [_tempRecipeSteps] associated with the recipe
-  /// setting id [settingId]
-  Future<void> tempDeleteRecipeStep(int settingId) async {
-    _tempRecipeSteps.remove(settingId);
+  /// variable id [variableId]
+  Future<void> tempDeleteRecipeStep(int variableId) async {
+    _tempRecipeSteps.remove(variableId);
     notifyListeners();
   }
 
@@ -596,7 +602,7 @@ class RecipesProvider extends ChangeNotifier {
   /// Saves data in [_tempRecipeSteps] to [_recipeSteps] after edits and
   /// updates the recipe steps database accordingly
   ///
-  /// First makes updates to the database and [associatedSettingsCount], then
+  /// First makes updates to the database and [associatedVariablesCount], then
   /// populates [_recipeSteps] with the all data from [_tempRecipeSteps] sorted
   /// by time
   Future<void> saveEditedRecipeSteps(int recipeEntryId) async {
@@ -604,7 +610,7 @@ class RecipesProvider extends ChangeNotifier {
     /// [_recipeSteps], delete that recipe step from the database
     for (var id in recipeSteps[recipeEntryId]?.keys ?? const Iterable.empty()) {
       if (!tempRecipeSteps.containsKey(id)) {
-        await RecipeSettingsDatabase.instance.delete(id);
+        await RecipeVariablesDatabase.instance.delete(id);
       }
     }
 
@@ -688,9 +694,9 @@ class RecipesProvider extends ChangeNotifier {
   }
 
   /// Deletes a recipe note from [_tempRecipeNotes] associated with the recipe
-  /// setting id [settingId]
-  Future<void> tempDeleteRecipeNote(int settingId) async {
-    _tempRecipeNotes.remove(settingId);
+  /// variable id [variableId]
+  Future<void> tempDeleteRecipeNote(int variableId) async {
+    _tempRecipeNotes.remove(variableId);
     notifyListeners();
   }
 
@@ -712,7 +718,7 @@ class RecipesProvider extends ChangeNotifier {
   /// Saves data in [_tempRecipeNotes] to [_recipeNotes] after edits and
   /// updates the recipe notes database accordingly
   ///
-  /// First makes updates to the database and [associatedSettingsCount], then
+  /// First makes updates to the database and [associatedVariablesCount], then
   /// populates [_recipeNotes] with the all data from [_tempRecipeNotes] sorted
   /// by time
   Future<void> saveEditedRecipeNotes(int recipeEntryId) async {
@@ -720,7 +726,7 @@ class RecipesProvider extends ChangeNotifier {
     /// [_recipeNotes], delete that recipe note from the database
     for (var id in recipeNotes[recipeEntryId]?.keys ?? const Iterable.empty()) {
       if (!tempRecipeNotes.containsKey(id)) {
-        await RecipeSettingsDatabase.instance.delete(id);
+        await RecipeVariablesDatabase.instance.delete(id);
       }
     }
 
@@ -760,40 +766,40 @@ class RecipesProvider extends ChangeNotifier {
   /// Adds a coffee bean to the database and [_coffeeBeans] and returns its id
   ///
   /// Used for when adding a bean via the snackbar on the recipe details screen
-  /// that is activated when adding recipe settings with no coffee beans in
+  /// that is activated when adding recipe variables with no coffee beans in
   /// the database
   Future<int> addBean(String beanName, String? description) async {
     final newCoffeeBean = await CoffeeBeansDatabase.instance.create(
       CoffeeBean(
         beanName: beanName,
         description: description,
-        associatedSettingsCount: 0,
+        associatedVariablesCount: 0,
       ),
     );
     _coffeeBeans.addAll({newCoffeeBean.id!: newCoffeeBean});
     return newCoffeeBean.id!;
   }
 
-  /// Either increments or decrements the AssociatedSettingsCount property of
+  /// Either increments or decrements the AssociatedVariablesCount property of
   /// a coffee bean in [_coffeeBeans] and updates the database with that value
   /// for that coffee bean
-  Future<void> editAssociatedSettingsCount(
+  Future<void> editAssociatedVariablesCount(
     int beanId,
-    AssociatedSettingsCountEditType editType,
+    AssociatedVariablesCountEditType editType,
   ) async {
-    if (editType == AssociatedSettingsCountEditType.increment) {
-      _coffeeBeans[beanId]!.associatedSettingsCount++;
+    if (editType == AssociatedVariablesCountEditType.increment) {
+      _coffeeBeans[beanId]!.associatedVariablesCount++;
     } else {
-      _coffeeBeans[beanId]!.associatedSettingsCount--;
+      _coffeeBeans[beanId]!.associatedVariablesCount--;
     }
     await CoffeeBeansDatabase.instance.update(coffeeBeans[beanId]!);
-    log("Associated settings count ${describeEnum(editType)}ed "
+    log("Associated variables count ${describeEnum(editType)}ed "
         "for bean with id: ${_coffeeBeans[beanId]!.id.toString()}");
   }
 }
 
 enum EditMode { enabled, disabled }
 
-/// Possible edits that can be made to the AssociatedSettingsCount property
+/// Possible edits that can be made to the AssociatedVariablesCount property
 /// of a coffee bean
-enum AssociatedSettingsCountEditType { increment, decrement }
+enum AssociatedVariablesCountEditType { increment, decrement }

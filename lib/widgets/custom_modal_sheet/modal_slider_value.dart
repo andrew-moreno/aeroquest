@@ -1,12 +1,12 @@
 import 'package:aeroquest/providers/recipes_provider.dart';
-import 'package:aeroquest/providers/settings_slider_provider.dart';
+import 'package:aeroquest/providers/variables_slider_provider.dart';
 import 'package:aeroquest/widgets/custom_modal_sheet/modal_value_container.dart';
 import 'package:aeroquest/widgets/recipe_parameters_value.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ModalSliderValue extends StatefulWidget {
-  /// Defines the widget used to display the recipe setting container and value
+  /// Defines the widget used to display the recipe variable container and value
   /// inside the editing modal sheet
   const ModalSliderValue({
     Key? key,
@@ -14,7 +14,7 @@ class ModalSliderValue extends StatefulWidget {
     this.isClickable = true,
   }) : super(key: key);
 
-  /// Defines the setting type of the settings value container
+  /// Defines the variable type of the variables value container
   final ParameterType parameterType;
 
   /// Defines whether the container can be clicked or not
@@ -27,25 +27,26 @@ class ModalSliderValue extends StatefulWidget {
 }
 
 class _ModalSliderValueState extends State<ModalSliderValue> {
-  /// Used for setting the appropriate setting value to the widget
+  /// Used for setting the appropriate variable value to the widget
   ///
   /// Values won't be null because they are set in [ValueSliderGroupTemplate]
-  num _settingValue(ParameterType parameterType) {
+  num _variableValue(ParameterType parameterType) {
     switch (parameterType) {
       case ParameterType.grindSetting:
-        return Provider.of<SettingsSliderProvider>(context).tempGrindSetting!;
+        return Provider.of<VariablesSliderProvider>(context).tempGrindSetting!;
       case ParameterType.coffeeAmount:
-        return Provider.of<SettingsSliderProvider>(context).tempCoffeeAmount!;
+        return Provider.of<VariablesSliderProvider>(context).tempCoffeeAmount!;
       case ParameterType.waterAmount:
-        return Provider.of<SettingsSliderProvider>(context).tempWaterAmount!;
+        return Provider.of<VariablesSliderProvider>(context).tempWaterAmount!;
       case ParameterType.waterTemp:
-        return Provider.of<SettingsSliderProvider>(context).tempWaterTemp!;
+        return Provider.of<VariablesSliderProvider>(context).tempWaterTemp!;
       case ParameterType.brewTime:
-        return Provider.of<SettingsSliderProvider>(context).tempBrewTime!;
+        return Provider.of<VariablesSliderProvider>(context).tempBrewTime!;
       case ParameterType.recipeStepTime:
-        return Provider.of<SettingsSliderProvider>(context).tempRecipeStepTime!;
+        return Provider.of<VariablesSliderProvider>(context)
+            .tempRecipeStepTime!;
       case ParameterType.none:
-        throw Exception("SettingType.none passed incorrectly");
+        throw Exception("VariableType.none passed incorrectly");
     }
   }
 
@@ -55,7 +56,7 @@ class _ModalSliderValueState extends State<ModalSliderValue> {
       child: Padding(
         padding: const EdgeInsets.all(7.0),
         child: RecipeParameterValue(
-          parameterValue: _settingValue(widget.parameterType),
+          parameterValue: _variableValue(widget.parameterType),
           parameterType: widget.parameterType,
         ),
       ),

@@ -1,10 +1,10 @@
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/widgets/custom_card.dart';
-import 'package:aeroquest/widgets/recipe_settings/recipe_settings_container.dart';
+import 'package:aeroquest/widgets/recipe_variables/recipe_variables_container.dart';
 import 'package:flutter/material.dart';
 
 import 'package:aeroquest/widgets/card_header.dart';
-import 'package:aeroquest/models/recipe_settings.dart';
+import 'package:aeroquest/models/recipe_variables.dart';
 import 'package:aeroquest/models/recipe.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details.dart';
 import 'package:provider/provider.dart';
@@ -21,9 +21,9 @@ class RecipeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Map<int, RecipeSettings> recipeSettings =
+    final Map<int, RecipeVariables> recipeVariables =
         Provider.of<RecipesProvider>(context, listen: false)
-                .recipeSettings[recipeData.id] ??
+                .recipeVariables[recipeData.id] ??
             {};
     return GestureDetector(
       onTap: () {
@@ -45,20 +45,20 @@ class RecipeCard extends StatelessWidget {
               description: recipeData.description,
             ),
             Visibility(
-              visible: recipeSettings.isNotEmpty,
+              visible: recipeVariables.isNotEmpty,
               child: Column(
-                children: (recipeSettings.values.any((recipeSetting) =>
-                        RecipeSettings.stringToSettingVisibility(
-                            recipeSetting.visibility) ==
-                        SettingVisibility.shown))
+                children: (recipeVariables.values.any((recipeVariable) =>
+                        RecipeVariables.stringToVariablesVisibility(
+                            recipeVariable.visibility) ==
+                        VariablesVisibility.shown))
                     ? [
                         const SizedBox(height: 10),
-                        RecipeSettingsContainer(
-                          recipeSettings: recipeSettings.values
-                              .where((recipeSetting) =>
-                                  RecipeSettings.stringToSettingVisibility(
-                                      recipeSetting.visibility) ==
-                                  SettingVisibility.shown)
+                        RecipeVariablesContainer(
+                          recipeVariables: recipeVariables.values
+                              .where((recipeVariable) =>
+                                  RecipeVariables.stringToVariablesVisibility(
+                                      recipeVariable.visibility) ==
+                                  VariablesVisibility.shown)
                               .toList(),
                         )
                       ]

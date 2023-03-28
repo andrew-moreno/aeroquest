@@ -1,6 +1,6 @@
-import 'package:aeroquest/providers/settings_slider_provider.dart';
+import 'package:aeroquest/providers/variables_slider_provider.dart';
 import 'package:aeroquest/screens/coffee_beans/coffee_beans.dart';
-import 'package:aeroquest/screens/recipe_details/recipe_details_body/recipe_details_body.dart';
+import 'package:aeroquest/screens/recipe_details/recipe_details.dart';
 import 'package:aeroquest/widgets/add_to_recipe_button.dart';
 import 'package:aeroquest/widgets/custom_modal_sheet/value_slider_group_template.dart';
 import 'package:aeroquest/widgets/empty_details_text.dart';
@@ -11,44 +11,44 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 
 import 'package:aeroquest/constraints.dart';
-import 'package:aeroquest/models/recipe_settings.dart';
+import 'package:aeroquest/models/recipe_variables.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
-import 'package:aeroquest/widgets/recipe_settings/widgets/bean_settings.dart';
+import 'package:aeroquest/widgets/recipe_variables/widgets/bean_variables.dart';
 
-class BeanSettingsGroup extends StatefulWidget {
-  /// Defines the widget for displaying all recipe settings on the recipe
+class BeanVariablesGroup extends StatefulWidget {
+  /// Defines the widget for displaying all recipe variables on the recipe
   /// details page
-  const BeanSettingsGroup({
+  const BeanVariablesGroup({
     Key? key,
     required this.recipeEntryId,
   }) : super(key: key);
 
-  /// Recipe that these recipe settings are associated with
+  /// Recipe that these recipe variables are associated with
   final int recipeEntryId;
 
   @override
-  State<BeanSettingsGroup> createState() => _BeanSettingsGroupState();
+  State<BeanVariablesGroup> createState() => _BeanVariablesGroupState();
 }
 
-class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
+class _BeanVariablesGroupState extends State<BeanVariablesGroup> {
   /// Form key used for validation in the modal sheet
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
 
   late final _recipesProvider =
       Provider.of<RecipesProvider>(context, listen: false);
 
-  Map<int, RecipeSettings> selectRecipeSettingsData() {
+  Map<int, RecipeVariables> selectRecipeVariablesData() {
     if (_recipesProvider.editMode == EditMode.enabled) {
-      return _recipesProvider.tempRecipeSettings;
+      return _recipesProvider.tempRecipeVariables;
     } else {
-      return _recipesProvider.recipeSettings[widget.recipeEntryId] ?? {};
+      return _recipesProvider.recipeVariables[widget.recipeEntryId] ?? {};
     }
   }
 
   /// If no coffee beans have been added, displays a snackbar that notifies the
   /// user and lets them add a coffee bean from the RecipeDetails page.
-  /// Otherwise, opens the modal sheet for adding recipe settings
-  void selectAddSettingMode() {
+  /// Otherwise, opens the modal sheet for adding recipe variables
+  void selectAddVariablesMode() {
     if (_recipesProvider.coffeeBeans.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -92,60 +92,61 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
     }
   }
 
-  /// Displays the modal sheet for adding recipe settings
-  void showAddModal({RecipeSettings? recipeSettingsData}) {
+  /// Displays the modal sheet for adding recipe variables
+  void showAddModal({RecipeVariables? recipeVariablesData}) {
     showCustomModalSheet(
-      modalType: ModalType.settings,
+      modalType: ModalType.variables,
       submitAction: () {
-        if (!_recipesProvider.settingsBeanFormKey.currentState!.validate()) {
+        if (!_recipesProvider.variablesBeanFormKey.currentState!.validate()) {
           return;
         }
-        setRecipesProviderTempSettingParameters();
-        _recipesProvider.tempAddSetting(
+        setRecipesProviderTempVariablesParameters();
+        _recipesProvider.tempAddVariable(
             widget.recipeEntryId); // index doesn't matter for recipe entry id
         Navigator.of(context).pop();
       },
-      recipeSettingsData: recipeSettingsData,
+      recipeVariablesData: recipeVariablesData,
       context: context,
     );
   }
 
-  /// Displays the modal sheet for editing recipe settings
-  void showEditingModal(int recipeSettingId) {
+  /// Displays the modal sheet for editing recipe variables
+  void showEditingModal(int recipeVariablesId) {
     showCustomModalSheet(
-      modalType: ModalType.settings,
+      modalType: ModalType.variables,
       submitAction: () {
-        setRecipesProviderTempSettingParameters();
-        _recipesProvider
-            .editSetting(_recipesProvider.tempRecipeSettings[recipeSettingId]!);
+        setRecipesProviderTempVariablesParameters();
+        _recipesProvider.editVariables(
+            _recipesProvider.tempRecipeVariables[recipeVariablesId]!);
         Navigator.of(context).pop();
       },
       deleteAction: () {
-        _recipesProvider.tempDeleteSetting(recipeSettingId);
+        _recipesProvider.tempDeleteVariables(recipeVariablesId);
         Navigator.of(context).pop();
       },
-      recipeSettingsData: _recipesProvider.tempRecipeSettings[recipeSettingId],
+      recipeVariablesData:
+          _recipesProvider.tempRecipeVariables[recipeVariablesId],
       context: context,
     );
   }
 
-  /// Sets the temp recipe settings parameter from the SettingsSliderProvider
-  /// to the associated temp recipe settings parameter in the RecipeProvider
-  void setRecipesProviderTempSettingParameters() {
+  /// Sets the temp recipe variables parameter from the VariablesSliderProvider
+  /// to the associated temp recipe variables parameter in the RecipeProvider
+  void setRecipesProviderTempVariablesParameters() {
     Provider.of<RecipesProvider>(context, listen: false).tempGrindSetting =
-        Provider.of<SettingsSliderProvider>(context, listen: false)
+        Provider.of<VariablesSliderProvider>(context, listen: false)
             .tempGrindSetting;
     Provider.of<RecipesProvider>(context, listen: false).tempCoffeeAmount =
-        Provider.of<SettingsSliderProvider>(context, listen: false)
+        Provider.of<VariablesSliderProvider>(context, listen: false)
             .tempCoffeeAmount;
     Provider.of<RecipesProvider>(context, listen: false).tempWaterAmount =
-        Provider.of<SettingsSliderProvider>(context, listen: false)
+        Provider.of<VariablesSliderProvider>(context, listen: false)
             .tempWaterAmount;
     Provider.of<RecipesProvider>(context, listen: false).tempWaterTemp =
-        Provider.of<SettingsSliderProvider>(context, listen: false)
+        Provider.of<VariablesSliderProvider>(context, listen: false)
             .tempWaterTemp;
     Provider.of<RecipesProvider>(context, listen: false).tempBrewTime =
-        Provider.of<SettingsSliderProvider>(context, listen: false)
+        Provider.of<VariablesSliderProvider>(context, listen: false)
             .tempBrewTime;
   }
 
@@ -153,18 +154,18 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
   Widget build(BuildContext context) {
     return Consumer<RecipesProvider>(
       builder: (_, recipesProvider, __) {
-        Map<int, RecipeSettings> recipeSettingsData =
-            selectRecipeSettingsData();
+        Map<int, RecipeVariables> recipeVariablesData =
+            selectRecipeVariablesData();
         return Column(
           children: [
-            (recipeSettingsData.isNotEmpty)
+            (recipeVariablesData.isNotEmpty)
                 ? ListView.separated(
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: recipeSettingsData.length,
+                    itemCount: recipeVariablesData.length,
                     shrinkWrap: true,
                     itemBuilder: (context, int index) {
-                      int id = recipeSettingsData.keys
-                          .elementAt(recipeSettingsData.length - index - 1);
+                      int id = recipeVariablesData.keys
+                          .elementAt(recipeVariablesData.length - index - 1);
 
                       return GestureDetector(
                         onTap: () {
@@ -175,18 +176,19 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
                         child: Visibility(
                           visible: (_recipesProvider.editMode ==
                                       EditMode.disabled &&
-                                  RecipeSettings.stringToSettingVisibility(
-                                          recipeSettingsData[id]!.visibility) ==
-                                      SettingVisibility.hidden)
+                                  RecipeVariables.stringToVariablesVisibility(
+                                          recipeVariablesData[id]!
+                                              .visibility) ==
+                                      VariablesVisibility.hidden)
                               ? false
                               : true,
                           child: Opacity(
                             opacity: (_recipesProvider.editMode ==
                                         EditMode.enabled &&
-                                    RecipeSettings.stringToSettingVisibility(
-                                            recipeSettingsData[id]!
+                                    RecipeVariables.stringToVariablesVisibility(
+                                            recipeVariablesData[id]!
                                                 .visibility) ==
-                                        SettingVisibility.hidden)
+                                        VariablesVisibility.hidden)
                                 ? 0.5
                                 : 1,
                             child: Container(
@@ -199,11 +201,11 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
                                     BorderRadius.circular(kCornerRadius),
                                 boxShadow: (_recipesProvider.editMode ==
                                         EditMode.enabled)
-                                    ? [kSettingsBoxShadow]
+                                    ? [kVariablesBoxShadow]
                                     : [],
                               ),
-                              child: BeanSettings(
-                                recipeSetting: recipeSettingsData[id]!,
+                              child: BeanVariables(
+                                recipeVariables: recipeVariablesData[id]!,
                               ),
                             ),
                           ),
@@ -214,12 +216,12 @@ class _BeanSettingsGroupState extends State<BeanSettingsGroup> {
                       return const SizedBox(height: 10);
                     },
                   )
-                : const EmptyDetailsText(dataType: RecipeDetailsText.setting),
+                : const EmptyDetailsText(dataType: RecipeDetailsText.variable),
             const SizedBox(height: 20),
             (_recipesProvider.editMode == EditMode.enabled)
                 ? AddToRecipeButton(
-                    buttonText: "Add Setting",
-                    onTap: selectAddSettingMode,
+                    buttonText: "Add Variables",
+                    onTap: selectAddVariablesMode,
                   )
                 : Container(),
           ],

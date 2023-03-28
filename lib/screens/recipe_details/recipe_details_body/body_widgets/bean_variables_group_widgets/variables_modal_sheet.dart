@@ -1,21 +1,21 @@
-import 'package:aeroquest/providers/settings_slider_provider.dart';
-import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/bean_settings_group_widgets/coffee_bean_dropdown.dart';
+import 'package:aeroquest/providers/variables_slider_provider.dart';
+import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/bean_variables_group_widgets/coffee_bean_dropdown.dart';
 import 'package:aeroquest/widgets/animated_toggle.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:aeroquest/providers/recipes_provider.dart';
-import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/bean_settings_group_widgets/settings_value_slider_group.dart';
+import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/bean_variables_group_widgets/variables_value_slider_group.dart';
 import 'package:aeroquest/widgets/custom_button.dart';
-import 'package:aeroquest/models/recipe_settings.dart';
+import 'package:aeroquest/models/recipe_variables.dart';
 
-class SettingsModalSheet extends StatefulWidget {
-  /// Defines the modal sheet used for editing recipe settings
-  const SettingsModalSheet({
+class VariablesModalSheet extends StatefulWidget {
+  /// Defines the modal sheet used for editing recipe variables
+  const VariablesModalSheet({
     Key? key,
     required this.submitAction,
     this.deleteAction,
-    this.recipeSettingsData,
+    this.recipeVariablesData,
   }) : super(key: key);
 
   /// Function to execute when submitting the modal sheet
@@ -24,20 +24,20 @@ class SettingsModalSheet extends StatefulWidget {
   /// Function to execute when pressing the delete button on the modal sheet
   final Function()? deleteAction;
 
-  /// Recipe settings data being passed
-  final RecipeSettings? recipeSettingsData;
+  /// Recipe variables data being passed
+  final RecipeVariables? recipeVariablesData;
 
   @override
-  State<SettingsModalSheet> createState() => _SettingsModalSheetState();
+  State<VariablesModalSheet> createState() => _VariablesModalSheetState();
 }
 
-class _SettingsModalSheetState extends State<SettingsModalSheet> {
+class _VariablesModalSheetState extends State<VariablesModalSheet> {
   /// Options used for the animated toggle responsible for showing and hiding
-  /// recipe settings
+  /// recipe variables
   final List<String> _animatedToggleValues = const ["Show", "Hide"];
 
   late final RecipesProvider _recipesProvider;
-  late final SettingsSliderProvider _settingsSliderProvider;
+  late final VariablesSliderProvider _variablesSliderProvider;
 
   @override
   void initState() {
@@ -45,22 +45,23 @@ class _SettingsModalSheetState extends State<SettingsModalSheet> {
 
     /// Used to initialize providers for use in [dispose] method
     _recipesProvider = Provider.of<RecipesProvider>(context, listen: false);
-    _settingsSliderProvider =
-        Provider.of<SettingsSliderProvider>(context, listen: false);
+    _variablesSliderProvider =
+        Provider.of<VariablesSliderProvider>(context, listen: false);
 
-    Provider.of<RecipesProvider>(context, listen: false).tempSettingVisibility =
-        (widget.recipeSettingsData?.visibility == null)
-            ? SettingVisibility.shown
-            : RecipeSettings.stringToSettingVisibility(
-                widget.recipeSettingsData!.visibility);
+    Provider.of<RecipesProvider>(context, listen: false)
+            .tempvariablesVisibility =
+        (widget.recipeVariablesData?.visibility == null)
+            ? VariablesVisibility.shown
+            : RecipeVariables.stringToVariablesVisibility(
+                widget.recipeVariablesData!.visibility);
     Provider.of<RecipesProvider>(context, listen: false).tempBeanId =
-        widget.recipeSettingsData?.beanId;
+        widget.recipeVariablesData?.beanId;
   }
 
   @override
   void dispose() {
-    _recipesProvider.clearTempSettingParameters();
-    _settingsSliderProvider.clearTempSettingParameters();
+    _recipesProvider.clearTempVariablesParameters();
+    _variablesSliderProvider.clearTempVariableParameters();
     super.dispose();
   }
 
@@ -83,26 +84,26 @@ class _SettingsModalSheetState extends State<SettingsModalSheet> {
                 onToggleCallback: (index) {
                   index == 0
                       ? Provider.of<RecipesProvider>(context, listen: false)
-                          .tempSettingVisibility = SettingVisibility.shown
+                          .tempvariablesVisibility = VariablesVisibility.shown
                       : Provider.of<RecipesProvider>(context, listen: false)
-                          .tempSettingVisibility = SettingVisibility.hidden;
+                          .tempvariablesVisibility = VariablesVisibility.hidden;
                 },
                 initialPosition:
                     (Provider.of<RecipesProvider>(context, listen: false)
-                                .tempSettingVisibility ==
-                            SettingVisibility.shown)
+                                .tempvariablesVisibility ==
+                            VariablesVisibility.shown)
                         ? Position.first
                         : Position.last,
                 toggleType: ToggleType.horizontal,
               ),
               const SizedBox(height: 20),
               CoffeeBeanDropdown(
-                recipeSettingsData: widget.recipeSettingsData,
+                recipeVariablesData: widget.recipeVariablesData,
               ),
               // Spacing handled in CoffeeBeanDropdown
-              SettingsValueSliderGroup(
+              VariablesValueSliderGroup(
                 maxWidth: constraints.maxWidth,
-                recipeSettingsData: widget.recipeSettingsData,
+                recipeVariablesData: widget.recipeVariablesData,
               ),
               const SizedBox(height: 20),
               Row(

@@ -1,5 +1,5 @@
 import 'package:aeroquest/constraints.dart';
-import 'package:aeroquest/models/recipe_settings.dart';
+import 'package:aeroquest/models/recipe_variables.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -7,14 +7,14 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 
 class CoffeeBeanDropdown extends StatefulWidget {
-  /// Defines the widget used for selecting a coffee bean for a recipe setting
+  /// Defines the widget used for selecting a coffee bean for a recipe variable
   const CoffeeBeanDropdown({
     Key? key,
-    this.recipeSettingsData,
+    this.recipeVariablesData,
   }) : super(key: key);
 
-  /// Recipe settings data being passed
-  final RecipeSettings? recipeSettingsData;
+  /// Recipe variables data being passed
+  final RecipeVariables? recipeVariablesData;
 
   @override
   State<CoffeeBeanDropdown> createState() => _CoffeeBeanDropdownState();
@@ -34,7 +34,7 @@ class _CoffeeBeanDropdownState extends State<CoffeeBeanDropdown> {
         DropdownButtonHideUnderline(
           child: FormBuilder(
             key: Provider.of<RecipesProvider>(context, listen: false)
-                .settingsBeanFormKey,
+                .variablesBeanFormKey,
             child: DropdownButtonFormField2(
               items: List.generate(
                 _recipesProvider.coffeeBeans.length,
@@ -55,9 +55,9 @@ class _CoffeeBeanDropdownState extends State<CoffeeBeanDropdown> {
                   );
                 },
               ),
-              value: (widget.recipeSettingsData != null)
+              value: (widget.recipeVariablesData != null)
                   ? _recipesProvider
-                      .coffeeBeans[widget.recipeSettingsData!.beanId]!.beanName
+                      .coffeeBeans[widget.recipeVariablesData!.beanId]!.beanName
                   : null,
               onChanged: (String? value) {
                 _recipesProvider.tempBeanId = _recipesProvider

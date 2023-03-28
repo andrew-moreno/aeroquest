@@ -108,7 +108,7 @@ class _AppSettingsState extends State<AppSettings> {
                     ),
                     title: "Grind Size Interval",
                     description: "Defines the amount that "
-                        "the grind size setting for a recipe "
+                        "the grind size variable for a recipe "
                         "can be increased or decreased",
                   );
                 },
@@ -125,7 +125,7 @@ class _AppSettingsState extends State<AppSettings> {
                     ),
                     title: "Temperature Unit",
                     description: "Whether to use Celsius or Fahrenheit for "
-                        "the temperature setting for a recipe",
+                        "the temperature variable for a recipe",
                   );
                 },
               ),
@@ -141,7 +141,7 @@ class _AppSettingsState extends State<AppSettings> {
                     ),
                     title: "Mass Unit",
                     description: "Whether to use grams or ounces for "
-                        "the mass setting for a recipe",
+                        "the mass variable for a recipe",
                   );
                 },
               ),

@@ -1,6 +1,6 @@
 import 'package:aeroquest/models/recipe_step.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
-import 'package:aeroquest/providers/settings_slider_provider.dart';
+import 'package:aeroquest/providers/variables_slider_provider.dart';
 import 'package:aeroquest/widgets/custom_modal_sheet/value_slider_group_template.dart';
 import 'package:aeroquest/widgets/recipe_parameters_value.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +32,7 @@ class _RecipeStepsValueSliderState extends State<RecipeStepsValueSlider> {
   @override
   void initState() {
     super.initState();
-    Provider.of<SettingsSliderProvider>(context, listen: false)
+    Provider.of<VariablesSliderProvider>(context, listen: false)
         .tempRecipeStepTime = widget.recipeStepsData?.time ?? 0;
     Provider.of<RecipesProvider>(context, listen: false).activeSlider =
         ParameterType.recipeStepTime;

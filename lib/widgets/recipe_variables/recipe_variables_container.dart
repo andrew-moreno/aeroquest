@@ -1,27 +1,27 @@
-import 'package:aeroquest/models/recipe_settings.dart';
+import 'package:aeroquest/models/recipe_variables.dart';
 import 'package:flutter/material.dart';
 import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import 'package:aeroquest/widgets/recipe_settings/widgets/bean_settings.dart';
+import 'package:aeroquest/widgets/recipe_variables/widgets/bean_variables.dart';
 import 'package:aeroquest/constraints.dart';
 
-class RecipeSettingsContainer extends StatelessWidget {
-  /// Defines the widget that contains the recipe settings per coffee bean
-  RecipeSettingsContainer({
+class RecipeVariablesContainer extends StatelessWidget {
+  /// Defines the widget that contains the recipe variables per coffee bean
+  RecipeVariablesContainer({
     Key? key,
-    required this.recipeSettings,
+    required this.recipeVariables,
   }) : super(key: key);
 
-  /// The list of recipe settings to be displayed
+  /// The list of recipe variables to be displayed
   ///
-  /// If [recipeSettings.length] > 1, this widget becomes scrollable
-  final List<RecipeSettings> recipeSettings;
+  /// If [recipeVariables.length] > 1, this widget becomes scrollable
+  final List<RecipeVariables> recipeVariables;
 
   /// Controller used to handle page scrolling
   ///
   /// Viewport fraction of 1.02 provides adequate spacing between recipe
-  /// settings
+  /// variables
   final _controller = PageController(viewportFraction: 1.02);
 
   @override
@@ -37,30 +37,30 @@ class RecipeSettingsContainer extends StatelessWidget {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: (recipeSettings.length > 1)
+            child: (recipeVariables.length > 1)
                 ? ExpandablePageView(
                     controller: _controller,
                     children: List.generate(
-                      recipeSettings.length,
+                      recipeVariables.length,
                       (index) => FractionallySizedBox(
                         widthFactor: 1 / _controller.viewportFraction,
-                        child: BeanSettings(
-                          recipeSetting:
-                              recipeSettings[recipeSettings.length - index - 1],
+                        child: BeanVariables(
+                          recipeVariables: recipeVariables[
+                              recipeVariables.length - index - 1],
                         ),
                       ),
                     ),
                   )
-                : BeanSettings(
-                    recipeSetting: recipeSettings[0],
+                : BeanVariables(
+                    recipeVariables: recipeVariables[0],
                   ),
           ),
         ),
-        const SizedBox(height: kRecipeSettingsVerticalPadding),
-        (recipeSettings.length > 1)
+        const SizedBox(height: kRecipeVariablesVerticalPadding),
+        (recipeVariables.length > 1)
             ? SmoothPageIndicator(
                 controller: _controller,
-                count: recipeSettings.length,
+                count: recipeVariables.length,
                 effect: kPageIndicatorEffect,
               )
             : Container(),

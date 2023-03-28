@@ -1,6 +1,6 @@
 import 'package:aeroquest/providers/recipes_provider.dart';
-import 'package:aeroquest/providers/settings_slider_provider.dart';
-import 'package:aeroquest/screens/recipe_details/recipe_details_body/recipe_details_body.dart';
+import 'package:aeroquest/providers/variables_slider_provider.dart';
+import 'package:aeroquest/screens/recipe_details/recipe_details.dart';
 import 'package:aeroquest/widgets/add_to_recipe_button.dart';
 import 'package:aeroquest/widgets/animated_toggle.dart';
 import 'package:aeroquest/widgets/custom_modal_sheet/value_slider_group_template.dart';
@@ -339,15 +339,15 @@ class _RecipeMethodRecipeStepsState extends State<RecipeMethodRecipeSteps> {
   }
 }
 
-/// Sets the temp recipeStep parameters from the SettingsSliderProvider to the
+/// Sets the temp recipeStep parameters from the VariablesSliderProvider to the
 /// associated temp recipeStep parameter in the RecipeProvider
 void _setRecipesProviderTempRecipeStepParameters({
   required BuildContext context,
 }) {
   Provider.of<RecipesProvider>(context, listen: false).tempRecipeStepText =
-      Provider.of<SettingsSliderProvider>(context, listen: false)
+      Provider.of<VariablesSliderProvider>(context, listen: false)
           .tempRecipeStepText;
   Provider.of<RecipesProvider>(context, listen: false).tempRecipeStepTime =
-      Provider.of<SettingsSliderProvider>(context, listen: false)
+      Provider.of<VariablesSliderProvider>(context, listen: false)
           .tempRecipeStepTime;
 }

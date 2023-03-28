@@ -5,7 +5,7 @@ class AnimatedToggle extends StatefulWidget {
   /// Defines the toggle widget for selecting between values stacked
   /// horizontally
   ///
-  /// Built for use when selecting the visibility of recipe settings
+  /// Built for use when selecting the visibility of recipe variables
   ///
   /// Only functions as a two position toggle
   const AnimatedToggle({

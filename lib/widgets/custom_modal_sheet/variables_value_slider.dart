@@ -1,16 +1,16 @@
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/providers/app_settings_provider.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
-import 'package:aeroquest/providers/settings_slider_provider.dart';
+import 'package:aeroquest/providers/variables_slider_provider.dart';
 import 'package:aeroquest/widgets/recipe_parameters_value.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vertical_weight_slider/vertical_weight_slider.dart';
 
-class SettingValueSlider extends StatefulWidget {
+class VariablesValueSlider extends StatefulWidget {
   /// Defines an individual value slider to be used when editing recipe
-  /// setting values
-  const SettingValueSlider({
+  /// variable values
+  const VariablesValueSlider({
     Key? key,
     this.opacity = 1,
     this.disableScrolling = false,
@@ -33,35 +33,47 @@ class SettingValueSlider extends StatefulWidget {
   /// Used to avoid clipping of the slider when modal is active
   final double maxWidth;
 
-  /// Setting type to change for this slider
+  /// Variable type to change for this slider
   final ParameterType parameterType;
 
   @override
-  State<SettingValueSlider> createState() => _SettingValueSliderState();
+  State<VariablesValueSlider> createState() => _VariablesValueSliderState();
 }
 
-class _SettingValueSliderState extends State<SettingValueSlider> {
-  late final SettingsSliderProvider _settingsSliderProvider;
+class _VariablesValueSliderState extends State<VariablesValueSlider> {
+  late final VariablesSliderProvider _variablesSliderProvider;
 
   @override
   void initState() {
-    _settingsSliderProvider =
-        Provider.of<SettingsSliderProvider>(context, listen: false);
+    _variablesSliderProvider =
+        Provider.of<VariablesSliderProvider>(context, listen: false);
     super.initState();
   }
 
   /// Max possible value for each slider type
-  int _maxValue(ParameterType parameterType) {
+  double _maxValue(ParameterType parameterType) {
     switch (parameterType) {
       case ParameterType.grindSetting:
         return 100;
       case ParameterType.coffeeAmount:
         return 100;
       case ParameterType.waterAmount:
-        return 300; // roughly max amount of water possible in aeropress
+        {
+          double maxValue;
+          MassUnit massUnit =
+              Provider.of<AppSettingsProvider>(context, listen: false)
+                  .massUnit!;
+          if (massUnit == MassUnit.gram) {
+            maxValue = 300;
+          } else {
+            maxValue = 300 / 28.34952;
+          }
+          return maxValue;
+        }
+
       case ParameterType.waterTemp:
         {
-          int maxValue;
+          double maxValue;
           TemperatureUnit temperatureUnit =
               Provider.of<AppSettingsProvider>(context, listen: false)
                   .temperatureUnit!;
@@ -90,13 +102,13 @@ class _SettingValueSliderState extends State<SettingValueSlider> {
     switch (sliderType) {
       case ParameterType.grindSetting:
         return WeightSliderController(
-          initialWeight: _settingsSliderProvider.tempGrindSetting!,
+          initialWeight: _variablesSliderProvider.tempGrindSetting!,
           interval: Provider.of<AppSettingsProvider>(context, listen: false)
               .grindInterval!,
         );
       case ParameterType.coffeeAmount:
         return WeightSliderController(
-          initialWeight: _settingsSliderProvider.tempCoffeeAmount!,
+          initialWeight: _variablesSliderProvider.tempCoffeeAmount!,
           interval: 0.1,
         );
       case ParameterType.waterAmount:
@@ -111,7 +123,7 @@ class _SettingValueSliderState extends State<SettingValueSlider> {
             interval = 0.1;
           }
           return WeightSliderController(
-            initialWeight: _settingsSliderProvider.tempWaterAmount!,
+            initialWeight: _variablesSliderProvider.tempWaterAmount!,
             interval: interval,
           );
         }
@@ -127,17 +139,18 @@ class _SettingValueSliderState extends State<SettingValueSlider> {
             interval = 5 / 9;
           }
           return WeightSliderController(
-            initialWeight: _settingsSliderProvider.tempWaterTemp!,
+            initialWeight: _variablesSliderProvider.tempWaterTemp!,
             interval: interval,
           );
         }
       case ParameterType.brewTime:
         return WeightSliderController(
-          initialWeight: _settingsSliderProvider.tempBrewTime!.toDouble(),
+          initialWeight: _variablesSliderProvider.tempBrewTime!.toDouble(),
         );
       case ParameterType.recipeStepTime:
         return WeightSliderController(
-          initialWeight: _settingsSliderProvider.tempRecipeStepTime!.toDouble(),
+          initialWeight:
+              _variablesSliderProvider.tempRecipeStepTime!.toDouble(),
         );
       case ParameterType.none:
         return WeightSliderController(initialWeight: 50);
@@ -170,7 +183,7 @@ class _SettingValueSliderState extends State<SettingValueSlider> {
           ),
           controller: _controllerSelector(widget.parameterType),
           onChanged: (double value) {
-            _settingsSliderProvider.sliderOnChanged(
+            _variablesSliderProvider.sliderOnChanged(
                 value, widget.parameterType);
           },
         ),

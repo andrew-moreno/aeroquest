@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class CustomCard extends StatelessWidget {
   /// Defines the structure of the card that is displayed on all main pages
   ///
-  /// eg. Card for Recipes, Coffee Beans, and Settings
+  /// eg. Card for Recipes, Coffee Beans, and Variables
   const CustomCard({
     Key? key,
     required this.child,
@@ -17,7 +17,7 @@ class CustomCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(
-        vertical: kRecipeSettingsVerticalPadding,
+        vertical: kRecipeVariablesVerticalPadding,
         horizontal: 15,
       ),
       decoration: BoxDecoration(

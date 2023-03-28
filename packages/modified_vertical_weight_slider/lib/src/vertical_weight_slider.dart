@@ -20,7 +20,7 @@ class VerticalWeightSlider extends StatefulWidget {
   final WeightSliderController controller;
 
   /// Maximum weight that the slider can be scrolled
-  final int maxWeight;
+  final double maxWeight;
 
   /// If non-null, requires the child to have exactly this height.
   final double height;

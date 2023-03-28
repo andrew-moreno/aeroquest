@@ -4,7 +4,7 @@ import 'package:aeroquest/constraints.dart';
 import 'package:provider/provider.dart';
 
 class RecipeParameterValue extends StatefulWidget {
-  /// Defines the widget for displaying recipe setting values
+  /// Defines the widget for displaying recipe variable values
   ///
   /// eg. Grind: 17, Water Amount: 200, etc.
   const RecipeParameterValue({
@@ -109,7 +109,7 @@ class _RecipeParameterValueState extends State<RecipeParameterValue> {
     }
   }
 
-  /// Selects the correct unit to display next to recipe setting values
+  /// Selects the correct unit to display next to recipe variable values
   String _unitType(ParameterType parameterType) {
     switch (parameterType) {
       case ParameterType.grindSetting:
@@ -163,8 +163,8 @@ class _RecipeParameterValueState extends State<RecipeParameterValue> {
               _unitType(widget.parameterType),
               style: Theme.of(context)
                   .textTheme
-                  .bodyText1!
-                  .copyWith(color: kAccentTransparent),
+                  .subtitle1!
+                  .copyWith(color: kAccentTransparent, height: 1.75),
             ),
           ],
         ),

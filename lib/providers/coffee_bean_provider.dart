@@ -1,7 +1,7 @@
 import 'dart:collection';
 import 'dart:developer';
 import 'package:aeroquest/databases/coffee_beans_database.dart';
-import 'package:aeroquest/databases/recipe_settings_database.dart';
+import 'package:aeroquest/databases/recipe_variables_database.dart';
 import 'package:flutter/material.dart';
 
 import 'package:aeroquest/models/coffee_bean.dart';
@@ -29,7 +29,7 @@ class CoffeeBeanProvider extends ChangeNotifier {
       CoffeeBean(
         beanName: beanName,
         description: description,
-        associatedSettingsCount: 0,
+        associatedVariablesCount: 0,
       ),
     );
     _coffeeBeans.addAll({newCoffeeBean.id!: newCoffeeBean});
@@ -40,21 +40,21 @@ class CoffeeBeanProvider extends ChangeNotifier {
 
   /// Deletes a bean from the database and [_coffeeBeans]
   ///
-  /// If [deleteAssociatedSettings] is true, will also delete recipe settings
+  /// If [deleteAssociatedVariables] is true, will also delete recipe variables
   /// that use this coffee bean
   Future<void> deleteBean({
     required int id,
-    deleteAssociatedSettings = false,
+    deleteAssociatedVariables = false,
   }) async {
-    if (deleteAssociatedSettings) {
-      await RecipeSettingsDatabase.instance.deleteSettingsOfBeanId(id);
+    if (deleteAssociatedVariables) {
+      await RecipeVariablesDatabase.instance.deleteVariablesOfBeanId(id);
     }
     _coffeeBeans.remove(id);
     await CoffeeBeansDatabase.instance.delete(id);
 
     log("Coffee beans removed with id: " + id.toString());
-    if (deleteAssociatedSettings) {
-      log("Associated recipe settings also deleted");
+    if (deleteAssociatedVariables) {
+      log("Associated recipe variables also deleted");
     }
     notifyListeners();
   }
@@ -64,17 +64,17 @@ class CoffeeBeanProvider extends ChangeNotifier {
     int id,
     String beanName,
     String? description,
-    int associatedSettingsCount,
+    int associatedVariablesCount,
   ) async {
     final coffeeBean = CoffeeBean(
       id: id,
       beanName: beanName,
       description: description,
-      associatedSettingsCount: associatedSettingsCount,
+      associatedVariablesCount: associatedVariablesCount,
     );
     _coffeeBeans[id]!.beanName = beanName;
     _coffeeBeans[id]?.description = description;
-    _coffeeBeans[id]!.associatedSettingsCount = associatedSettingsCount;
+    _coffeeBeans[id]!.associatedVariablesCount = associatedVariablesCount;
     await CoffeeBeansDatabase.instance.update(coffeeBean);
     log("beans updated with id: " + id.toString());
     notifyListeners();

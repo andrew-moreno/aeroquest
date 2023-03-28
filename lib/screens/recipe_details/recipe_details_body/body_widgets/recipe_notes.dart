@@ -1,13 +1,12 @@
 import 'package:aeroquest/models/recipe_note.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
-import 'package:aeroquest/providers/settings_slider_provider.dart';
-import 'package:aeroquest/screens/recipe_details/recipe_details_body/recipe_details_body.dart';
+import 'package:aeroquest/providers/variables_slider_provider.dart';
+import 'package:aeroquest/screens/recipe_details/recipe_details.dart';
 import 'package:aeroquest/widgets/add_to_recipe_button.dart';
 import 'package:aeroquest/widgets/custom_modal_sheet/value_slider_group_template.dart';
 import 'package:aeroquest/widgets/empty_details_text.dart';
 import 'package:flutter/material.dart';
 
-import 'package:aeroquest/models/recipe.dart';
 import 'package:aeroquest/constraints.dart';
 import 'package:provider/provider.dart';
 
@@ -26,24 +25,8 @@ class RecipeNotes extends StatefulWidget {
 }
 
 class _RecipeNotesState extends State<RecipeNotes> {
-  late Recipe _recipeData;
-
   late final RecipesProvider _recipesProvider =
       Provider.of<RecipesProvider>(context, listen: false);
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _recipeData = _selectRecipeData();
-  }
-
-  Recipe _selectRecipeData() {
-    if (_recipesProvider.editMode == EditMode.enabled) {
-      return _recipesProvider.tempRecipe;
-    } else {
-      return _recipesProvider.recipes[widget.recipeEntryId]!;
-    }
-  }
 
   Map<int, RecipeNote> _selectRecipeNotesData() {
     if (_recipesProvider.editMode == EditMode.enabled) {
@@ -188,12 +171,12 @@ class _RecipeMethodRecipeNotesState extends State<RecipeMethodRecipeNotes> {
   }
 }
 
-/// Sets the temp recipeNote parameters from the SettingsSliderProvider to the
+/// Sets the temp recipeNote parameters from the VariablesSliderProvider to the
 /// associated temp recipeNote parameter in the RecipeProvider
 void _setRecipesProviderTempRecipeNoteParameters({
   required BuildContext context,
 }) {
   Provider.of<RecipesProvider>(context, listen: false).tempRecipeNoteText =
-      Provider.of<SettingsSliderProvider>(context, listen: false)
+      Provider.of<VariablesSliderProvider>(context, listen: false)
           .tempRecipeNoteText;
 }

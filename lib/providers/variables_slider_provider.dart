@@ -1,16 +1,16 @@
-import 'package:aeroquest/models/recipe_settings.dart';
+import 'package:aeroquest/models/recipe_variables.dart';
 import 'package:aeroquest/widgets/recipe_parameters_value.dart';
 import 'package:flutter/material.dart';
 
-class SettingsSliderProvider extends ChangeNotifier {
-  /// Parameters used for generating/editing recipe settings
+class VariablesSliderProvider extends ChangeNotifier {
+  /// Parameters used for generating/editing recipe variables
   ///
   /// These parameters are separate from RecipesProvider to avoid unnecessary
   /// rebuilds for widgets using RecipeProvider
   ///
   /// All values associated with each variable are set to null at all times
-  /// except when editing recipe settings values using the editing modal sheet
-  SettingVisibility? tempSettingVisibility;
+  /// except when editing recipe variables values using the editing modal sheet
+  VariablesVisibility? tempVariablesVisibility;
   int? tempBeanId;
   double? tempGrindSetting;
   double? tempCoffeeAmount;
@@ -24,7 +24,7 @@ class SettingsSliderProvider extends ChangeNotifier {
   String? tempRecipeNoteText;
 
   /// Defines which value is getting changed when sliding the slider and
-  /// assigns the appropriate settings value to [value]
+  /// assigns the appropriate variables value to [value]
   void sliderOnChanged(double value, ParameterType parameterType) {
     switch (parameterType) {
       case ParameterType.grindSetting:
@@ -51,15 +51,15 @@ class SettingsSliderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Clears all temporary setting parameters by setting them to null
-  void clearTempSettingParameters() {
+  /// Clears all temporary variable parameters by setting them to null
+  void clearTempVariableParameters() {
     tempBeanId = null;
     tempGrindSetting = null;
     tempCoffeeAmount = null;
     tempWaterAmount = null;
     tempWaterTemp = null;
     tempBrewTime = null;
-    tempSettingVisibility = null;
+    tempVariablesVisibility = null;
   }
 
   /// Clears all temporary recipe step parameters by setting them to null

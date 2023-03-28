@@ -1,6 +1,6 @@
 import 'package:aeroquest/home.dart';
 import 'package:aeroquest/providers/app_settings_provider.dart';
-import 'package:aeroquest/providers/settings_slider_provider.dart';
+import 'package:aeroquest/providers/variables_slider_provider.dart';
 import 'package:aeroquest/screens/app_settings/app_settings.dart';
 import 'package:aeroquest/screens/onboarding/onboarding.dart';
 import 'package:control_style/decorated_input_border.dart';
@@ -31,8 +31,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<CoffeeBeanProvider>(
           create: (_) => CoffeeBeanProvider(),
         ),
-        ChangeNotifierProvider<SettingsSliderProvider>(
-          create: (_) => SettingsSliderProvider(),
+        ChangeNotifierProvider<VariablesSliderProvider>(
+          create: (_) => VariablesSliderProvider(),
         ),
         ChangeNotifierProvider<AppSettingsProvider>(
             create: (_) => AppSettingsProvider()),

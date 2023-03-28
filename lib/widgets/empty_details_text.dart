@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class EmptyDetailsText extends StatelessWidget {
-  /// Used to notify the user that no settings, steps, or notes are present in
+  /// Used to notify the user that no variables, steps, or notes are present in
   /// the recipe details page
   const EmptyDetailsText({
     Key? key,
@@ -12,6 +12,14 @@ class EmptyDetailsText extends StatelessWidget {
 
   /// Data type that is missing
   final RecipeDetailsText dataType;
+
+  String _descriptionText(dataType) {
+    if (dataType == RecipeDetailsText.variable) {
+      return "set of ${describeEnum(dataType)}s";
+    } else {
+      return describeEnum(dataType);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +39,7 @@ class EmptyDetailsText extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         Text(
-          "Edit recipe to add a ${describeEnum(dataType)}",
+          "Edit the recipe to add a ${_descriptionText(dataType)}",
           textAlign: TextAlign.center,
           style: const TextStyle(
             fontSize: 15,
@@ -46,7 +54,7 @@ class EmptyDetailsText extends StatelessWidget {
 }
 
 enum RecipeDetailsText {
-  setting,
+  variable,
   step,
   note,
 }

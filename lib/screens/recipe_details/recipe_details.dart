@@ -1,6 +1,11 @@
-import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/bean_settings_group.dart';
+import 'package:aeroquest/models/recipe_note.dart';
+import 'package:aeroquest/models/recipe_step.dart';
+import 'package:aeroquest/models/recipe_variables.dart';
+import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/bean_variables_group.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/recipe_method.dart';
+import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/recipe_method_widgets/recipe_steps_modal_sheet.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/recipe_notes.dart';
+import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/recipe_notes_widgets/recipe_notes_modal_sheet.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_header.dart';
 import 'package:aeroquest/widgets/appbar/appbar_button.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +17,9 @@ import 'package:aeroquest/widgets/custom_dialog.dart';
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/models/recipe.dart';
 import 'package:sliver_tools/sliver_tools.dart';
+
+import '../../widgets/custom_modal_sheet/value_slider_group_template.dart';
+import 'recipe_details_body/body_widgets/bean_variables_group_widgets/variables_modal_sheet.dart';
 
 class RecipeDetails extends StatefulWidget {
   /// The screen used for displaying and editing the details of a single recipe
@@ -166,7 +174,7 @@ class _RecipeDetailsState extends State<RecipeDetails> {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> tabs = <String>['Settings', 'Method', "Notes"];
+    final List<String> tabs = <String>['Variables', 'Method', "Notes"];
     return DefaultTabController(
       length: tabs.length,
       child: Scaffold(
@@ -266,7 +274,7 @@ class _RecipeDetailsState extends State<RecipeDetails> {
                   child: TabBarView(
                     children: [
                       RecipeDetailsBodyChild(
-                        child: BeanSettingsGroup(
+                        child: BeanVariablesGroup(
                           recipeEntryId: widget.recipeData.id!,
                         ),
                       ),
@@ -329,4 +337,54 @@ class RecipeDetailsBodyChild extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Used to show the modal sheet used for editing recipe steps or recipe variables
+void showCustomModalSheet({
+  required BuildContext context,
+  required Function() submitAction,
+  Function()? deleteAction,
+  required ModalType modalType,
+  RecipeVariables? recipeVariablesData,
+  RecipeStep? recipeStepsData,
+  RecipeNote? recipeNotesData,
+}) {
+  showModalBottomSheet(
+    context: context,
+    shape: const RoundedRectangleBorder(
+      borderRadius:
+          BorderRadius.vertical(top: Radius.circular(kModalCornerRadius)),
+    ),
+    backgroundColor: kDarkSecondary,
+    isScrollControlled: true,
+    builder: (_) {
+      switch (modalType) {
+        case ModalType.variables:
+          {
+            return VariablesModalSheet(
+              submitAction: submitAction,
+              deleteAction: deleteAction,
+              recipeVariablesData: recipeVariablesData,
+            );
+          }
+
+        case ModalType.steps:
+          {
+            return RecipeStepsModalSheet(
+              submitAction: submitAction,
+              deleteAction: deleteAction,
+              recipeStepsData: recipeStepsData,
+            );
+          }
+        case ModalType.notes:
+          {
+            return RecipeNotesModalSheet(
+              submitAction: submitAction,
+              deleteAction: deleteAction,
+              recipeNotesData: recipeNotesData,
+            );
+          }
+      }
+    },
+  );
 }

@@ -2,7 +2,7 @@ import 'package:aeroquest/constraints.dart';
 import 'package:flutter/material.dart';
 
 class ModalValueContainer extends StatefulWidget {
-  /// Defines the structure of the container that holds the recipe setting
+  /// Defines the structure of the container that holds the recipe variable
   /// text value
   const ModalValueContainer({
     Key? key,

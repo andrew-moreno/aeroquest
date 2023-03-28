@@ -25,22 +25,22 @@ class BeansContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /// Used to warn the user that this coffee bean is associated with
-    /// recipe settings
+    /// Used to warn the user that this coffee bean is associated with existing
+    /// recipe variables
     ///
-    /// Deletes all associated settings if the user confirms
+    /// Deletes all associated variables if the user confirms
     Future<void> _showDeleteDialog() async {
       return await showDialog(
         context: context,
         builder: (context) => CustomDialog(
-          titleText: "Delete Associated Settings?",
+          titleText: "Delete Associated Variables?",
           description:
-              "This bean is associated with recipe settings. Do you want to delete these settings as well?",
+              "This bean is associated with existing recipe variables. Do you want to delete these variables as well?",
           leftAction: () => Navigator.of(context).pop(false),
           rightAction: () {
             Provider.of<CoffeeBeanProvider>(context, listen: false).deleteBean(
               id: beanData.id!,
-              deleteAssociatedSettings: true,
+              deleteAssociatedVariables: true,
             );
             Navigator.of(context).pop();
           },
@@ -70,13 +70,13 @@ class BeansContainer extends StatelessWidget {
                 beanData.id!,
                 beanName,
                 description,
-                beanData.associatedSettingsCount,
+                beanData.associatedVariablesCount,
               );
               Navigator.of(context).pop();
             },
             deleteAction: () {
               Navigator.of(context).pop();
-              if (beanData.associatedSettingsCount > 0) {
+              if (beanData.associatedVariablesCount > 0) {
                 _showDeleteDialog();
               } else {
                 Provider.of<CoffeeBeanProvider>(context, listen: false)

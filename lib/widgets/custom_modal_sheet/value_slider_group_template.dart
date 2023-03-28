@@ -1,5 +1,5 @@
 import 'package:aeroquest/widgets/custom_modal_sheet/modal_slider_value.dart';
-import 'package:aeroquest/widgets/custom_modal_sheet/custom_vertical_weight_slider.dart';
+import 'package:aeroquest/widgets/custom_modal_sheet/variables_value_slider.dart';
 import 'package:aeroquest/widgets/recipe_parameters_value.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +9,7 @@ import 'package:aeroquest/providers/recipes_provider.dart';
 class ValueSliderGroupTemplate extends StatelessWidget {
   /// Defines the widget that contains all sliders and slider values
   ///
-  /// Can be used for editing recipe steps or recipe settings
+  /// Can be used for editing recipe steps or recipe variables
   const ValueSliderGroupTemplate({
     Key? key,
     required this.maxWidth,
@@ -20,12 +20,12 @@ class ValueSliderGroupTemplate extends StatelessWidget {
   final double maxWidth;
 
   /// Whether the modal sheet being displayed is used for editing recipe
-  /// settings or recipe steps
+  /// variables or recipe steps
   final ModalType modalType;
 
   /// Returns a list of the appropriate parameter types based on [modalType]
   List<ParameterType> _parameterTypeListSelector() {
-    if (modalType == ModalType.settings) {
+    if (modalType == ModalType.variables) {
       return [
         ParameterType.grindSetting,
         ParameterType.coffeeAmount,
@@ -55,7 +55,7 @@ class ValueSliderGroupTemplate extends StatelessWidget {
 
                 /// recipe steps modal cannot have an interactive value container
                 /// see [isClickable]
-                (modalType == ModalType.settings)
+                (modalType == ModalType.variables)
                     ? (index) => ModalSliderValue(
                           parameterType: parameterType
                               .where((sliderType) =>
@@ -76,7 +76,7 @@ class ValueSliderGroupTemplate extends StatelessWidget {
               children: List.generate(
                 // includes ParameterType.none
                 parameterType.length,
-                (index) => SettingValueSlider(
+                (index) => VariablesValueSlider(
                   maxWidth: maxWidth,
                   parameterType: parameterType[index],
                   disableScrolling: (parameterType[index] == ParameterType.none)
@@ -95,4 +95,4 @@ class ValueSliderGroupTemplate extends StatelessWidget {
 }
 
 /// Describes the type of modal sheet to be displayed
-enum ModalType { settings, steps, notes }
+enum ModalType { variables, steps, notes }

@@ -8,7 +8,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 
 class RecipeNotesModalSheet extends StatefulWidget {
-  /// Defines the modal sheet used for editing recipe settings
+  /// Defines the modal sheet used for editing recipe variables
   const RecipeNotesModalSheet({
     Key? key,
     required this.submitAction,

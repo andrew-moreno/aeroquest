@@ -35,7 +35,7 @@ class CoffeeBeansDatabase {
         ${CoffeeBeanFields.id} $idType,
         ${CoffeeBeanFields.beanName} $textType,
         ${CoffeeBeanFields.description} $nullableTextType,
-        ${CoffeeBeanFields.associatedSettingsCount} $intType
+        ${CoffeeBeanFields.associatedVariablesCount} $intType
       ) 
     ''');
   }
