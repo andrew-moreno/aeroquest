@@ -73,27 +73,6 @@ class _AppSettingsState extends State<AppSettings> {
 
   @override
   Widget build(BuildContext context) {
-    Widget _grindIntervalModalSheet = GrindIntervalModalSheet(
-      initialGrindInterval:
-          Provider.of<AppSettingsProvider>(context, listen: false)
-              .grindInterval!,
-    );
-
-    Widget _temperaturUnitModalSheet = TemperatureUnitModalSheet(
-        initialTemperatureUnit:
-            Provider.of<AppSettingsProvider>(context, listen: false)
-                .temperatureUnit!);
-
-    Widget _waterUnitModalSheet = WaterUnitModalSheet(
-        initialWaterUnit:
-            Provider.of<AppSettingsProvider>(context, listen: false)
-                .waterUnit!);
-
-    Widget _coffeeUnitModalSheet = CoffeeUnitModalSheet(
-        initialCoffeeUnit:
-            Provider.of<AppSettingsProvider>(context, listen: false)
-                .coffeeUnit!);
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kPrimary,
@@ -116,7 +95,12 @@ class _AppSettingsState extends State<AppSettings> {
                         AppSettingsProvider.getGrindIntervalText(grindInterval),
                     onTap: () => showModalSheet(
                       context: context,
-                      modalContent: _grindIntervalModalSheet,
+                      modalContent: GrindIntervalModalSheet(
+                        initialGrindInterval: Provider.of<AppSettingsProvider>(
+                                context,
+                                listen: false)
+                            .grindInterval!,
+                      ),
                     ),
                     title: "Grind Size Interval",
                     description: "Defines the amount that "
@@ -133,7 +117,11 @@ class _AppSettingsState extends State<AppSettings> {
                     text: _temperatureUnitTextSelector(temperatureUnit),
                     onTap: () => showModalSheet(
                       context: context,
-                      modalContent: _temperaturUnitModalSheet,
+                      modalContent: TemperatureUnitModalSheet(
+                          initialTemperatureUnit:
+                              Provider.of<AppSettingsProvider>(context,
+                                      listen: false)
+                                  .temperatureUnit!),
                     ),
                     title: "Temperature Unit",
                     description: "Whether to use Celsius or Fahrenheit for "
@@ -149,7 +137,11 @@ class _AppSettingsState extends State<AppSettings> {
                     text: _waterUnitTextSelector(waterUnit),
                     onTap: () => showModalSheet(
                       context: context,
-                      modalContent: _waterUnitModalSheet,
+                      modalContent: WaterUnitModalSheet(
+                          initialWaterUnit: Provider.of<AppSettingsProvider>(
+                                  context,
+                                  listen: false)
+                              .waterUnit!),
                     ),
                     title: "Water Amount Unit",
                     description: "Whether to use grams or ounces for "
@@ -165,7 +157,11 @@ class _AppSettingsState extends State<AppSettings> {
                     text: _coffeeUnitTextSelector(coffeeUnit),
                     onTap: () => showModalSheet(
                       context: context,
-                      modalContent: _coffeeUnitModalSheet,
+                      modalContent: CoffeeUnitModalSheet(
+                          initialCoffeeUnit: Provider.of<AppSettingsProvider>(
+                                  context,
+                                  listen: false)
+                              .coffeeUnit!),
                     ),
                     title: "Coffee Amount Unit",
                     description: "Whether to use grams, tablespoons, or the "
