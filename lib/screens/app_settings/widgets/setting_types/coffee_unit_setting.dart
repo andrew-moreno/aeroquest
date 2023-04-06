@@ -1,5 +1,6 @@
 import 'package:aeroquest/providers/app_settings_provider.dart';
 import 'package:aeroquest/widgets/custom_modal_sheet/modal_value_container.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -21,6 +22,19 @@ class CoffeeUnitSetting extends StatefulWidget {
 }
 
 class _CoffeeUnitSettingState extends State<CoffeeUnitSetting> {
+  /// Selects the text to be displayed in the settings buttons
+  ///
+  /// Scoops are displayed as the full word rather than abbreviated
+  String settingText(int index) {
+    /// returning scoop
+    if (CoffeeUnitSetting.coffeeUnitValues.keys.elementAt(index) ==
+        CoffeeUnit.scoop) {
+      return describeEnum(CoffeeUnit.scoop);
+    } else {
+      return CoffeeUnitSetting.coffeeUnitValues.values.elementAt(index);
+    }
+  }
+
   CoffeeUnit stringToCoffeeUnit(String coffeeUnit) {
     if (coffeeUnit == CoffeeUnitSetting.coffeeUnitValues[CoffeeUnit.gram]) {
       return CoffeeUnit.gram;
@@ -47,7 +61,7 @@ class _CoffeeUnitSettingState extends State<CoffeeUnitSetting> {
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: ModalValueContainer(
               child: Text(
-                CoffeeUnitSetting.coffeeUnitValues.values.elementAt(index),
+                settingText(index),
                 style: Theme.of(context).textTheme.bodyText1,
               ),
               onTap: () {
@@ -64,7 +78,7 @@ class _CoffeeUnitSettingState extends State<CoffeeUnitSetting> {
                           .coffeeUnitValues.values
                           .elementAt(index)),
             ),
-          )
+          ),
       ],
     );
   }
