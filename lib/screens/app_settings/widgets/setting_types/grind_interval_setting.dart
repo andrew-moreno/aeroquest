@@ -22,16 +22,9 @@ class _GrindIntervalSettingState extends State<GrindIntervalSetting> {
       children: [
         for (int index = 0; index < _intervalValues.length; index++)
           ModalValueContainer(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 7,
-                vertical: 10,
-              ),
-              child: Text(
-                AppSettingsProvider.getGrindIntervalText(
-                    _intervalValues[index]),
-                style: Theme.of(context).textTheme.bodyText1,
-              ),
+            child: Text(
+              AppSettingsProvider.getGrindIntervalText(_intervalValues[index]),
+              style: Theme.of(context).textTheme.bodyText1,
             ),
             onTap: () {
               Provider.of<AppSettingsProvider>(context, listen: false)
