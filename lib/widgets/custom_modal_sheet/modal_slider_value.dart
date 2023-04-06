@@ -53,12 +53,9 @@ class _ModalSliderValueState extends State<ModalSliderValue> {
   @override
   Widget build(BuildContext context) {
     return ModalValueContainer(
-      child: Padding(
-        padding: const EdgeInsets.all(7.0),
-        child: RecipeParameterValue(
-          parameterValue: _variableValue(widget.parameterType),
-          parameterType: widget.parameterType,
-        ),
+      child: RecipeParameterValue(
+        parameterValue: _variableValue(widget.parameterType),
+        parameterType: widget.parameterType,
       ),
       onTap: () {
         if (widget.isClickable) {
