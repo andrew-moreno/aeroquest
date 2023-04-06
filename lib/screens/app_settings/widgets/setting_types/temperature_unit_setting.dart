@@ -12,19 +12,19 @@ class TemperatureUnitSetting extends StatefulWidget {
     required this.toggleType,
   }) : super(key: key);
 
-  /// Initial value of the grind interval to display in the modal sheet
+  /// Initial value of the temperature unit to display in the modal sheet
   final TemperatureUnit initialTemperatureUnit;
 
   /// Whether to set the toggle to horizontal or vertical orientation
   final ToggleType toggleType;
+
+  static const temperatureUnitValues = ["°C", "°F"];
 
   @override
   State<TemperatureUnitSetting> createState() => _TemperatureUnitSettingState();
 }
 
 class _TemperatureUnitSettingState extends State<TemperatureUnitSetting> {
-  static const _temperatureUnitValues = ["°C", "°F"];
-
   @override
   void initState() {
     super.initState();
@@ -35,7 +35,7 @@ class _TemperatureUnitSettingState extends State<TemperatureUnitSetting> {
   @override
   Widget build(BuildContext context) {
     return AnimatedToggle(
-      values: _temperatureUnitValues,
+      values: TemperatureUnitSetting.temperatureUnitValues,
       onToggleCallback: (index) {
         index == 0
             ? Provider.of<AppSettingsProvider>(context, listen: false)

@@ -1,6 +1,6 @@
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/providers/app_settings_provider.dart';
-import 'package:aeroquest/screens/app_settings/widgets/setting_types/mass_unit_setting.dart';
+import 'package:aeroquest/screens/app_settings/widgets/setting_types/water_unit_setting.dart';
 import 'package:aeroquest/screens/app_settings/widgets/setting_types/temperature_unit_setting.dart';
 import 'package:aeroquest/screens/onboarding/pages/onboarding_page_template.dart';
 import 'package:aeroquest/widgets/animated_toggle.dart';
@@ -46,8 +46,8 @@ class OnboardingPage2 extends StatelessWidget {
             ),
             SettingsContainer(
               title: "Mass Unit",
-              setting: MassUnitSetting(
-                initialMassUnit: MassUnit.gram,
+              setting: WaterUnitSetting(
+                initialWaterUnit: WaterUnit.gram,
                 toggleType: ToggleType.vertical,
               ),
             ),

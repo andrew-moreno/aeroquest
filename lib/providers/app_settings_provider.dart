@@ -13,10 +13,16 @@ class AppSettingsProvider extends ChangeNotifier {
   /// [TemperatureUnit]
   static const temperatureUnitPref = "temperatureUnit";
 
-  /// Name of the mass system setting in the Shared Preferences db
+  /// Name of the water amount unit setting in the Shared Preferences db
   ///
-  /// Stores the mass system settings as a string representation of [MassUnit]
-  static const massUnitPref = "massUnit";
+  /// Stores the water amount unit settings as a string representation of [WaterUnit]
+  static const waterUnitPref = "waterUnit";
+
+  /// Name of the coffee amount unit setting in the Shared Preferences db
+  ///
+  /// Stores the coffee amount unit settings as a string representation of
+  /// [CoffeeUnit]
+  static const coffeeUnitPref = "coffeeUnit";
 
   /// Name of the setting that determines whether to display the onboarding
   /// screen when the app is opened for the first time
@@ -36,7 +42,7 @@ class AppSettingsProvider extends ChangeNotifier {
 
   /// Temporary temperature measurement system value
   ///
-  /// Value set by [setUnitSystem()]
+  /// Value set by [setTemperatureUnit()]
   ///
   /// Used instead of directly pulling from the Shared Preferences db to avoid
   /// async operations
@@ -46,28 +52,41 @@ class AppSettingsProvider extends ChangeNotifier {
   /// modal sheet without saving to the Shared Preferences db
   TemperatureUnit? tempTemperatureUnit;
 
-  /// Temporary mass measurement system value
+  /// Temporary measurement system value for water amount
   ///
-  /// Value set by [setUnitSystem()]
+  /// Value set by [setWaterUnit()]
   ///
   /// Used instead of directly pulling from the Shared Preferences db to avoid
   /// async operations
-  MassUnit? massUnit;
+  WaterUnit? waterUnit;
 
-  /// Temporary mass unit value that is used to select a value in the modal
-  /// sheet without saving to the Shared Preferences db
-  MassUnit? tempMassUnit;
+  /// Temporary water unit value that is used to select a value in the
+  /// modal sheet without saving to the Shared Preferences db
+  WaterUnit? tempWaterUnit;
 
-  /// Populates [grinInterval], [temperatureUnit] and [massUnit] with data
-  /// from their respective databases
+  /// Temporary measurement system value for coffee amount
+  ///
+  /// Value set by [setCoffeeUnit()]
+  ///
+  /// Used instead of directly pulling from the Shared Preferences db to avoid
+  /// async operations
+  CoffeeUnit? coffeeUnit;
+
+  /// Temporary coffee unit value that is used to select a value in the
+  /// modal sheet without saving to the Shared Preferences db
+  CoffeeUnit? tempCoffeeUnit;
+
+  /// Populates [grindInterval], [temperatureUnit], [waterUnit], and
+  /// [coffeeUnit] with data from their respective databases
   Future<void> cacheAppSettingData() async {
     await setGrindInterval();
     await setTemperatureUnit();
-    await setMassUnit();
+    await setWaterUnit();
+    await setCoffeeUnit();
   }
 
   /// Sets [value] as the grind interval in the Shared Preferences db and sets
-  /// the new value to [grindInterval]
+  /// [grindInterval] to the new value
   void updateGrindInterval(double value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setDouble(grindIntervalPref, value);
@@ -83,8 +102,8 @@ class AppSettingsProvider extends ChangeNotifier {
     return prefs.getDouble(grindIntervalPref) ?? 1;
   }
 
-  /// Sets the current grind interval in the Shared Preferences db to
-  /// [grindInterval]
+  /// Sets [grindInterval] to the current grind interval in the Shared
+  /// Preferences db
   Future<void> setGrindInterval() async {
     grindInterval = await getGrindInterval();
   }
@@ -107,7 +126,7 @@ class AppSettingsProvider extends ChangeNotifier {
   }
 
   /// Sets [value] as the temperature unit in the Shared Preferences db and
-  /// sets the new value to [temperatureUnit]
+  /// sets [temperatureUnit] to the new value
   Future<void> updateTemperatureUnit(String value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(temperatureUnitPref, value);
@@ -124,8 +143,8 @@ class AppSettingsProvider extends ChangeNotifier {
         describeEnum(TemperatureUnit.celsius);
   }
 
-  /// Sets the current temperature unit in the Shared Preferences db to
-  /// [temperatureUnit]
+  /// Sets [temperatureUnit] to the current temperature unit in the Shared
+  /// Preferences db
   Future<void> setTemperatureUnit() async {
     if (await getTemperatureUnit() == describeEnum(TemperatureUnit.celsius)) {
       temperatureUnit = TemperatureUnit.celsius;
@@ -134,34 +153,65 @@ class AppSettingsProvider extends ChangeNotifier {
     }
   }
 
-  /// Sets [value] as the mass unit in the Shared Preferences db and sets the
-  /// new value to [massUnit]
-  Future<void> updateMassUnit(String value) async {
+  /// Sets [value] as the water amount unit in the Shared Preferences db and
+  /// sets [waterUnit] to the new value
+  Future<void> updateWaterUnit(String value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(massUnitPref, value);
-    await setMassUnit();
+    prefs.setString(waterUnitPref, value);
+    await setWaterUnit();
     notifyListeners();
   }
 
-  /// Gets the mass unit from the Shared Preferences db
+  /// Gets the water amount unit from the Shared Preferences db
   ///
-  /// If no value is set, returns "g" as the default value
-  Future<String> getMassUnit() async {
+  /// If no value is set, returns "g" (grams) as the default value
+  Future<String> getWaterUnit() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString(massUnitPref) ?? describeEnum(MassUnit.gram);
+    return prefs.getString(waterUnitPref) ?? describeEnum(WaterUnit.gram);
   }
 
-  /// Sets the current temperature unit in the Shared Preferences db to
-  /// [massUnit]
-  Future<void> setMassUnit() async {
-    if (await getMassUnit() == describeEnum(MassUnit.gram)) {
-      massUnit = MassUnit.gram;
+  /// Sets [waterUnit] to the current water amount unit in the Shared
+  /// Preferences db
+  Future<void> setWaterUnit() async {
+    if (await getWaterUnit() == describeEnum(WaterUnit.gram)) {
+      waterUnit = WaterUnit.gram;
     } else {
-      massUnit = MassUnit.ounce;
+      waterUnit = WaterUnit.ounce;
+    }
+  }
+
+  /// Sets [value] as the coffee amount unit in the Shared Preferences db and
+  /// sets [coffeeUnit] to the new value
+  Future<void> updateCoffeeUnit(String value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(coffeeUnitPref, value);
+    await setCoffeeUnit();
+    notifyListeners();
+  }
+
+  /// Gets the coffee amount unit from the Shared Preferences db
+  ///
+  /// If no value is set, returns "g" (grams) as the default value
+  Future<String> getCoffeeUnit() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(coffeeUnitPref) ?? describeEnum(CoffeeUnit.gram);
+  }
+
+  /// Sets the current coffee amount unit in the Shared Preferences db to
+  /// [coffeeUnit]
+  Future<void> setCoffeeUnit() async {
+    if (await getCoffeeUnit() == describeEnum(CoffeeUnit.gram)) {
+      coffeeUnit = CoffeeUnit.gram;
+    } else if (await getCoffeeUnit() == describeEnum(CoffeeUnit.tbps)) {
+      coffeeUnit = CoffeeUnit.tbps;
+    } else {
+      coffeeUnit = CoffeeUnit.scoop;
     }
   }
 }
 
 enum TemperatureUnit { celsius, fahrenheit }
 
-enum MassUnit { gram, ounce }
+enum WaterUnit { gram, ounce }
+
+enum CoffeeUnit { gram, tbps, scoop }

@@ -1,9 +1,13 @@
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/providers/app_settings_provider.dart';
+import 'package:aeroquest/screens/app_settings/widgets/modal_sheet_types/coffee_unit_modal_sheet.dart';
 import 'package:aeroquest/screens/app_settings/widgets/modal_sheet_types/grind_interval_modal_sheet.dart';
-import 'package:aeroquest/screens/app_settings/widgets/modal_sheet_types/mass_unit_modal_sheet.dart';
+import 'package:aeroquest/screens/app_settings/widgets/modal_sheet_types/water_unit_modal_sheet.dart';
 import 'package:aeroquest/screens/app_settings/widgets/modal_sheet_types/temperature_unit_modal_sheet.dart';
 import 'package:aeroquest/screens/app_settings/widgets/setting_card.dart';
+import 'package:aeroquest/screens/app_settings/widgets/setting_types/coffee_unit_setting.dart';
+import 'package:aeroquest/screens/app_settings/widgets/setting_types/temperature_unit_setting.dart';
+import 'package:aeroquest/screens/app_settings/widgets/setting_types/water_unit_setting.dart';
 import 'package:aeroquest/widgets/appbar/appbar_leading.dart';
 import 'package:aeroquest/widgets/appbar/appbar_text.dart';
 import 'package:aeroquest/widgets/custom_drawer.dart';
@@ -49,20 +53,22 @@ class _AppSettingsState extends State<AppSettings> {
   String _temperatureUnitTextSelector(TemperatureUnit tempUnit) {
     switch (tempUnit) {
       case TemperatureUnit.celsius:
-        return "°C";
+        return TemperatureUnitSetting.temperatureUnitValues[0];
       case TemperatureUnit.fahrenheit:
-        return "°F";
+        return TemperatureUnitSetting.temperatureUnitValues[1];
     }
   }
 
-  /// Selects the correct mass unit text to return based on the [massUnit]
-  String _massUnitTextSelector(MassUnit massUnit) {
-    switch (massUnit) {
-      case MassUnit.gram:
-        return "g";
-      case MassUnit.ounce:
-        return "oz";
-    }
+  /// Selects the correct water amount unit text to return based on the
+  /// [waterUnit]
+  String _waterUnitTextSelector(WaterUnit waterUnit) {
+    return WaterUnitSetting.waterUnitValues[waterUnit]!;
+  }
+
+  /// Selects the correct coffee amount unit text to return based on the
+  /// [coffeeUnit]
+  String _coffeeUnitTextSelector(CoffeeUnit coffeeUnit) {
+    return CoffeeUnitSetting.coffeeUnitValues[coffeeUnit]!;
   }
 
   @override
@@ -78,9 +84,15 @@ class _AppSettingsState extends State<AppSettings> {
             Provider.of<AppSettingsProvider>(context, listen: false)
                 .temperatureUnit!);
 
-    Widget _massUnitModalSheet = MassUnitModalSheet(
-        initialMassUnit:
-            Provider.of<AppSettingsProvider>(context, listen: false).massUnit!);
+    Widget _waterUnitModalSheet = WaterUnitModalSheet(
+        initialWaterUnit:
+            Provider.of<AppSettingsProvider>(context, listen: false)
+                .waterUnit!);
+
+    Widget _coffeeUnitModalSheet = CoffeeUnitModalSheet(
+        initialCoffeeUnit:
+            Provider.of<AppSettingsProvider>(context, listen: false)
+                .coffeeUnit!);
 
     return Scaffold(
       appBar: AppBar(
@@ -130,18 +142,35 @@ class _AppSettingsState extends State<AppSettings> {
                 },
               ),
               const SizedBox(height: 20),
-              Selector<AppSettingsProvider, MassUnit>(
-                selector: (_, provider) => provider.massUnit!,
-                builder: (_, massUnit, __) {
+              Selector<AppSettingsProvider, WaterUnit>(
+                selector: (_, provider) => provider.waterUnit!,
+                builder: (_, waterUnit, __) {
                   return SettingCard(
-                    text: _massUnitTextSelector(massUnit),
+                    text: _waterUnitTextSelector(waterUnit),
                     onTap: () => showModalSheet(
                       context: context,
-                      modalContent: _massUnitModalSheet,
+                      modalContent: _waterUnitModalSheet,
                     ),
-                    title: "Mass Unit",
+                    title: "Water Amount Unit",
                     description: "Whether to use grams or ounces for "
-                        "the mass variable for a recipe",
+                        "the amount of water used to brew a recipe",
+                  );
+                },
+              ),
+              const SizedBox(height: 20),
+              Selector<AppSettingsProvider, CoffeeUnit>(
+                selector: (_, provider) => provider.coffeeUnit!,
+                builder: (_, coffeeUnit, __) {
+                  return SettingCard(
+                    text: _coffeeUnitTextSelector(coffeeUnit),
+                    onTap: () => showModalSheet(
+                      context: context,
+                      modalContent: _coffeeUnitModalSheet,
+                    ),
+                    title: "Coffee Amount Unit",
+                    description: "Whether to use grams, tablespoons, or the "
+                        "AeroPress scoop for the amount of coffee used to "
+                        "brew a recipe",
                   );
                 },
               ),

@@ -121,10 +121,10 @@ class _OnboardingNavigationState extends State<OnboardingNavigation> {
       Provider.of<AppSettingsProvider>(
         context,
         listen: false,
-      ).updateMassUnit(describeEnum(Provider.of<AppSettingsProvider>(
+      ).updateWaterUnit(describeEnum(Provider.of<AppSettingsProvider>(
         context,
         listen: false,
-      ).tempMassUnit!));
+      ).tempWaterUnit!));
     }
   }
 

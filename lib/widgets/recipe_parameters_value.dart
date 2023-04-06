@@ -47,15 +47,14 @@ class _RecipeParameterValueState extends State<RecipeParameterValue> {
           return widget.parameterValue.toStringAsFixed(decimalPlaces);
         }
       case ParameterType.coffeeAmount:
-        return (widget.parameterValue)
-            .toStringAsFixed((widget.parameterValue == 100) ? 0 : 1);
+        return (widget.parameterValue).toStringAsFixed(0);
       case ParameterType.waterAmount:
         {
           int fractionDigits;
-          MassUnit massUnit =
+          WaterUnit massUnit =
               Provider.of<AppSettingsProvider>(context, listen: false)
-                  .massUnit!;
-          if (massUnit == MassUnit.gram) {
+                  .waterUnit!;
+          if (massUnit == WaterUnit.gram) {
             fractionDigits = 0;
           } else {
             fractionDigits = 1;
@@ -112,16 +111,28 @@ class _RecipeParameterValueState extends State<RecipeParameterValue> {
   /// Selects the correct unit to display next to recipe variable values
   String _unitType(ParameterType parameterType) {
     switch (parameterType) {
-      case ParameterType.grindSetting:
-        return "";
       case ParameterType.coffeeAmount:
+        {
+          String units;
+          CoffeeUnit massUnit =
+              Provider.of<AppSettingsProvider>(context, listen: false)
+                  .coffeeUnit!;
+          if (massUnit == CoffeeUnit.gram) {
+            units = "g";
+          } else if (massUnit == CoffeeUnit.tbps) {
+            units = "tbps";
+          } else {
+            units = "scps";
+          }
+          return units;
+        }
       case ParameterType.waterAmount:
         {
           String units;
-          MassUnit massUnit =
+          WaterUnit massUnit =
               Provider.of<AppSettingsProvider>(context, listen: false)
-                  .massUnit!;
-          if (massUnit == MassUnit.gram) {
+                  .waterUnit!;
+          if (massUnit == WaterUnit.gram) {
             units = "g";
           } else {
             units = "oz";
@@ -141,6 +152,7 @@ class _RecipeParameterValueState extends State<RecipeParameterValue> {
           }
           return units;
         }
+      case ParameterType.grindSetting:
       case ParameterType.brewTime:
       case ParameterType.recipeStepTime:
       case ParameterType.none:

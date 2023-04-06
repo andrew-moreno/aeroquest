@@ -60,10 +60,10 @@ class _VariablesValueSliderState extends State<VariablesValueSlider> {
       case ParameterType.waterAmount:
         {
           double maxValue;
-          MassUnit massUnit =
+          WaterUnit massUnit =
               Provider.of<AppSettingsProvider>(context, listen: false)
-                  .massUnit!;
-          if (massUnit == MassUnit.gram) {
+                  .waterUnit!;
+          if (massUnit == WaterUnit.gram) {
             maxValue = 300;
           } else {
             maxValue = 300 / 28.34952;
@@ -109,15 +109,14 @@ class _VariablesValueSliderState extends State<VariablesValueSlider> {
       case ParameterType.coffeeAmount:
         return WeightSliderController(
           initialWeight: _variablesSliderProvider.tempCoffeeAmount!,
-          interval: 0.1,
         );
       case ParameterType.waterAmount:
         {
           double interval;
-          MassUnit unitSystem =
+          WaterUnit unitSystem =
               Provider.of<AppSettingsProvider>(context, listen: false)
-                  .massUnit!;
-          if (unitSystem == MassUnit.gram) {
+                  .waterUnit!;
+          if (unitSystem == WaterUnit.gram) {
             interval = 1.0;
           } else {
             interval = 0.1;

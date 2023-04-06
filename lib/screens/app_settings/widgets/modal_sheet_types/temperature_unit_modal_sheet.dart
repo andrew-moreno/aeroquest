@@ -14,7 +14,7 @@ class TemperatureUnitModalSheet extends StatefulWidget {
     required this.initialTemperatureUnit,
   }) : super(key: key);
 
-  /// Initial value of the grind interval to display in the modal sheet
+  /// Initial value of the temperature unit to display in the modal sheet
   final TemperatureUnit initialTemperatureUnit;
 
   @override
