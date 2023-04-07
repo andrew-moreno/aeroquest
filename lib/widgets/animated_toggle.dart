@@ -43,7 +43,7 @@ class _AnimatedToggleState extends State<AnimatedToggle> {
   }
 
   // Constants for defining the toggle size
-  static const double _horizontalHeight = 40;
+  static const double _horizontalHeight = 35;
   static const double _horizontalWidth = 75;
   static const double _verticalHeight = 30;
   static const double _verticalWidth = 90;

@@ -39,7 +39,7 @@ class BeanVariables extends StatelessWidget {
           ),
         ),
         Container(
-          padding: const EdgeInsets.all(7),
+          padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 0),
           decoration: BoxDecoration(
             color: kLightSecondary,
             borderRadius: BorderRadius.circular(8),

@@ -31,7 +31,7 @@ class _ModalValueContainerState extends State<ModalValueContainer> {
       onTap: widget.onTap,
       child: Container(
         margin: widget.displayBorder ? null : const EdgeInsets.all(2),
-        padding: const EdgeInsets.all(7),
+        padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           color: kLightSecondary,
           borderRadius: BorderRadius.circular(kCornerRadius),
