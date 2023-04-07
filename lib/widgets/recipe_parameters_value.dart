@@ -47,7 +47,18 @@ class _RecipeParameterValueState extends State<RecipeParameterValue> {
           return widget.parameterValue.toStringAsFixed(decimalPlaces);
         }
       case ParameterType.coffeeAmount:
-        return (widget.parameterValue).toStringAsFixed(0);
+        {
+          int fractionDigits;
+          CoffeeUnit coffeeUnit =
+              Provider.of<AppSettingsProvider>(context, listen: false)
+                  .coffeeUnit!;
+          if (coffeeUnit == CoffeeUnit.gram) {
+            fractionDigits = 0;
+          } else {
+            fractionDigits = 1;
+          }
+          return (widget.parameterValue).toStringAsFixed(fractionDigits);
+        }
       case ParameterType.waterAmount:
         {
           int fractionDigits;

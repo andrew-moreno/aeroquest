@@ -21,7 +21,7 @@ class OnboardingPageTemplate extends StatelessWidget {
   final String bottomText;
 
   /// Widgets to display below [bottomText] and above navigation
-  final List<Widget> bottomWidgets;
+  final Widget bottomWidgets;
 
   /// Handles background colour scheme
   final Widget background;
@@ -66,12 +66,9 @@ class OnboardingPageTemplate extends StatelessWidget {
                       ),
                     ),
                     Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: bottomWidgets,
-                      ),
+                      child: bottomWidgets,
                     ),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 10),
                   ],
                 ),
               ),

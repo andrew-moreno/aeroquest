@@ -56,7 +56,21 @@ class _VariablesValueSliderState extends State<VariablesValueSlider> {
       case ParameterType.grindSetting:
         return 100;
       case ParameterType.coffeeAmount:
-        return 100;
+        {
+          double maxValueInGrams = 50;
+          CoffeeUnit coffeeUnit =
+              Provider.of<AppSettingsProvider>(context, listen: false)
+                  .coffeeUnit!;
+          if (coffeeUnit == CoffeeUnit.gram) {
+            return maxValueInGrams;
+          } else if (coffeeUnit == CoffeeUnit.tbps) {
+            /// grams to tbps conversion factor
+            return maxValueInGrams / 5;
+          } else {
+            /// grams to scoops conversion factor
+            return maxValueInGrams / 8.7;
+          }
+        }
       case ParameterType.waterAmount:
         {
           double maxValue;
@@ -107,9 +121,22 @@ class _VariablesValueSliderState extends State<VariablesValueSlider> {
               .grindInterval!,
         );
       case ParameterType.coffeeAmount:
-        return WeightSliderController(
-          initialWeight: _variablesSliderProvider.tempCoffeeAmount!,
-        );
+        {
+          double interval;
+          CoffeeUnit coffeeUnit =
+              Provider.of<AppSettingsProvider>(context, listen: false)
+                  .coffeeUnit!;
+          if (coffeeUnit == CoffeeUnit.gram) {
+            interval = 1.0;
+          } else {
+            interval = 0.1;
+          }
+          return WeightSliderController(
+            initialWeight: _variablesSliderProvider.tempCoffeeAmount!,
+            interval: interval,
+          );
+        }
+
       case ParameterType.waterAmount:
         {
           double interval;

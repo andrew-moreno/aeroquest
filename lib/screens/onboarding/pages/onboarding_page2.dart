@@ -1,5 +1,6 @@
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/providers/app_settings_provider.dart';
+import 'package:aeroquest/screens/app_settings/widgets/setting_types/coffee_unit_setting.dart';
 import 'package:aeroquest/screens/app_settings/widgets/setting_types/water_unit_setting.dart';
 import 'package:aeroquest/screens/app_settings/widgets/setting_types/temperature_unit_setting.dart';
 import 'package:aeroquest/screens/onboarding/pages/onboarding_page_template.dart';
@@ -33,27 +34,29 @@ class OnboardingPage2 extends StatelessWidget {
       ),
       bottomText:
           "Before getting started, please configure your AeroQuest units:",
-      bottomWidgets: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: const [
-            SettingsContainer(
-              title: "Temperature Unit",
-              setting: TemperatureUnitSetting(
-                initialTemperatureUnit: TemperatureUnit.celsius,
-                toggleType: ToggleType.vertical,
-              ),
+      bottomWidgets: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: const [
+          SettingsContainer(
+            title: "Temperature Unit",
+            setting: TemperatureUnitSetting(
+              initialTemperatureUnit: TemperatureUnit.celsius,
+              toggleType: ToggleType.horizontal,
             ),
-            SettingsContainer(
-              title: "Mass Unit",
-              setting: WaterUnitSetting(
-                initialWaterUnit: WaterUnit.gram,
-                toggleType: ToggleType.vertical,
-              ),
+          ),
+          SettingsContainer(
+            title: "Water Amount Unit",
+            setting: WaterUnitSetting(
+              initialWaterUnit: WaterUnit.gram,
+              toggleType: ToggleType.horizontal,
             ),
-          ],
-        ),
-      ],
+          ),
+          SettingsContainer(
+            title: "Coffee Amount Unit",
+            setting: CoffeeUnitSetting(),
+          ),
+        ],
+      ),
     );
   }
 }

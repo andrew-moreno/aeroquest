@@ -50,6 +50,17 @@ class _CoffeeUnitSettingState extends State<CoffeeUnitSetting> {
   }
 
   @override
+  void initState() {
+    if (Provider.of<AppSettingsProvider>(context, listen: false)
+            .tempCoffeeUnit ==
+        null) {
+      Provider.of<AppSettingsProvider>(context, listen: false).tempCoffeeUnit =
+          CoffeeUnit.gram;
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

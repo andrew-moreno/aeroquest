@@ -125,6 +125,14 @@ class _OnboardingNavigationState extends State<OnboardingNavigation> {
         context,
         listen: false,
       ).tempWaterUnit!));
+
+      Provider.of<AppSettingsProvider>(
+        context,
+        listen: false,
+      ).updateCoffeeUnit(describeEnum(Provider.of<AppSettingsProvider>(
+        context,
+        listen: false,
+      ).tempCoffeeUnit!));
     }
   }
 

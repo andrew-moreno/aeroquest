@@ -68,18 +68,20 @@ class OnboardingPage1 extends StatelessWidget {
         ),
       ),
       bottomText: "With AeroQuest, you can...",
-      bottomWidgets: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40.0),
-          child: ListView.separated(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemBuilder: (_, index) => TipsContainer(text: tips[index]),
-            separatorBuilder: (_, index) => const SizedBox(height: 25),
-            itemCount: tips.length,
-          ),
+      bottomWidgets: Padding(
+        padding: const EdgeInsets.only(
+          left: 40.0,
+          right: 40,
+          top: 20,
         ),
-      ],
+        child: ListView.separated(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemBuilder: (_, index) => TipsContainer(text: tips[index]),
+          separatorBuilder: (_, index) => const SizedBox(height: 25),
+          itemCount: tips.length,
+        ),
+      ),
     );
   }
 }
