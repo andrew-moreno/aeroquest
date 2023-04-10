@@ -494,6 +494,7 @@ class RecipesProvider extends ChangeNotifier {
       if (!containsKey) {
         /// Populate the recipe variable with a proper id from the database
         RecipeVariables newCoffeeVariablesData = RecipeVariables(
+          id: id,
           recipeEntryId: tempRecipeVariables[id]!.recipeEntryId,
           beanId: tempRecipeVariables[id]!.beanId,
           grindSetting: tempRecipeVariables[id]!.grindSetting,
@@ -624,6 +625,7 @@ class RecipesProvider extends ChangeNotifier {
       if (!containsKey) {
         /// Populate the recipe step with a proper id from the database
         RecipeStep newRecipeStep = RecipeStep(
+          id: id,
           recipeEntryId: tempRecipeSteps[id]!.recipeEntryId,
           time: tempRecipeSteps[id]!.time,
           text: tempRecipeSteps[id]!.text,
@@ -740,6 +742,7 @@ class RecipesProvider extends ChangeNotifier {
       if (!containsKey) {
         /// Populate the recipe note with a proper id from the database
         RecipeNote newRecipeNote = RecipeNote(
+          id: id,
           recipeEntryId: tempRecipeNotes[id]!.recipeEntryId,
           text: tempRecipeNotes[id]!.text,
         );
