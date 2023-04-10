@@ -36,22 +36,8 @@ class VariablesValueSlider extends StatefulWidget {
   /// Variable type to change for this slider
   final ParameterType parameterType;
 
-  @override
-  State<VariablesValueSlider> createState() => _VariablesValueSliderState();
-}
-
-class _VariablesValueSliderState extends State<VariablesValueSlider> {
-  late final VariablesSliderProvider _variablesSliderProvider;
-
-  @override
-  void initState() {
-    _variablesSliderProvider =
-        Provider.of<VariablesSliderProvider>(context, listen: false);
-    super.initState();
-  }
-
   /// Max possible value for each slider type
-  double _maxValue(ParameterType parameterType) {
+  static double maxValue(BuildContext context, ParameterType parameterType) {
     switch (parameterType) {
       case ParameterType.grindSetting:
         return 100;
@@ -67,20 +53,19 @@ class _VariablesValueSliderState extends State<VariablesValueSlider> {
             /// grams to tbps conversion factor
             return maxValueInGrams / 5;
           } else {
-            /// grams to scoops conversion factor
-            return maxValueInGrams / 8.7;
+            /// grams to scoops conversion factor (rounded down)
+            return maxValueInGrams / 10;
           }
         }
       case ParameterType.waterAmount:
         {
-          double maxValue;
+          double maxValue = 300;
           WaterUnit massUnit =
               Provider.of<AppSettingsProvider>(context, listen: false)
                   .waterUnit!;
-          if (massUnit == WaterUnit.gram) {
-            maxValue = 300;
-          } else {
-            maxValue = 300 / 28.34952;
+          if (massUnit == WaterUnit.ounce) {
+            /// grams to oz conversion rounded up
+            maxValue = 300 / 30;
           }
           return maxValue;
         }
@@ -94,21 +79,32 @@ class _VariablesValueSliderState extends State<VariablesValueSlider> {
           if (temperatureUnit == TemperatureUnit.celsius) {
             maxValue = 100;
           } else {
-            // Subtract 32 because idk why :(
             maxValue = 212 - 32;
           }
           return maxValue;
         }
+      case ParameterType.recipeStepTime:
       case ParameterType.brewTime:
         return 180; // 30 minutes
-      case ParameterType.recipeStepTime:
-        return 180;
       case ParameterType.none:
-
-        /// value doesnt matter but initial value of slider set to 50
-        /// must be greater than 50 plus space on screen
+        // value doesnt matter but initial value of slider set to 50
+        // must be greater than 50 plus space on screen
         return 100;
     }
+  }
+
+  @override
+  State<VariablesValueSlider> createState() => _VariablesValueSliderState();
+}
+
+class _VariablesValueSliderState extends State<VariablesValueSlider> {
+  late final VariablesSliderProvider _variablesSliderProvider;
+
+  @override
+  void initState() {
+    _variablesSliderProvider =
+        Provider.of<VariablesSliderProvider>(context, listen: false);
+    super.initState();
   }
 
   // initializing controllers for weight slider
@@ -198,7 +194,8 @@ class _VariablesValueSliderState extends State<VariablesValueSlider> {
         child: VerticalWeightSlider(
           disableScrolling: widget.disableScrolling,
           maxWidth: widget.maxWidth,
-          maxWeight: _maxValue(widget.parameterType),
+          maxWeight:
+              VariablesValueSlider.maxValue(context, widget.parameterType),
           height: 40,
           decoration: const PointerDecoration(
             width: 25.0,

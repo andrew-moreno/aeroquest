@@ -1,4 +1,6 @@
 import 'package:aeroquest/providers/app_settings_provider.dart';
+import 'package:aeroquest/screens/app_settings/widgets/setting_types/grind_interval_setting.dart';
+import 'package:aeroquest/widgets/custom_modal_sheet/variables_value_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:aeroquest/constraints.dart';
 import 'package:provider/provider.dart';
@@ -36,9 +38,17 @@ class _RecipeParameterValueState extends State<RecipeParameterValue> {
           double grindInterval =
               Provider.of<AppSettingsProvider>(context, listen: false)
                   .grindInterval!;
-          if (grindInterval == 1.0 || widget.parameterValue == 100) {
+          if (grindInterval == 1.0 ||
+              widget.parameterValue ==
+                  VariablesValueSlider.maxValue(
+                      context, widget.parameterType)) {
             decimalPlaces = 0;
-          } else if (grindInterval == 0.25 || grindInterval == 1 / 3) {
+          } else if (grindInterval ==
+                  GrindIntervalSetting.intervalValues
+                      .firstWhere((element) => element == 0.25) ||
+              grindInterval ==
+                  GrindIntervalSetting.intervalValues
+                      .firstWhere((element) => element == 1 / 3)) {
             decimalPlaces = 2;
           } else {
             decimalPlaces = 1;
@@ -52,7 +62,10 @@ class _RecipeParameterValueState extends State<RecipeParameterValue> {
           CoffeeUnit coffeeUnit =
               Provider.of<AppSettingsProvider>(context, listen: false)
                   .coffeeUnit!;
-          if (coffeeUnit == CoffeeUnit.gram) {
+          if (coffeeUnit == CoffeeUnit.gram ||
+              widget.parameterValue ==
+                  VariablesValueSlider.maxValue(
+                      context, widget.parameterType)) {
             fractionDigits = 0;
           } else {
             fractionDigits = 1;
@@ -65,7 +78,10 @@ class _RecipeParameterValueState extends State<RecipeParameterValue> {
           WaterUnit massUnit =
               Provider.of<AppSettingsProvider>(context, listen: false)
                   .waterUnit!;
-          if (massUnit == WaterUnit.gram) {
+          if (massUnit == WaterUnit.gram ||
+              widget.parameterValue ==
+                  VariablesValueSlider.maxValue(
+                      context, widget.parameterType)) {
             fractionDigits = 0;
           } else {
             fractionDigits = 1;

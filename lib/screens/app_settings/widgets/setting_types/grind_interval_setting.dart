@@ -7,34 +7,39 @@ class GrindIntervalSetting extends StatefulWidget {
   /// Defines the modal sheet used for editing the grind setting interval
   const GrindIntervalSetting({Key? key}) : super(key: key);
 
+  static const List<double> intervalValues = [0.1, 0.2, 0.25, 1 / 3, 0.5, 1.0];
+
   @override
   State<GrindIntervalSetting> createState() => _GrindIntervalSettingState();
 }
 
 class _GrindIntervalSettingState extends State<GrindIntervalSetting> {
   /// Possible grind interval values that can be set
-  static const List<double> _intervalValues = [0.1, 0.2, 0.25, 1 / 3, 0.5, 1.0];
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        for (int index = 0; index < _intervalValues.length; index++)
+        for (int index = 0;
+            index < GrindIntervalSetting.intervalValues.length;
+            index++)
           ModalValueContainer(
             child: Text(
-              AppSettingsProvider.getGrindIntervalText(_intervalValues[index]),
+              AppSettingsProvider.getGrindIntervalText(
+                  GrindIntervalSetting.intervalValues[index]),
               style: Theme.of(context).textTheme.bodyText1,
             ),
             onTap: () {
               Provider.of<AppSettingsProvider>(context, listen: false)
-                  .tempGrindInterval = _intervalValues[index];
+                      .tempGrindInterval =
+                  GrindIntervalSetting.intervalValues[index];
               setState(() {});
             },
             displayBorder:
                 Provider.of<AppSettingsProvider>(context, listen: false)
                         .tempGrindInterval ==
-                    _intervalValues[index],
+                    GrindIntervalSetting.intervalValues[index],
           )
       ],
     );
