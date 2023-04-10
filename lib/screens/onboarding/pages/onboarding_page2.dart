@@ -13,24 +13,10 @@ class OnboardingPage2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OnboardingPageTemplate(
-      background: Column(
-        children: [
-          Expanded(
-            flex: kOnboardingTopFlex,
-            child: Container(),
-          ),
-          Expanded(
-            flex: kOnboardingBottomFlex,
-            child: Container(
-              color: kDarkSecondary,
-            ),
-          ),
-        ],
-      ),
       title: Container(),
-      description: Image.asset(
-        "assets/images/light_icon.png",
-        scale: 2.9,
+      description: Expanded(
+        flex: kOnboardingTopFlex,
+        child: Image.asset("assets/images/light_icon.png"),
       ),
       bottomText:
           "Before getting started, please configure your AeroQuest units:",

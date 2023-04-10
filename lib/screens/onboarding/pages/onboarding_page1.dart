@@ -16,20 +16,6 @@ class OnboardingPage1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OnboardingPageTemplate(
-      background: Column(
-        children: [
-          Expanded(
-            flex: kOnboardingTopFlex,
-            child: Container(),
-          ),
-          Expanded(
-            flex: kOnboardingBottomFlex,
-            child: Container(
-              color: kDarkSecondary,
-            ),
-          ),
-        ],
-      ),
       title: Column(
         children: const [
           Text(

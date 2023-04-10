@@ -21,39 +21,17 @@ class Onboarding extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Stack(
+        child: Column(
           children: [
-            Column(
-              children: [
-                Expanded(
-                  child: PageView(
-                    controller: controller,
-                    physics: const NeverScrollableScrollPhysics(),
-                    children: [
-                      Stack(
-                        children: [
-                          Column(
-                            children: [
-                              Expanded(
-                                flex: kOnboardingTopFlex,
-                                child: Container(),
-                              ),
-                              Expanded(
-                                flex: kOnboardingBottomFlex,
-                                child: Container(
-                                  color: kDarkSecondary,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const OnboardingPage1(),
-                        ],
-                      ),
-                      const OnboardingPage2(),
-                    ],
-                  ),
-                ),
-              ],
+            Expanded(
+              child: PageView(
+                controller: controller,
+                physics: const NeverScrollableScrollPhysics(),
+                children: const [
+                  OnboardingPage1(),
+                  OnboardingPage2(),
+                ],
+              ),
             ),
             OnboardingNavigation(controller: controller),
           ],
@@ -143,6 +121,7 @@ class _OnboardingNavigationState extends State<OnboardingNavigation> {
       foregroundColor: kLightSecondary,
     );
     return Container(
+      color: kDarkSecondary,
       alignment: Alignment.bottomCenter,
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
