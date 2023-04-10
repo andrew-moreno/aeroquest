@@ -35,7 +35,7 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
           AppBarButton(
             onTap: () {
               showCustomCoffeeBeanModalSheet(
-                submitAction: () {
+                submitAction: () async {
                   if (!_formKey.currentState!.validate()) {
                     return;
                   }
@@ -43,7 +43,7 @@ class _CoffeeBeansState extends State<CoffeeBeans> {
                       _formKey.currentState!.fields["beanName"]!.value;
                   String? description =
                       _formKey.currentState!.fields["description"]?.value;
-                  Provider.of<CoffeeBeanProvider>(context, listen: false)
+                  await Provider.of<CoffeeBeanProvider>(context, listen: false)
                       .addBean(beanName, description);
                   Navigator.of(context).pop();
                 },

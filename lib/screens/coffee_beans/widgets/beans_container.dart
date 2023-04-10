@@ -59,14 +59,15 @@ class BeansContainer extends StatelessWidget {
         ),
         onTap: () {
           showCustomCoffeeBeanModalSheet(
-            submitAction: () {
+            submitAction: () async {
               if (!formKey.currentState!.validate()) {
                 return;
               }
               String beanName = formKey.currentState!.fields["beanName"]!.value;
               String? description =
                   formKey.currentState!.fields["description"]?.value;
-              Provider.of<CoffeeBeanProvider>(context, listen: false).editBean(
+              await Provider.of<CoffeeBeanProvider>(context, listen: false)
+                  .editBean(
                 beanData.id!,
                 beanName,
                 description,

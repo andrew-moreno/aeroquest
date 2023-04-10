@@ -1,10 +1,8 @@
 import 'package:aeroquest/providers/variables_slider_provider.dart';
-import 'package:aeroquest/screens/coffee_beans/coffee_beans.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details.dart';
 import 'package:aeroquest/widgets/add_to_recipe_button.dart';
 import 'package:aeroquest/widgets/custom_modal_sheet/value_slider_group_template.dart';
 import 'package:aeroquest/widgets/empty_details_text.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 import 'dart:core';
 
@@ -31,9 +29,6 @@ class BeanVariablesGroup extends StatefulWidget {
 }
 
 class _BeanVariablesGroupState extends State<BeanVariablesGroup> {
-  /// Form key used for validation in the modal sheet
-  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
-
   late final _recipesProvider =
       Provider.of<RecipesProvider>(context, listen: false);
 
@@ -48,49 +43,49 @@ class _BeanVariablesGroupState extends State<BeanVariablesGroup> {
   /// If no coffee beans have been added, displays a snackbar that notifies the
   /// user and lets them add a coffee bean from the RecipeDetails page.
   /// Otherwise, opens the modal sheet for adding recipe variables
-  void selectAddVariablesMode() {
-    if (_recipesProvider.coffeeBeans.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text(
-            "Add a coffee bean first!",
-            style: TextStyle(
-              fontFamily: "Poppins",
-              fontWeight: FontWeight.w500,
-              color: kPrimary,
-            ),
-          ),
-          backgroundColor: kLightSecondary,
-          elevation: 10,
-          action: SnackBarAction(
-            label: "Add",
-            textColor: kAccent,
-            onPressed: () {
-              showCustomCoffeeBeanModalSheet(
-                submitAction: () async {
-                  if (!_formKey.currentState!.validate()) {
-                    return;
-                  }
-                  String beanName =
-                      _formKey.currentState!.fields["beanName"]!.value;
-                  String? description =
-                      _formKey.currentState!.fields["description"]?.value;
-                  _recipesProvider.addBean(beanName, description);
-                  Navigator.of(context).pop();
-                  showAddModal();
-                },
-                autoFocusTitleField: true,
-                context: context,
-                formKey: _formKey,
-              );
-            },
-          ),
-        ),
-      );
-    } else {
-      showAddModal();
-    }
-  }
+  // void selectAddVariablesMode() {
+  //   if (_recipesProvider.coffeeBeans.isEmpty) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: const Text(
+  //           "Add a coffee bean first!",
+  //           style: TextStyle(
+  //             fontFamily: "Poppins",
+  //             fontWeight: FontWeight.w500,
+  //             color: kPrimary,
+  //           ),
+  //         ),
+  //         backgroundColor: kLightSecondary,
+  //         elevation: 10,
+  //         action: SnackBarAction(
+  //           label: "Add",
+  //           textColor: kAccent,
+  //           onPressed: () {
+  //             showCustomCoffeeBeanModalSheet(
+  //               submitAction: () async {
+  //                 if (!_formKey.currentState!.validate()) {
+  //                   return;
+  //                 }
+  //                 String beanName =
+  //                     _formKey.currentState!.fields["beanName"]!.value;
+  //                 String? description =
+  //                     _formKey.currentState!.fields["description"]?.value;
+  //                 _recipesProvider.addBean(beanName, description);
+  //                 Navigator.of(context).pop();
+  //                 showAddModal();
+  //               },
+  //               autoFocusTitleField: true,
+  //               context: context,
+  //               formKey: _formKey,
+  //             );
+  //           },
+  //         ),
+  //       ),
+  //     );
+  //   } else {
+  //     showAddModal();
+  //   }
+  // }
 
   /// Displays the modal sheet for adding recipe variables
   void showAddModal({RecipeVariables? recipeVariablesData}) {
@@ -222,7 +217,7 @@ class _BeanVariablesGroupState extends State<BeanVariablesGroup> {
               child: (_recipesProvider.editMode == EditMode.enabled)
                   ? AddToRecipeButton(
                       buttonText: "Add Variable Set",
-                      onTap: selectAddVariablesMode,
+                      onTap: showAddModal,
                     )
                   : Container(),
             ),
