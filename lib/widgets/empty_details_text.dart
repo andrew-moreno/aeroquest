@@ -21,14 +21,24 @@ class EmptyDetailsText extends StatelessWidget {
     }
   }
 
+  String _titleText(dataType) {
+    if (dataType == RecipeDetailsText.variable) {
+      return describeEnum(dataType)[0].toUpperCase() +
+          describeEnum(dataType).substring(1).toLowerCase() +
+          " Sets";
+    } else {
+      return describeEnum(dataType)[0].toUpperCase() +
+          describeEnum(dataType).substring(1).toLowerCase() +
+          "s";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    String capitalizedData = describeEnum(dataType)[0].toUpperCase() +
-        describeEnum(dataType).substring(1).toLowerCase();
     return Column(
       children: [
         Text(
-          "No ${capitalizedData}s Added",
+          "No ${_titleText(dataType)} Added",
           textAlign: TextAlign.center,
           style: const TextStyle(
             color: kLightSecondary,

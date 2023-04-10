@@ -35,7 +35,7 @@ class BeansContainer extends StatelessWidget {
         builder: (context) => CustomDialog(
           titleText: "Delete Associated Variables?",
           description:
-              "This bean is associated with existing recipe variables. Do you want to delete these variables as well?",
+              "This bean is associated with existing recipe variable sets. Do you want to delete these variable sets as well?",
           leftAction: () => Navigator.of(context).pop(false),
           rightAction: () {
             Provider.of<CoffeeBeanProvider>(context, listen: false).deleteBean(

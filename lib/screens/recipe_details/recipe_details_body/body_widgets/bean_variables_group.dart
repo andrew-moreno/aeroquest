@@ -217,13 +217,15 @@ class _BeanVariablesGroupState extends State<BeanVariablesGroup> {
                     },
                   )
                 : const EmptyDetailsText(dataType: RecipeDetailsText.variable),
-            const SizedBox(height: 20),
-            (_recipesProvider.editMode == EditMode.enabled)
-                ? AddToRecipeButton(
-                    buttonText: "Add Variables",
-                    onTap: selectAddVariablesMode,
-                  )
-                : Container(),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20.0),
+              child: (_recipesProvider.editMode == EditMode.enabled)
+                  ? AddToRecipeButton(
+                      buttonText: "Add Variable Set",
+                      onTap: selectAddVariablesMode,
+                    )
+                  : Container(),
+            ),
           ],
         );
       },
