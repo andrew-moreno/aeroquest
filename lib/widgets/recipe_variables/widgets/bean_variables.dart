@@ -1,10 +1,10 @@
 import 'package:aeroquest/providers/recipes_provider.dart';
-import 'package:flutter/material.dart';
-
 import 'package:aeroquest/models/recipe_variables.dart';
 import 'package:aeroquest/widgets/recipe_parameters_value.dart';
 import 'package:aeroquest/constraints.dart';
+
 import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
 
 class BeanVariables extends StatelessWidget {
   /// Defines the widget used to display recipe variables for a single

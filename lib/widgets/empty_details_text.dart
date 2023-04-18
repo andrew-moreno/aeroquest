@@ -1,4 +1,5 @@
 import 'package:aeroquest/constraints.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -63,6 +64,8 @@ class EmptyDetailsText extends StatelessWidget {
   }
 }
 
+/// Describes the possible types of text values that can be displayed on the
+/// RecipeDetails page
 enum RecipeDetailsText {
   variable,
   step,

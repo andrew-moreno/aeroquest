@@ -5,6 +5,7 @@ import 'package:aeroquest/screens/app_settings/widgets/setting_types/water_unit_
 import 'package:aeroquest/screens/app_settings/widgets/setting_types/temperature_unit_setting.dart';
 import 'package:aeroquest/screens/onboarding/pages/onboarding_page_template.dart';
 import 'package:aeroquest/widgets/animated_toggle.dart';
+
 import "package:flutter/material.dart";
 
 class OnboardingPage2 extends StatelessWidget {
@@ -48,6 +49,7 @@ class OnboardingPage2 extends StatelessWidget {
 }
 
 class SettingsContainer extends StatelessWidget {
+  /// Defines the widget to display a setting widget with title text
   const SettingsContainer({
     Key? key,
     required this.title,
@@ -55,8 +57,13 @@ class SettingsContainer extends StatelessWidget {
     required this.setting,
   }) : super(key: key);
 
+  /// Title to display above the setting widget
   final String title;
+
+  /// Description to display above the setting widget
   final String? description;
+
+  /// Setting editor
   final Widget setting;
 
   @override

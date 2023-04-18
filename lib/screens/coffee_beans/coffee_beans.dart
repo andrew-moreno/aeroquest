@@ -1,7 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:provider/provider.dart';
-
 import 'package:aeroquest/screens/coffee_beans/widgets/beans_container.dart';
 import 'package:aeroquest/screens/coffee_beans/widgets/custom_beans_modal_sheet.dart';
 import 'package:aeroquest/widgets/appbar/appbar_button.dart';
@@ -10,6 +6,10 @@ import 'package:aeroquest/widgets/appbar/appbar_text.dart';
 import 'package:aeroquest/widgets/custom_drawer.dart';
 import 'package:aeroquest/providers/coffee_bean_provider.dart';
 import 'package:aeroquest/constraints.dart';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:provider/provider.dart';
 
 class CoffeeBeans extends StatefulWidget {
   /// The screen used for displaying all coffee beans

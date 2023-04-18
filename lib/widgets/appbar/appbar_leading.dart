@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-
 import 'package:aeroquest/constraints.dart';
+
+import 'package:flutter/material.dart';
 
 class AppBarLeading extends StatelessWidget {
   /// Defines the widget used for the leading button in the app bar
@@ -33,6 +33,8 @@ class AppBarLeading extends StatelessWidget {
   }
 }
 
+/// Describes the possible functions that can be executed by a user on the
+/// left side of the app bar
 enum LeadingFunction {
   menu,
   back,

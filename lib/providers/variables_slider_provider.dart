@@ -1,5 +1,6 @@
 import 'package:aeroquest/models/recipe_variables.dart';
 import 'package:aeroquest/widgets/recipe_parameters_value.dart';
+
 import 'package:flutter/material.dart';
 
 class VariablesSliderProvider extends ChangeNotifier {

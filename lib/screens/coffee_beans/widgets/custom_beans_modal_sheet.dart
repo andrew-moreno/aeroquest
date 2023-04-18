@@ -1,10 +1,11 @@
 import 'package:aeroquest/widgets/custom_form_field.dart';
+import 'package:aeroquest/widgets/custom_button.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
-import 'package:aeroquest/widgets/custom_button.dart';
-
 class CustomBeansModalSheet extends StatelessWidget {
+  /// Defines the modal sheet used to edit coffee beans
   const CustomBeansModalSheet({
     Key? key,
     required this.formKey,

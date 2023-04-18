@@ -1,20 +1,30 @@
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/widgets/card_header.dart';
 import 'package:aeroquest/widgets/custom_card.dart';
+
 import 'package:flutter/material.dart';
 
 class SettingCard extends StatelessWidget {
+  /// Defines the widget used for displaying information about the various
+  /// settings
   const SettingCard({
     Key? key,
-    required this.text,
+    required this.settingValue,
     required this.onTap,
     required this.title,
     required this.description,
   }) : super(key: key);
 
-  final String text;
+  /// Current value that is set for the respective setting
+  final String settingValue;
+
+  /// Function to execute when pressing the card
   final void Function() onTap;
+
+  /// Title to be displayed in the card
   final String title;
+
+  /// Description to be displayed in the card
   final String description;
 
   @override
@@ -36,7 +46,7 @@ class SettingCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(kCornerRadius),
                 boxShadow: [kBoxShadow],
               ),
-              child: Text(text,
+              child: Text(settingValue,
                   style: Theme.of(context)
                       .textTheme
                       .bodyText1!

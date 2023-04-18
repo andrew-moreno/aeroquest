@@ -3,16 +3,15 @@ import 'package:aeroquest/providers/app_settings_provider.dart';
 import 'package:aeroquest/providers/variables_slider_provider.dart';
 import 'package:aeroquest/screens/app_settings/app_settings.dart';
 import 'package:aeroquest/screens/onboarding/onboarding.dart';
-import 'package:control_style/decorated_input_border.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter/material.dart';
-
 import 'package:aeroquest/providers/coffee_bean_provider.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
-import 'package:aeroquest/screens/about_aeroquest/about_aeroquest.dart';
 import 'package:aeroquest/screens/coffee_beans/coffee_beans.dart';
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/screens/recipes/recipes.dart';
+
+import 'package:control_style/decorated_input_border.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   runApp(const MyApp());
@@ -160,7 +159,6 @@ class MyApp extends StatelessWidget {
               return null;
             },
             routes: {
-              AboutAeroquest.routeName: (ctx) => const AboutAeroquest(),
               Onboarding.routeName: (ctx) => Onboarding(),
             },
           );

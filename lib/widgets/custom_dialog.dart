@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/widgets/custom_button.dart';
+
+import 'package:flutter/material.dart';
 
 class CustomDialog extends StatelessWidget {
   /// Defines the widget used for a dialog box

@@ -1,8 +1,8 @@
 import 'package:aeroquest/providers/app_settings_provider.dart';
 import 'package:aeroquest/screens/app_settings/widgets/app_settings_modal_sheet.dart';
 import 'package:aeroquest/screens/app_settings/widgets/setting_types/grind_interval_setting.dart';
-import 'package:flutter/material.dart';
 
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class GrindIntervalModalSheet extends StatefulWidget {

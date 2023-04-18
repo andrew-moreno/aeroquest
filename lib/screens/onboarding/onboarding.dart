@@ -3,6 +3,7 @@ import 'package:aeroquest/providers/app_settings_provider.dart';
 import 'package:aeroquest/screens/onboarding/pages/onboarding_page1.dart';
 import 'package:aeroquest/screens/onboarding/pages/onboarding_page2.dart';
 import 'package:aeroquest/screens/recipes/recipes.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

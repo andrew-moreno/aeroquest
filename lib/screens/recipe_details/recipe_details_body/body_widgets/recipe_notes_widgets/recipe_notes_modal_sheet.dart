@@ -1,11 +1,11 @@
 import 'package:aeroquest/models/recipe_note.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/widgets/custom_form_field.dart';
-import 'package:flutter/material.dart';
-
 import 'package:aeroquest/widgets/custom_button.dart';
+
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
 
 class RecipeNotesModalSheet extends StatefulWidget {
   /// Defines the modal sheet used for editing recipe variables

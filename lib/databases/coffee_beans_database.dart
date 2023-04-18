@@ -1,6 +1,7 @@
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:aeroquest/models/coffee_bean.dart';
+
+import 'package:path/path.dart' show join;
+import 'package:sqflite/sqflite.dart';
 
 class CoffeeBeansDatabase {
   static final CoffeeBeansDatabase instance = CoffeeBeansDatabase._init();

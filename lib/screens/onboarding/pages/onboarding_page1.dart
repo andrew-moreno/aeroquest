@@ -1,5 +1,6 @@
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/screens/onboarding/pages/onboarding_page_template.dart';
+
 import "package:flutter/material.dart";
 
 class OnboardingPage1 extends StatelessWidget {
@@ -109,27 +110,5 @@ class TipsContainer extends StatelessWidget {
         ],
       ),
     );
-
-    /// TipsContainer using coloured rounded rectangle
-
-    // return Container(
-    //   padding: const EdgeInsets.symmetric(
-    //     vertical: 8,
-    //     horizontal: 15,
-    //   ),
-    //   // decoration: BoxDecoration(
-    //   //   color: kLightSecondary,
-    //   //   borderRadius: BorderRadius.circular(kCornerRadius),
-    //   // ),
-    //   child: Text(
-    //     text,
-    //     style: const TextStyle(
-    //       fontFamily: "Poppins",
-    //       fontSize: 13,
-    //       fontWeight: FontWeight.w500,
-    //       color: kPrimary,
-    //     ),
-    //   ),
-    // );
   }
 }

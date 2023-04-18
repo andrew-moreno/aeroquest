@@ -1,10 +1,10 @@
 import 'package:aeroquest/models/recipe_variables.dart';
+import 'package:aeroquest/widgets/recipe_variables/widgets/bean_variables.dart';
+import 'package:aeroquest/constraints.dart';
+
 import 'package:flutter/material.dart';
 import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
-import 'package:aeroquest/widgets/recipe_variables/widgets/bean_variables.dart';
-import 'package:aeroquest/constraints.dart';
 
 class RecipeVariablesContainer extends StatelessWidget {
   /// Defines the widget that contains the recipe variables per coffee bean

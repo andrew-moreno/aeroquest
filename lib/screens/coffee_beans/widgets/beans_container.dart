@@ -3,11 +3,11 @@ import 'package:aeroquest/providers/coffee_bean_provider.dart';
 import 'package:aeroquest/widgets/card_header.dart';
 import 'package:aeroquest/widgets/custom_card.dart';
 import 'package:aeroquest/widgets/custom_dialog.dart';
+import 'package:aeroquest/screens/coffee_beans/coffee_beans.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
-
-import '../coffee_beans.dart';
 
 class BeansContainer extends StatelessWidget {
   /// Container for each coffee bean entry

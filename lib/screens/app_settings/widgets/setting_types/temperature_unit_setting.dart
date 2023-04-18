@@ -1,7 +1,7 @@
 import 'package:aeroquest/providers/app_settings_provider.dart';
 import 'package:aeroquest/widgets/animated_toggle.dart';
-import 'package:flutter/material.dart';
 
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class TemperatureUnitSetting extends StatefulWidget {

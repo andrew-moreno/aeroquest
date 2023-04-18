@@ -1,7 +1,9 @@
 import 'package:aeroquest/constraints.dart';
+
 import "package:flutter/material.dart";
 
 class OnboardingPageTemplate extends StatelessWidget {
+  /// Template used to build an onboarding page
   const OnboardingPageTemplate({
     Key? key,
     required this.title,
@@ -27,6 +29,7 @@ class OnboardingPageTemplate extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        /// Top section of page
         Expanded(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -38,6 +41,8 @@ class OnboardingPageTemplate extends StatelessWidget {
             ],
           ),
         ),
+
+        /// Bottom section of page
         Container(
           height: 320,
           color: kDarkSecondary,

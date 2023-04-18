@@ -1,10 +1,11 @@
 import 'dart:collection';
 import 'dart:developer';
+
 import 'package:aeroquest/databases/coffee_beans_database.dart';
 import 'package:aeroquest/databases/recipe_variables_database.dart';
-import 'package:flutter/material.dart';
-
 import 'package:aeroquest/models/coffee_bean.dart';
+
+import 'package:flutter/material.dart';
 
 class CoffeeBeanProvider extends ChangeNotifier {
   /// Holds up to date information on the coffee beans in the coffee beans

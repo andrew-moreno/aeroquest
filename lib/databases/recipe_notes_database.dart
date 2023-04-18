@@ -1,8 +1,8 @@
-import 'dart:collection';
-
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:aeroquest/models/recipe_note.dart';
+
+import 'dart:collection' show SplayTreeMap;
+import 'package:path/path.dart' show join;
+import 'package:sqflite/sqflite.dart';
 
 class RecipeNotesDatabase {
   static final RecipeNotesDatabase instance = RecipeNotesDatabase._init();

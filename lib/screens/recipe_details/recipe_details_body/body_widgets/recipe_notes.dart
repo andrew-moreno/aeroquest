@@ -5,9 +5,9 @@ import 'package:aeroquest/screens/recipe_details/recipe_details.dart';
 import 'package:aeroquest/widgets/add_to_recipe_button.dart';
 import 'package:aeroquest/widgets/custom_modal_sheet/value_slider_group_template.dart';
 import 'package:aeroquest/widgets/empty_details_text.dart';
-import 'package:flutter/material.dart';
-
 import 'package:aeroquest/constraints.dart';
+
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class RecipeNotes extends StatefulWidget {

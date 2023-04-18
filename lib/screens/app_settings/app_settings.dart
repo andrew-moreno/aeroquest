@@ -11,6 +11,7 @@ import 'package:aeroquest/screens/app_settings/widgets/setting_types/water_unit_
 import 'package:aeroquest/widgets/appbar/appbar_leading.dart';
 import 'package:aeroquest/widgets/appbar/appbar_text.dart';
 import 'package:aeroquest/widgets/custom_drawer.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -90,7 +91,8 @@ class _AppSettingsState extends State<AppSettings> {
               selector: (_, provider) => provider.grindInterval!,
               builder: (_, grindInterval, __) {
                 return SettingCard(
-                  text: AppSettingsProvider.getGrindIntervalText(grindInterval),
+                  settingValue:
+                      AppSettingsProvider.getGrindIntervalText(grindInterval),
                   onTap: () => showModalSheet(
                     context: context,
                     modalContent: GrindIntervalModalSheet(
@@ -112,7 +114,7 @@ class _AppSettingsState extends State<AppSettings> {
               selector: (_, provider) => provider.temperatureUnit!,
               builder: (_, temperatureUnit, __) {
                 return SettingCard(
-                  text: _temperatureUnitTextSelector(temperatureUnit),
+                  settingValue: _temperatureUnitTextSelector(temperatureUnit),
                   onTap: () => showModalSheet(
                     context: context,
                     modalContent: TemperatureUnitModalSheet(
@@ -132,7 +134,7 @@ class _AppSettingsState extends State<AppSettings> {
               selector: (_, provider) => provider.waterUnit!,
               builder: (_, waterUnit, __) {
                 return SettingCard(
-                  text: _waterUnitTextSelector(waterUnit),
+                  settingValue: _waterUnitTextSelector(waterUnit),
                   onTap: () => showModalSheet(
                     context: context,
                     modalContent: WaterUnitModalSheet(
@@ -152,7 +154,7 @@ class _AppSettingsState extends State<AppSettings> {
               selector: (_, provider) => provider.coffeeUnit!,
               builder: (_, coffeeUnit, __) {
                 return SettingCard(
-                  text: _coffeeUnitTextSelector(coffeeUnit),
+                  settingValue: _coffeeUnitTextSelector(coffeeUnit),
                   onTap: () => showModalSheet(
                     context: context,
                     modalContent: CoffeeUnitModalSheet(

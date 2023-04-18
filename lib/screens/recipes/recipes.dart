@@ -2,9 +2,6 @@ import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/providers/app_settings_provider.dart';
 import 'package:aeroquest/providers/coffee_bean_provider.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter/material.dart';
-
 import 'package:aeroquest/widgets/appbar/appbar_button.dart';
 import 'package:aeroquest/widgets/appbar/appbar_leading.dart';
 import 'package:aeroquest/widgets/appbar/appbar_text.dart';
@@ -12,6 +9,9 @@ import 'package:aeroquest/screens/recipes/widgets/recipe_card.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/widgets/custom_drawer.dart';
 import 'package:aeroquest/widgets/custom_dialog.dart';
+
+import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
 
 class Recipes extends StatefulWidget {
   /// Defines the screen for displaying all recipes

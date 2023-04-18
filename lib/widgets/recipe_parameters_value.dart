@@ -1,9 +1,10 @@
 import 'package:aeroquest/providers/app_settings_provider.dart';
 import 'package:aeroquest/screens/app_settings/widgets/setting_types/grind_interval_setting.dart';
 import 'package:aeroquest/widgets/custom_modal_sheet/variables_value_slider.dart';
-import 'package:flutter/material.dart';
 import 'package:aeroquest/constraints.dart';
+
 import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
 
 class RecipeParameterValue extends StatefulWidget {
   /// Defines the widget for displaying recipe variable values

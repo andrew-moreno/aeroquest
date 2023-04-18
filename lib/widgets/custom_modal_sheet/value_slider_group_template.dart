@@ -1,10 +1,10 @@
 import 'package:aeroquest/widgets/custom_modal_sheet/modal_slider_value.dart';
 import 'package:aeroquest/widgets/custom_modal_sheet/variables_value_slider.dart';
 import 'package:aeroquest/widgets/recipe_parameters_value.dart';
+import 'package:aeroquest/providers/recipes_provider.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import 'package:aeroquest/providers/recipes_provider.dart';
 
 class ValueSliderGroupTemplate extends StatelessWidget {
   /// Defines the widget that contains all sliders and slider values

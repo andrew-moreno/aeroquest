@@ -7,16 +7,16 @@ import 'package:aeroquest/databases/recipe_steps_database.dart';
 import 'package:aeroquest/models/coffee_bean.dart';
 import 'package:aeroquest/models/recipe_note.dart';
 import 'package:aeroquest/models/recipe_step.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import "package:collection/collection.dart";
-
 import 'package:aeroquest/widgets/recipe_parameters_value.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:aeroquest/databases/recipe_variables_database.dart';
 import 'package:aeroquest/databases/recipes_database.dart';
 import 'package:aeroquest/models/recipe.dart';
-import '../models/recipe_variables.dart';
+import 'package:aeroquest/models/recipe_variables.dart';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import "package:collection/collection.dart";
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 class RecipesProvider extends ChangeNotifier {
   /// Reflects recipe information from the recipes database, mapped by recipe
@@ -801,6 +801,7 @@ class RecipesProvider extends ChangeNotifier {
   }
 }
 
+/// Describes the different editing modes
 enum EditMode { enabled, disabled }
 
 /// Possible edits that can be made to the AssociatedVariablesCount property

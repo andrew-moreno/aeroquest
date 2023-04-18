@@ -2,9 +2,9 @@ import 'package:aeroquest/providers/app_settings_provider.dart';
 import 'package:aeroquest/screens/app_settings/widgets/app_settings_modal_sheet.dart';
 import 'package:aeroquest/screens/app_settings/widgets/setting_types/water_unit_setting.dart';
 import 'package:aeroquest/widgets/animated_toggle.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 import 'package:provider/provider.dart';
 
 class WaterUnitModalSheet extends StatefulWidget {

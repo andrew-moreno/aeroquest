@@ -3,6 +3,7 @@ import 'package:aeroquest/providers/app_settings_provider.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/providers/variables_slider_provider.dart';
 import 'package:aeroquest/widgets/recipe_parameters_value.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vertical_weight_slider/vertical_weight_slider.dart';

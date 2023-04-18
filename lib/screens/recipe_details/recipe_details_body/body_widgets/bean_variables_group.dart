@@ -32,6 +32,8 @@ class _BeanVariablesGroupState extends State<BeanVariablesGroup> {
   late final _recipesProvider =
       Provider.of<RecipesProvider>(context, listen: false);
 
+  /// Function to select which recipe variable data to display based on
+  /// whether the editing mode is enabled or disabled
   Map<int, RecipeVariables> selectRecipeVariablesData() {
     if (_recipesProvider.editMode == EditMode.enabled) {
       return _recipesProvider.tempRecipeVariables;
@@ -39,53 +41,6 @@ class _BeanVariablesGroupState extends State<BeanVariablesGroup> {
       return _recipesProvider.recipeVariables[widget.recipeEntryId] ?? {};
     }
   }
-
-  /// If no coffee beans have been added, displays a snackbar that notifies the
-  /// user and lets them add a coffee bean from the RecipeDetails page.
-  /// Otherwise, opens the modal sheet for adding recipe variables
-  // void selectAddVariablesMode() {
-  //   if (_recipesProvider.coffeeBeans.isEmpty) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: const Text(
-  //           "Add a coffee bean first!",
-  //           style: TextStyle(
-  //             fontFamily: "Poppins",
-  //             fontWeight: FontWeight.w500,
-  //             color: kPrimary,
-  //           ),
-  //         ),
-  //         backgroundColor: kLightSecondary,
-  //         elevation: 10,
-  //         action: SnackBarAction(
-  //           label: "Add",
-  //           textColor: kAccent,
-  //           onPressed: () {
-  //             showCustomCoffeeBeanModalSheet(
-  //               submitAction: () async {
-  //                 if (!_formKey.currentState!.validate()) {
-  //                   return;
-  //                 }
-  //                 String beanName =
-  //                     _formKey.currentState!.fields["beanName"]!.value;
-  //                 String? description =
-  //                     _formKey.currentState!.fields["description"]?.value;
-  //                 _recipesProvider.addBean(beanName, description);
-  //                 Navigator.of(context).pop();
-  //                 showAddModal();
-  //               },
-  //               autoFocusTitleField: true,
-  //               context: context,
-  //               formKey: _formKey,
-  //             );
-  //           },
-  //         ),
-  //       ),
-  //     );
-  //   } else {
-  //     showAddModal();
-  //   }
-  // }
 
   /// Displays the modal sheet for adding recipe variables
   void showAddModal({RecipeVariables? recipeVariablesData}) {

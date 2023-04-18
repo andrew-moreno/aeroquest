@@ -15,7 +15,8 @@ class AppSettingsProvider extends ChangeNotifier {
 
   /// Name of the water amount unit setting in the Shared Preferences db
   ///
-  /// Stores the water amount unit settings as a string representation of [WaterUnit]
+  /// Stores the water amount unit settings as a string representation of
+  /// [WaterUnit]
   static const waterUnitPref = "waterUnit";
 
   /// Name of the coffee amount unit setting in the Shared Preferences db
@@ -98,8 +99,9 @@ class AppSettingsProvider extends ChangeNotifier {
   ///
   /// If no value is set, returns 1 as the default value
   Future<double> getGrindInterval() async {
+    double defaultGrindSetting = 1;
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getDouble(grindIntervalPref) ?? 1;
+    return prefs.getDouble(grindIntervalPref) ?? defaultGrindSetting;
   }
 
   /// Sets [grindInterval] to the current grind interval in the Shared
@@ -210,8 +212,11 @@ class AppSettingsProvider extends ChangeNotifier {
   }
 }
 
+/// Enum for describing the possible temperature unit settings
 enum TemperatureUnit { celsius, fahrenheit }
 
+/// Enum for describing the possible water amount unit settings
 enum WaterUnit { gram, ounce }
 
+/// Enum for describing the possible coffee amount unit settings
 enum CoffeeUnit { gram, tbps, scoop }

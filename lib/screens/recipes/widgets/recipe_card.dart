@@ -1,13 +1,13 @@
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/widgets/custom_card.dart';
 import 'package:aeroquest/widgets/recipe_variables/recipe_variables_container.dart';
-import 'package:flutter/material.dart';
-
 import 'package:aeroquest/widgets/card_header.dart';
 import 'package:aeroquest/models/recipe_variables.dart';
 import 'package:aeroquest/models/recipe.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details.dart';
+
 import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
 
 class RecipeCard extends StatelessWidget {
   /// Defines the widget for displaying individual recipes

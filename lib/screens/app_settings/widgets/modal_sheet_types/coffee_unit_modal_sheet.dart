@@ -1,9 +1,9 @@
 import 'package:aeroquest/providers/app_settings_provider.dart';
 import 'package:aeroquest/screens/app_settings/widgets/app_settings_modal_sheet.dart';
 import 'package:aeroquest/screens/app_settings/widgets/setting_types/coffee_unit_setting.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 import 'package:provider/provider.dart';
 
 class CoffeeUnitModalSheet extends StatefulWidget {

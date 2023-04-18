@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
+
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AppBarButton extends StatelessWidget {
   /// Defines the widget used for buttons in the app bar

@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
-
 import 'package:aeroquest/constraints.dart';
 
-// header includes title, description, and edit button
+import 'package:flutter/material.dart';
+
 class CardHeader extends StatelessWidget {
   /// Defines the widget for painting the title and description of a
   /// recipe card or a coffee bean card

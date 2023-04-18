@@ -8,18 +8,17 @@ import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widget
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/recipe_notes_widgets/recipe_notes_modal_sheet.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_header.dart';
 import 'package:aeroquest/widgets/appbar/appbar_button.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/widgets/appbar/appbar_leading.dart';
 import 'package:aeroquest/widgets/custom_dialog.dart';
 import 'package:aeroquest/constraints.dart';
 import 'package:aeroquest/models/recipe.dart';
-import 'package:sliver_tools/sliver_tools.dart';
+import 'package:aeroquest/widgets/custom_modal_sheet/value_slider_group_template.dart';
+import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/bean_variables_group_widgets/variables_modal_sheet.dart';
 
-import '../../widgets/custom_modal_sheet/value_slider_group_template.dart';
-import 'recipe_details_body/body_widgets/bean_variables_group_widgets/variables_modal_sheet.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 
 class RecipeDetails extends StatefulWidget {
   /// The screen used for displaying and editing the details of a single recipe

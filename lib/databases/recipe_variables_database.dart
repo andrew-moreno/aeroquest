@@ -1,8 +1,8 @@
-import 'dart:collection';
-
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:aeroquest/models/recipe_variables.dart';
+
+import 'dart:collection' show SplayTreeMap;
+import 'package:path/path.dart' show join;
+import 'package:sqflite/sqflite.dart';
 
 class RecipeVariablesDatabase {
   static final RecipeVariablesDatabase instance =
