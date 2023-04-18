@@ -78,9 +78,7 @@ class _RecipesState extends State<Recipes> {
             )
           ],
         ),
-        drawer: const Drawer(
-          child: CustomDrawer(),
-        ),
+        drawer: const CustomDrawer(),
         body: SafeArea(
           child: FutureBuilder(
             future: cacheRecipeDataAndSetInterval(),

@@ -14,6 +14,7 @@ class AppBarText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
+      overflow: TextOverflow.fade,
       style: Theme.of(context).textTheme.headline2!,
     );
   }

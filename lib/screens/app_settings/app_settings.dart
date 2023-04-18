@@ -83,95 +83,92 @@ class _AppSettingsState extends State<AppSettings> {
       ),
       drawer: const CustomDrawer(),
       body: SafeArea(
-        child: Padding(
+        child: ListView(
           padding: const EdgeInsets.all(kRoutePagePadding),
-          child: Column(
-            children: [
-              Selector<AppSettingsProvider, double>(
-                selector: (_, provider) => provider.grindInterval!,
-                builder: (_, grindInterval, __) {
-                  return SettingCard(
-                    text:
-                        AppSettingsProvider.getGrindIntervalText(grindInterval),
-                    onTap: () => showModalSheet(
-                      context: context,
-                      modalContent: GrindIntervalModalSheet(
-                        initialGrindInterval: Provider.of<AppSettingsProvider>(
+          children: [
+            Selector<AppSettingsProvider, double>(
+              selector: (_, provider) => provider.grindInterval!,
+              builder: (_, grindInterval, __) {
+                return SettingCard(
+                  text: AppSettingsProvider.getGrindIntervalText(grindInterval),
+                  onTap: () => showModalSheet(
+                    context: context,
+                    modalContent: GrindIntervalModalSheet(
+                      initialGrindInterval: Provider.of<AppSettingsProvider>(
+                              context,
+                              listen: false)
+                          .grindInterval!,
+                    ),
+                  ),
+                  title: "Grind Size Interval",
+                  description: "Defines the amount that "
+                      "the grind size variable for a recipe "
+                      "can be increased or decreased",
+                );
+              },
+            ),
+            const SizedBox(height: 20),
+            Selector<AppSettingsProvider, TemperatureUnit>(
+              selector: (_, provider) => provider.temperatureUnit!,
+              builder: (_, temperatureUnit, __) {
+                return SettingCard(
+                  text: _temperatureUnitTextSelector(temperatureUnit),
+                  onTap: () => showModalSheet(
+                    context: context,
+                    modalContent: TemperatureUnitModalSheet(
+                        initialTemperatureUnit:
+                            Provider.of<AppSettingsProvider>(context,
+                                    listen: false)
+                                .temperatureUnit!),
+                  ),
+                  title: "Temperature Unit",
+                  description: "Whether to use Celsius or Fahrenheit for "
+                      "the temperature variable for a recipe",
+                );
+              },
+            ),
+            const SizedBox(height: 20),
+            Selector<AppSettingsProvider, WaterUnit>(
+              selector: (_, provider) => provider.waterUnit!,
+              builder: (_, waterUnit, __) {
+                return SettingCard(
+                  text: _waterUnitTextSelector(waterUnit),
+                  onTap: () => showModalSheet(
+                    context: context,
+                    modalContent: WaterUnitModalSheet(
+                        initialWaterUnit: Provider.of<AppSettingsProvider>(
                                 context,
                                 listen: false)
-                            .grindInterval!,
-                      ),
-                    ),
-                    title: "Grind Size Interval",
-                    description: "Defines the amount that "
-                        "the grind size variable for a recipe "
-                        "can be increased or decreased",
-                  );
-                },
-              ),
-              const SizedBox(height: 20),
-              Selector<AppSettingsProvider, TemperatureUnit>(
-                selector: (_, provider) => provider.temperatureUnit!,
-                builder: (_, temperatureUnit, __) {
-                  return SettingCard(
-                    text: _temperatureUnitTextSelector(temperatureUnit),
-                    onTap: () => showModalSheet(
-                      context: context,
-                      modalContent: TemperatureUnitModalSheet(
-                          initialTemperatureUnit:
-                              Provider.of<AppSettingsProvider>(context,
-                                      listen: false)
-                                  .temperatureUnit!),
-                    ),
-                    title: "Temperature Unit",
-                    description: "Whether to use Celsius or Fahrenheit for "
-                        "the temperature variable for a recipe",
-                  );
-                },
-              ),
-              const SizedBox(height: 20),
-              Selector<AppSettingsProvider, WaterUnit>(
-                selector: (_, provider) => provider.waterUnit!,
-                builder: (_, waterUnit, __) {
-                  return SettingCard(
-                    text: _waterUnitTextSelector(waterUnit),
-                    onTap: () => showModalSheet(
-                      context: context,
-                      modalContent: WaterUnitModalSheet(
-                          initialWaterUnit: Provider.of<AppSettingsProvider>(
-                                  context,
-                                  listen: false)
-                              .waterUnit!),
-                    ),
-                    title: "Water Amount Unit",
-                    description: "Whether to use grams or ounces for "
-                        "the amount of water used to brew a recipe",
-                  );
-                },
-              ),
-              const SizedBox(height: 20),
-              Selector<AppSettingsProvider, CoffeeUnit>(
-                selector: (_, provider) => provider.coffeeUnit!,
-                builder: (_, coffeeUnit, __) {
-                  return SettingCard(
-                    text: _coffeeUnitTextSelector(coffeeUnit),
-                    onTap: () => showModalSheet(
-                      context: context,
-                      modalContent: CoffeeUnitModalSheet(
-                          initialCoffeeUnit: Provider.of<AppSettingsProvider>(
-                                  context,
-                                  listen: false)
-                              .coffeeUnit!),
-                    ),
-                    title: "Coffee Amount Unit",
-                    description: "Whether to use grams, tablespoons, or the "
-                        "AeroPress scoop for the amount of coffee used to "
-                        "brew a recipe",
-                  );
-                },
-              ),
-            ],
-          ),
+                            .waterUnit!),
+                  ),
+                  title: "Water Amount Unit",
+                  description: "Whether to use grams or ounces for "
+                      "the amount of water used to brew a recipe",
+                );
+              },
+            ),
+            const SizedBox(height: 20),
+            Selector<AppSettingsProvider, CoffeeUnit>(
+              selector: (_, provider) => provider.coffeeUnit!,
+              builder: (_, coffeeUnit, __) {
+                return SettingCard(
+                  text: _coffeeUnitTextSelector(coffeeUnit),
+                  onTap: () => showModalSheet(
+                    context: context,
+                    modalContent: CoffeeUnitModalSheet(
+                        initialCoffeeUnit: Provider.of<AppSettingsProvider>(
+                                context,
+                                listen: false)
+                            .coffeeUnit!),
+                  ),
+                  title: "Coffee Amount Unit",
+                  description: "Whether to use grams, tablespoons, or the "
+                      "AeroPress scoop for the amount of coffee used to "
+                      "brew a recipe",
+                );
+              },
+            ),
+          ],
         ),
       ),
     );
