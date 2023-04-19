@@ -1,13 +1,13 @@
 import 'package:aeroquest/providers/variables_slider_provider.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/bean_variables_group_widgets/coffee_bean_dropdown.dart';
 import 'package:aeroquest/widgets/animated_toggle.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/screens/recipe_details/recipe_details_body/body_widgets/bean_variables_group_widgets/variables_value_slider_group.dart';
 import 'package:aeroquest/widgets/custom_button.dart';
 import 'package:aeroquest/models/recipe_variables.dart';
+
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class VariablesModalSheet extends StatefulWidget {
   /// Defines the modal sheet used for editing recipe variables
