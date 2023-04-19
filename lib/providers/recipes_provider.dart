@@ -405,10 +405,10 @@ class RecipesProvider extends ChangeNotifier {
     /// Variable tempId to a unique number for this recipe
     int tempId;
     if (tempRecipeVariables.isEmpty) {
-      /// [tempId] set to 0 if no recipe variables exist in the database for
+      /// [tempId] set to 1 if no recipe variables exist in the database for
       /// this recipe
       if (_recipeVariables[recipeEntryId]?.isEmpty ?? true) {
-        tempId = 0;
+        tempId = 1;
       } else {
         tempId = _recipeVariables[recipeEntryId]!.lastKey()! + 1;
       }
@@ -555,10 +555,10 @@ class RecipesProvider extends ChangeNotifier {
     /// Variable tempId to a unique number for this recipe
     int tempId;
     if (tempRecipeSteps.isEmpty) {
-      /// [tempId] set to 0 if no recipe steps exist in the database for this
+      /// [tempId] set to 1 if no recipe steps exist in the database for this
       /// recipe
       if (recipeSteps[recipeEntryId]?.isEmpty ?? true) {
-        tempId = 0;
+        tempId = 1;
       } else {
         tempId = _recipeSteps[recipeEntryId]!.lastKey()! + 1;
       }
@@ -675,10 +675,10 @@ class RecipesProvider extends ChangeNotifier {
     /// Setting tempId to a unique number for this recipe
     int tempId;
     if (tempRecipeNotes.isEmpty) {
-      /// [tempId] set to 0 if no recipe notes exist in the database for this
+      /// [tempId] set to 1 if no recipe notes exist in the database for this
       /// recipe
       if (recipeNotes[recipeEntryId]?.isEmpty ?? true) {
-        tempId = 0;
+        tempId = 1;
       } else {
         tempId = _recipeNotes[recipeEntryId]!.lastKey()! + 1;
       }
