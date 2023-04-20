@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.andrewmoreno1431.aeroquest">
+    package="com.andrewmoreno.aeroquest">
     <uses-permission android:name="android.permission.INTERNET"/>
     <queries>
         <intent>

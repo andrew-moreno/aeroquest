@@ -1,4 +1,4 @@
-package com.andrewmoreno1431.aeroquest
+package com.andrewmoreno.aeroquest
 
 import io.flutter.embedding.android.FlutterActivity
 
