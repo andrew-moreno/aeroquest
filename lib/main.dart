@@ -110,6 +110,11 @@ class MyApp extends StatelessWidget {
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
+                errorStyle: Theme.of(context)
+                    .textTheme
+                    .subtitle1!
+                    .copyWith(color: kDeleteRed),
+                errorMaxLines: 2,
                 filled: true,
                 fillColor: kLightSecondary,
                 border: DecoratedInputBorder(

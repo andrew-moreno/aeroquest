@@ -78,7 +78,7 @@ class _RecipeStepsModalSheetState extends State<RecipeStepsModalSheet> {
                   hint: "Step",
                   initialValue: widget.recipeStepsData?.text,
                   validate: true,
-                  validateText: "Please enter a recipeStep",
+                  validateText: "Please enter a step",
                   textCapitalization: TextCapitalization.sentences,
                 ),
               ),

@@ -119,7 +119,7 @@ class _CoffeeBeanDropdownState extends State<CoffeeBeanDropdown> {
                 });
               },
               hint: const Text(
-                "Select coffee beans",
+                "Select a coffee bean",
                 style: TextStyle(
                   color: kPrimary,
                   fontFamily: "Poppins",
@@ -168,7 +168,7 @@ class _CoffeeBeanDropdownState extends State<CoffeeBeanDropdown> {
                       top: 5,
                     ),
                     child: Text(
-                      "Please select coffee beans",
+                      "Please select a coffee bean",
                       style: Theme.of(context)
                           .textTheme
                           .subtitle1!

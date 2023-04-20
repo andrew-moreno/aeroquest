@@ -153,6 +153,8 @@ class CustomHeaderFormField extends StatelessWidget {
         hintText: hintText,
         hintStyle: hintStyle,
         fillColor: kPrimary,
+        errorStyle:
+            Theme.of(context).textTheme.subtitle1!.copyWith(color: kDeleteRed),
         border: DecoratedInputBorder(
           shadow: (enabled) ? [kBoxShadow] : [],
           child: OutlineInputBorder(

@@ -47,7 +47,11 @@ class CustomFormField extends StatelessWidget {
       initialValue: initialValue,
       style: const TextStyle(color: kPrimary, fontSize: 16),
       autofocus: autoFocus,
-      decoration: InputDecoration(hintText: hint),
+      decoration: InputDecoration(
+        hintText: hint,
+        errorStyle:
+            Theme.of(context).textTheme.subtitle1!.copyWith(color: kDeleteRed),
+      ),
       validator: (value) {
         if (validate && (value == null || value.isEmpty)) {
           if (validateText == null) {

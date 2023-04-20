@@ -68,6 +68,10 @@ class _RecipeDetailsState extends State<RecipeDetails> {
               _recipesProvider.setEditMode(EditMode.disabled);
               _recipesProvider.clearTempData(widget.recipeData.id!);
             });
+
+            /// Calling [validate()] will remove validation text if it is
+            /// left over
+            _recipesProvider.recipeIdentifiersFormKey.currentState!.validate();
           }
         },
       ),
