@@ -6,9 +6,4 @@ AeroQuest is an app designed for passionate AeroPress users who want assistance 
 
 ![Showcase](https://user-images.githubusercontent.com/46725252/233288317-7372da4c-4652-4837-99cd-ff7014d09d4c.png)
 
-## App Preview
-
-https://user-images.githubusercontent.com/46725252/176360088-1c4e8549-32e4-48c6-bcd7-8444def23fed.mp4
-
-
 
