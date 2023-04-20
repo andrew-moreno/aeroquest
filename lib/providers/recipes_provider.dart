@@ -150,6 +150,12 @@ class RecipesProvider extends ChangeNotifier {
   GlobalKey<FormBuilderState> recipeRecipeNotesFormKey =
       GlobalKey<FormBuilderState>();
 
+  /// Text controller to handle changes to a recipe's title
+  TextEditingController recipeTitleController = TextEditingController();
+
+  /// Text controller to handle changes to a recipe's description
+  TextEditingController recipeDescriptionController = TextEditingController();
+
   late PushPressure tempPushPressure;
   late BrewMethod tempBrewMethod;
 
@@ -373,7 +379,10 @@ class RecipesProvider extends ChangeNotifier {
 
   /// Clears [_tempRecipeVariables], [_tempRecipeSteps], and [_tempRecipeNotes]
   /// and all temp recipe variable parameters
-  void clearTempData() {
+  void clearTempData(int recipeEntryId) {
+    recipeTitleController.text = recipes[recipeEntryId]!.title;
+    recipeDescriptionController.text =
+        recipes[recipeEntryId]?.description ?? "";
     _tempRecipeVariables.clear();
     _tempRecipeSteps.clear();
     _tempRecipeNotes.clear();

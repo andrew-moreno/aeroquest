@@ -1,3 +1,4 @@
+import 'package:aeroquest/models/recipe.dart';
 import 'package:aeroquest/providers/recipes_provider.dart';
 import 'package:aeroquest/constraints.dart';
 
@@ -6,19 +7,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
-class RecipeDetailsHeader extends StatelessWidget {
+class RecipeDetailsHeader extends StatefulWidget {
   /// Defines the widget that contains the title and description for a recipe
   const RecipeDetailsHeader({
     Key? key,
-    required this.titleValue,
-    required this.descriptionValue,
+    required this.recipeData,
   }) : super(key: key);
 
-  /// The value of the title when the details page is opened
-  final String titleValue;
-
-  /// The value of the description when the details page is opened
-  final String? descriptionValue;
+  /// Recipe data to be displayed by this widget
+  final Recipe recipeData;
 
   static const _titleTextStyle = TextStyle(
     color: kLightSecondary,
@@ -39,12 +36,35 @@ class RecipeDetailsHeader extends StatelessWidget {
   static const double _sizedBoxHeight = 10;
 
   @override
-  Widget build(BuildContext context) {
-    bool isEditModeEnabled() {
-      return (Provider.of<RecipesProvider>(context, listen: false).editMode ==
-          EditMode.enabled);
-    }
+  State<RecipeDetailsHeader> createState() => _RecipeDetailsHeaderState();
+}
 
+class _RecipeDetailsHeaderState extends State<RecipeDetailsHeader> {
+  late final RecipesProvider _recipesProvider =
+      Provider.of<RecipesProvider>(context, listen: false);
+
+  /// Returns a bool highlighting if the the edit mode is enabled or not
+  bool isEditModeEnabled() {
+    return (_recipesProvider.editMode == EditMode.enabled);
+  }
+
+  @override
+  void initState() {
+    /// Setting initial value of the title form field
+    _recipesProvider.recipeTitleController.text =
+        _recipesProvider.recipes[widget.recipeData.id]?.title ??
+            widget.recipeData.title;
+
+    /// Setting the initial value of the description form field
+    _recipesProvider.recipeDescriptionController.text =
+        _recipesProvider.recipes[widget.recipeData.id]?.description ??
+            widget.recipeData.description ??
+            "";
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 40),
       child: FormBuilder(
@@ -54,25 +74,28 @@ class RecipeDetailsHeader extends StatelessWidget {
           children: [
             CustomHeaderFormField(
               name: "recipeTitle",
-              initialValue: titleValue,
               hintText: "Title",
-              hintStyle: _titleTextStyle,
+              hintStyle: RecipeDetailsHeader._titleTextStyle,
+              controller: Provider.of<RecipesProvider>(context, listen: false)
+                  .recipeTitleController,
               validate: true,
               textCapitalization: TextCapitalization.words,
               validateUniqueness: true,
               enabled: isEditModeEnabled(),
             ),
-            const SizedBox(height: _sizedBoxHeight),
+            const SizedBox(height: RecipeDetailsHeader._sizedBoxHeight),
             Opacity(
               opacity: (isEditModeEnabled() ||
-                      (descriptionValue != null && descriptionValue != ""))
+                      (_recipesProvider
+                          .recipeDescriptionController.text.isNotEmpty))
                   ? 1
                   : 0,
               child: CustomHeaderFormField(
                 name: "recipeDescription",
-                initialValue: descriptionValue,
                 hintText: "Description",
-                hintStyle: _descriptionTextStyle,
+                hintStyle: RecipeDetailsHeader._descriptionTextStyle,
+                controller: Provider.of<RecipesProvider>(context, listen: false)
+                    .recipeDescriptionController,
                 validate: false,
                 textCapitalization: TextCapitalization.sentences,
                 validateUniqueness: false,
@@ -91,21 +114,21 @@ class CustomHeaderFormField extends StatelessWidget {
   const CustomHeaderFormField({
     Key? key,
     required this.name,
-    required this.initialValue,
     required this.hintText,
     required this.hintStyle,
     required this.validate,
     required this.textCapitalization,
     required this.validateUniqueness,
     required this.enabled,
+    required this.controller,
   }) : super(key: key);
 
   final String name;
-  final String? initialValue;
   final String hintText;
   final TextStyle hintStyle;
   final TextCapitalization textCapitalization;
   final bool enabled;
+  final TextEditingController controller;
 
   /// Whether input should be validated before submission or not
   final bool validate;
@@ -116,13 +139,13 @@ class CustomHeaderFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FormBuilderTextField(
+      controller: controller,
       enabled: enabled,
       name: name,
       textCapitalization: textCapitalization,
       cursorColor: kLightSecondary,
       maxLines: null,
       textAlign: TextAlign.center,
-      initialValue: initialValue,
       style: hintStyle,
       decoration: InputDecoration(
         isDense: true,
@@ -142,7 +165,7 @@ class CustomHeaderFormField extends StatelessWidget {
         if (validate && (value == null || value.isEmpty)) {
           return "Please enter a title";
         } else if (validateUniqueness) {
-          if (value != initialValue &&
+          if (value != controller.text &&
               Provider.of<RecipesProvider>(context, listen: false)
                   .recipes
                   .values

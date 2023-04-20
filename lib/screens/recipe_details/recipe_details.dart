@@ -64,9 +64,10 @@ class _RecipeDetailsState extends State<RecipeDetails> {
           if (!isOsBackPressed || widget.isAdding) {
             Navigator.of(context).pop(true);
           } else {
-            _recipesProvider.setEditMode(EditMode.disabled);
-            _recipesProvider.clearTempData();
-            setState(() {});
+            setState(() {
+              _recipesProvider.setEditMode(EditMode.disabled);
+              _recipesProvider.clearTempData(widget.recipeData.id!);
+            });
           }
         },
       ),
@@ -122,7 +123,7 @@ class _RecipeDetailsState extends State<RecipeDetails> {
           return Future.value(true);
         }
         _recipesProvider.setEditMode(EditMode.disabled);
-        _recipesProvider.clearTempData();
+        _recipesProvider.clearTempData(widget.recipeData.id!);
         setState(() {});
         return Future.value(false);
       }
@@ -167,7 +168,7 @@ class _RecipeDetailsState extends State<RecipeDetails> {
   @override
   void dispose() {
     _recipesProvider.setEditMode(EditMode.disabled);
-    _recipesProvider.clearTempData();
+    _recipesProvider.clearTempData(widget.recipeData.id!);
     super.dispose();
   }
 
@@ -230,15 +231,7 @@ class _RecipeDetailsState extends State<RecipeDetails> {
                                 children: [
                                   const SizedBox(height: 5),
                                   RecipeDetailsHeader(
-                                    titleValue: _recipesProvider
-                                            .recipes[widget.recipeData.id]
-                                            ?.title ??
-                                        widget.recipeData.title,
-                                    descriptionValue: _recipesProvider
-                                            .recipes[widget.recipeData.id]
-                                            ?.description ??
-                                        widget.recipeData.description ??
-                                        "",
+                                    recipeData: widget.recipeData,
                                   ),
                                   const SizedBox(height: 20),
                                 ],
