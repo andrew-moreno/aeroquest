@@ -4,6 +4,8 @@ The AeroPress is one of the most versatile coffee brewers on the market, and wit
 
 AeroQuest is an app designed for passionate AeroPress users who want assistance tracking their favourite recipes and are looking to get the most out of each AeroPress brew. 
 
+[Download AeroQuest on the Play Store](https://play.google.com/store/apps/details?id=com.andrewmoreno.aeroquest)
+
 ![Showcase](https://user-images.githubusercontent.com/46725252/233288317-7372da4c-4652-4837-99cd-ff7014d09d4c.png)
 
 
